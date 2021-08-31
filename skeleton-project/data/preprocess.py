@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 import random  # 나중에 데이터셋 섞어야되면 이거 쓸라고
 
-#img_DIR = './datasets/images'
-#cap_DIR = './datasets/captions.csv'
+# img_DIR = './datasets/images'
+# cap_DIR = './datasets/captions.csv'
 
 # Req. 3-1	이미지 경로 및 캡션 불러오기
 
@@ -36,12 +36,16 @@ def get_path_caption(img_path, captions_path):
 
     return img_paths, captions
 
+# 리스트를 원하는 간격으로 나누는 메소드 -> https://jsikim1.tistory.com/141
+
+
+def list_chunk(lst, n):
+    return [lst[i:i+n] for i in range(0, len(lst), n)]
 
 # Req. 3-2	전체 데이터셋을 분리해 저장하기
+
+
 def dataset_split_save(img_paths, captions, train_split):
-    print('입력된 트레이닝데이터셋 % : ' + str(train_split) + "% 입니당 ㅎㅎ")
-    split_size = len(img_paths) * (train_split/100)
-    print('나눈 크기는 : ' + str(split_size))
 
     #  나중에 섞어야되면 여기서 섞는게 좋을거같기도하고
     # random.shuffle(img_paths)
@@ -54,10 +58,48 @@ def dataset_split_save(img_paths, captions, train_split):
 
     # print(len(train_img))
     # print(len(test_img))
-    # 이제 얘들을 저장해야함.
+    # 위는 리스트로 하는건데 아래부터 딕셔너리로 다시 할 예정
 
-    train_dataset_path = ''
-    val_dataset_path = ''
+    print('입력된 트레이닝데이터셋 % : ' + str(train_split) + "% 입니당 ㅎㅎ")
+
+    print("기본 캡션 : " + str(captions[:5]))
+    list_chunked = list_chunk(captions, 5)
+    print("5개씩 나눈 캡션 " + str(list_chunked[:5]))
+
+    # for문으로 하니까 너무 느려서 아래 방법으로함
+    # new_list = []
+    # for v in img_paths:
+    #     if v not in new_list:
+    #         new_list.append(v)
+
+    result1 = dict.fromkeys(img_paths)  # 리스트 값들을 key 로 변경 -> 중복 제거
+    result2 = list(result1)  # list(dict.fromkeys(arr)) -> 리스트로 변경
+
+    dic = dict(zip(result2, list_chunked))  # 중복이 제거된 리스트들로 다시 딕셔너리 생성
+
+    # 만든 딕셔너리를 셔플
+    dic = sorted(dic.items(), key=lambda x: random.random())
+
+    split_size = len(dic) * (train_split/100)
+    print('나눈 크기는 : ' + str(split_size))
+
+    # 섞인 딕셔너리를 스플릿사이즈에 맞게 나누어 트레이닝과 테스트로 나눔
+    train_tt = dic[:int(split_size)]
+    test_tt = dic[int(split_size):]
+
+    print("트레이닝 : " + str(train_tt[:5]))
+    print("테스트 : " + str(test_tt[:5]))
+
+    # 나누어진 데이터를 csv 파일로 저장
+    # https://www.delftstack.com/ko/howto/python/write-list-to-csv-python/
+    df = pd.DataFrame(train_tt)
+    df.to_csv('./datasets/train_val.csv')
+
+    df = pd.DataFrame(test_tt)
+    df.to_csv('./datasets/test_val.csv')
+
+    train_dataset_path = './datasets/train_val.csv'
+    val_dataset_path = './datasets/test_val.csv'
     return train_dataset_path, val_dataset_path
 
 
