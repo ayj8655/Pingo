@@ -14,7 +14,8 @@ def save_config(args):
     img_path = args.images_folder_path
     captions_path = args.caption_file_path
     train_split = args.train_split
-    return img_path, captions_path, train_split
+    do_traning = args.do_traning
+    return img_path, captions_path, train_split, do_traning
 
 
 # Req. 4-1	이미지와 캡션 시각화

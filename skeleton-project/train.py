@@ -4,8 +4,11 @@ from utils import utils
 import config
 
 # config 저장
-img_path, captions_path, train_split = utils.save_config(config.args)
+img_path, captions_path, train_split, do_traning = utils.save_config(
+    config.args)
 
+train_dataset_path = './datasets/train_val.csv'
+val_dataset_path = './datasets/test_val.csv'
 
 # 이미지 경로 및 캡션 불러오기
 img_paths, captions = preprocess.get_path_caption(
@@ -18,8 +21,9 @@ train_dataset_path, val_dataset_path = preprocess.dataset_split_save(
     img_paths, captions, train_split)
 
 
-# 저장된 데이터셋 불러오기
-img_paths, caption = preprocess.get_data_file()
+# 저장된 데이터셋 불러오기 -> do_traning이 참이면 트레이닝데이터 불러오기 거짓이면 테스트데이터
+img_paths, caption = preprocess.get_data_file(
+    do_traning, train_dataset_path, val_dataset_path)
 
 
 # 데이터 샘플링

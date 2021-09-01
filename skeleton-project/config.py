@@ -14,6 +14,8 @@ parser.add_argument('--images_folder_path', type=str,
                     default='.\\datasets\\images\\')
 parser.add_argument('-train_split', type=float,
                     default='80')
+parser.add_argument('-do_traning', type=bool,
+                    default=True)
 args = parser.parse_args()
 
 # print(args)

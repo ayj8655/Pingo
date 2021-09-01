@@ -77,7 +77,7 @@ def dataset_split_save(img_paths, captions, train_split):
 
     dic = dict(zip(result2, list_chunked))  # 중복이 제거된 리스트들로 다시 딕셔너리 생성
 
-    # 만든 딕셔너리를 셔플
+    # 만든 딕셔너리를 셔플 -> 셔플하면 리스트로 바뀜
     dic = sorted(dic.items(), key=lambda x: random.random())
 
     split_size = len(dic) * (train_split/100)
@@ -93,10 +93,10 @@ def dataset_split_save(img_paths, captions, train_split):
     # 나누어진 데이터를 csv 파일로 저장
     # https://www.delftstack.com/ko/howto/python/write-list-to-csv-python/
     df = pd.DataFrame(train_tt)
-    df.to_csv('./datasets/train_val.csv')
+    df.to_csv('./datasets/train_val.csv', sep=",")
 
     df = pd.DataFrame(test_tt)
-    df.to_csv('./datasets/test_val.csv')
+    df.to_csv('./datasets/test_val.csv', sep=",")
 
     train_dataset_path = './datasets/train_val.csv'
     val_dataset_path = './datasets/test_val.csv'
@@ -104,8 +104,43 @@ def dataset_split_save(img_paths, captions, train_split):
 
 
 # Req. 3-3	저장된 데이터셋 불러오기
-def get_data_file():
-    pass
+def get_data_file(do_traning, train_dataset_path, val_dataset_path):
+
+    if do_traning:
+        print("참입니당")
+
+        csv = pd.read_csv(train_dataset_path,
+                          sep=",", skiprows=1,
+                          names=['0', '1'])
+
+        img_paths = []
+        captions = []
+        img_paths = csv['0'].values.tolist()
+        captions = csv['1'].values.tolist()
+        # print(img_paths.values.tolist())
+        # print(captions.values.tolist())
+
+        print("이미지만나와야함 : " + str(img_paths[0]))
+        print("캡션만나와야함 : " + str(captions[0]))
+
+        return img_paths, captions
+
+    else:
+        print("거짓입니당")
+        csv = pd.read_csv(val_dataset_path,
+                          sep=",", skiprows=1,
+                          names=['0', '1'])
+
+        img_paths = []
+        captions = []
+        img_paths = csv['0'].values.tolist()
+        captions = csv['1'].values.tolist()
+        # print(img_paths.values.tolist())
+        # print(captions.values.tolist())
+
+        print("이미지만나와야함 : " + str(img_paths[0]))
+        print("캡션만나와야함 : " + str(captions[0]))
+        return img_paths, captions
 
 
 # Req. 3-4	데이터 샘플링
