@@ -144,5 +144,6 @@ def get_data_file(do_traning, train_dataset_path, val_dataset_path):
 
 
 # Req. 3-4	데이터 샘플링
-def sampling_data():
+def sampling_data(train_split):
+
     pass

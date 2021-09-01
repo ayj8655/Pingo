@@ -28,8 +28,11 @@ img_paths, caption = preprocess.get_data_file(
 
 # 데이터 샘플링
 if config.do_sampling:
-    img_paths, caption = preprocess.sampling_data()
+    img_paths, caption = preprocess.sampling_data(train_split)
 
+
+image_input = './datasets/images/10002456.jpg'
+caption_input = 'Two young guys with shaggy hair look at their hands while hanging out in the yard'
 
 # 이미지와 캡션 시각화 하기
-utils.visualize_img_caption()
+utils.visualize_img_caption(image_input, caption_input)
