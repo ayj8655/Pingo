@@ -17,15 +17,26 @@ def save_config(args):
     captions_path = args.caption_file_path
     train_split = args.train_split
     do_traning = args.do_traning
-    return img_path, captions_path, train_split, do_traning
+    sampling_split = args.sampling_split
+    return img_path, captions_path, train_split, do_traning, sampling_split
 
 
 # Req. 4-1	이미지와 캡션 시각화
-def visualize_img_caption(image_input, caption_input):
+def visualize_img_caption(img_paths, caption):
 
-    print("<start> " + caption_input + " <end>")
-    image = Image.open(image_input)
-    plt.title("<start> " + caption_input + " <end>")
+    s = (caption[0])[2:-1]
+
+    print("S출력 : "+s)
+
+    S = s.split('\',')
+
+    print("스플리한거 : " + S[0])
+
+    print("<start> " + S[0] + " <end>")
+
+    image = Image.open("./datasets/images/"+img_paths[0])
+
+    plt.title("<start> " + S[0] + " <end>")
     plt.imshow(np.asarray(image))
     plt.show()
 

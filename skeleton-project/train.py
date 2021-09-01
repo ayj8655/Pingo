@@ -4,7 +4,7 @@ from utils import utils
 import config
 
 # config 저장
-img_path, captions_path, train_split, do_traning = utils.save_config(
+img_path, captions_path, train_split, do_traning, sampling_split = utils.save_config(
     config.args)
 
 train_dataset_path = './datasets/train_val.csv'
@@ -28,11 +28,12 @@ img_paths, caption = preprocess.get_data_file(
 
 # 데이터 샘플링
 if config.do_sampling:
-    img_paths, caption = preprocess.sampling_data(train_split)
+    img_paths, caption = preprocess.sampling_data(
+        img_paths, caption, sampling_split)
 
 
-image_input = './datasets/images/10002456.jpg'
-caption_input = 'Two young guys with shaggy hair look at their hands while hanging out in the yard'
+#image_input = './datasets/images/10002456.jpg'
+#caption_input = 'Two young guys with shaggy hair look at their hands while hanging out in the yard'
 
 # 이미지와 캡션 시각화 하기
-utils.visualize_img_caption(image_input, caption_input)
+utils.visualize_img_caption(img_paths, caption)

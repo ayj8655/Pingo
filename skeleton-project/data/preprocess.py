@@ -144,6 +144,17 @@ def get_data_file(do_traning, train_dataset_path, val_dataset_path):
 
 
 # Req. 3-4	데이터 샘플링
-def sampling_data(train_split):
+def sampling_data(img_paths, caption, sampling_split):
 
-    pass
+    print('입력된 트레이닝데이터셋 % : ' + str(sampling_split) + "% 입니당 ㅎㅎ")
+
+    print("전체 데이터 개수 : " + str(len(img_paths)))
+    split_size = len(img_paths) * (sampling_split/100)
+    #print('나눈 크기는 : ' + str(split_size))
+
+    img_paths = img_paths[:int(split_size)]
+    caption = caption[:int(split_size)]
+
+    print("샘플링된 데이터 개수 : " + str(len(img_paths)))
+    print("샘플링된 데이터 퍼센트 : " + str(sampling_split))
+    return img_paths, caption
