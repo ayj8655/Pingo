@@ -24,27 +24,16 @@ def save_config(args):
 # Req. 4-1	이미지와 캡션 시각화
 def visualize_img_caption(img_paths, caption):
 
+    #   print(caption[0])
     s = (caption[0])[2:-1]
-
-    print("S출력 : "+s)
-
+#   print("S출력 : "+s)
     S = s.split('\',')
-
-    print("스플리한거 : " + S[0])
-
+#   print("스플리한거 : " + S[0])
     print("<start> " + S[0] + " <end>")
 
     image = Image.open("./datasets/images/"+img_paths[0])
 
-    plt.title("<start> " + S[0] + " <end>")
-    plt.imshow(np.asarray(image))
+    plt.figure(figsize=(10, 8))  # 보여지는 크기 조정
+    plt.title("<start> " + S[0] + " <end>")  # 타이틀 설정
+    plt.imshow(np.asarray(image))  # 이미지 지정
     plt.show()
-
-    pass
-
-
-def load_image(image_path):
-    image = Image.open(image_path).convert('RGB')
-    image = image.resize([224, 224], Image.LANCZOS)
-
-    return image

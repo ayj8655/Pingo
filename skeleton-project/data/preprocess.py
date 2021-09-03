@@ -29,17 +29,16 @@ def get_path_caption(img_path, captions_path):
                       sep="|", skiprows=1,
                       names=['image_name', 'comment_number', 'comment'])
 
-    img_paths = csv['image_name'].values.tolist()
+    img_paths = csv['image_name'].values.tolist()  # names에서 뽑아온 csv를 리스트로 변경
     captions = csv['comment'].values.tolist()
     # print(img_paths.values.tolist())
     # print(captions.values.tolist())
 
     return img_paths, captions
 
-# 리스트를 원하는 간격으로 나누는 메소드 -> https://jsikim1.tistory.com/141
-
 
 def list_chunk(lst, n):
+    # 리스트를 원하는 간격으로 나누는 메소드 -> https://jsikim1.tistory.com/141
     return [lst[i:i+n] for i in range(0, len(lst), n)]
 
 # Req. 3-2	전체 데이터셋을 분리해 저장하기
@@ -55,16 +54,15 @@ def dataset_split_save(img_paths, captions, train_split):
     # test_img = img_paths[int(split_size):]
     # train_captions = captions[:int(split_size)]
     # test_captions = captions[int(split_size):]
-
     # print(len(train_img))
     # print(len(test_img))
     # 위는 리스트로 하는건데 아래부터 딕셔너리로 다시 할 예정
 
-    print('입력된 트레이닝데이터셋 % : ' + str(train_split) + "% 입니당 ㅎㅎ")
+    print('입력된 트레이닝데이터셋 % : ' + str(train_split) + "%")
 
-    print("기본 캡션 : " + str(captions[:5]))
-    list_chunked = list_chunk(captions, 5)
-    print("5개씩 나눈 캡션 " + str(list_chunked[:5]))
+#   print("기본 캡션 : " + str(captions[:5]))
+    list_chunked = list_chunk(captions, 5)  # 5개씩 캡션을 묶어서 하나의 리스트로 변경
+#   print("5개씩 나눈 캡션 " + str(list_chunked[:5]))
 
     # for문으로 하니까 너무 느려서 아래 방법으로함
     # new_list = []
@@ -81,20 +79,19 @@ def dataset_split_save(img_paths, captions, train_split):
     dic = sorted(dic.items(), key=lambda x: random.random())
 
     split_size = len(dic) * (train_split/100)
-    print('나눈 크기는 : ' + str(split_size))
+#    print('나눈 크기는 : ' + str(split_size))
 
     # 섞인 딕셔너리를 스플릿사이즈에 맞게 나누어 트레이닝과 테스트로 나눔
     train_tt = dic[:int(split_size)]
     test_tt = dic[int(split_size):]
 
-    print("트레이닝 : " + str(train_tt[:5]))
-    print("테스트 : " + str(test_tt[:5]))
+#    print("트레이닝 : " + str(train_tt[:2]))
+#    print("테스트 : " + str(test_tt[:2]))
 
     # 나누어진 데이터를 csv 파일로 저장
     # https://www.delftstack.com/ko/howto/python/write-list-to-csv-python/
     df = pd.DataFrame(train_tt)
     df.to_csv('./datasets/train_val.csv', sep=",")
-
     df = pd.DataFrame(test_tt)
     df.to_csv('./datasets/test_val.csv', sep=",")
 
@@ -107,7 +104,7 @@ def dataset_split_save(img_paths, captions, train_split):
 def get_data_file(do_traning, train_dataset_path, val_dataset_path):
 
     if do_traning:
-        print("참입니당")
+        print("학습용데이터에요")
 
         csv = pd.read_csv(train_dataset_path,
                           sep=",", skiprows=1,
@@ -120,13 +117,13 @@ def get_data_file(do_traning, train_dataset_path, val_dataset_path):
         # print(img_paths.values.tolist())
         # print(captions.values.tolist())
 
-        print("이미지만나와야함 : " + str(img_paths[0]))
-        print("캡션만나와야함 : " + str(captions[0]))
+#        print("이미지만나와야함 : " + str(img_paths[0]))
+#        print("캡션만나와야함 : " + str(captions[0]))
 
         return img_paths, captions
 
     else:
-        print("거짓입니당")
+        print("테스트용 데이터입니당")
         csv = pd.read_csv(val_dataset_path,
                           sep=",", skiprows=1,
                           names=['0', '1'])
@@ -138,15 +135,15 @@ def get_data_file(do_traning, train_dataset_path, val_dataset_path):
         # print(img_paths.values.tolist())
         # print(captions.values.tolist())
 
-        print("이미지만나와야함 : " + str(img_paths[0]))
-        print("캡션만나와야함 : " + str(captions[0]))
+#        print("이미지만나와야함 : " + str(img_paths[0]))
+#        print("캡션만나와야함 : " + str(captions[0]))
         return img_paths, captions
 
 
 # Req. 3-4	데이터 샘플링
 def sampling_data(img_paths, caption, sampling_split):
 
-    print('입력된 트레이닝데이터셋 % : ' + str(sampling_split) + "% 입니당 ㅎㅎ")
+    print('입력된 트레이닝데이터셋 % : ' + str(sampling_split) + "%")
 
     print("전체 데이터 개수 : " + str(len(img_paths)))
     split_size = len(img_paths) * (sampling_split/100)
