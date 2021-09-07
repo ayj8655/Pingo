@@ -22,7 +22,8 @@ model = LinearModel(num_units=1)
 # 최적화 함수, 손실함수와 모델 바인딩
 model.compile(optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),
 			  loss=tf.keras.losses.MSE,
-			  metrics=[tf.keras.metrics.MeanSquaredError()])
+			  metrics=[tf.keras.metrics.MeanSquaredError()
+])
 
 
 # 모델 학습
