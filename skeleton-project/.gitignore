@@ -7,3 +7,9 @@ images/
 __pycache__/
 *.py[cod]
 *$py.class
+
+### VisualStudioCode ###
+.vscode/*
+my_test.py
+#pycharm
+.idea/
