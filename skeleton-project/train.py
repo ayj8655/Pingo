@@ -71,13 +71,23 @@ img_tensor /= 255.
 # plt.show()
 
 
+def img_load(img_path, target_size=250):
+
+    #    from keras.preprocessing import image
+    img = image.load_img(
+        img_dir+img_path, target_size=(target_size, target_size))
+    img_tensor = image.img_to_array(img)
+    img_tensor = np.expand_dims(img_tensor, axis=0)
+    # scaling into [0, 1]
+
+    img_tensor /= 255.
+
+    return img_tensor
+
+
 # 이미지 정규화 -> 방법을 못찾겠어서 일단 넘어감
-
-
 # 텍스트 데이터 토큰화
-
 # start랑 end 넣으라는데 왜 넣어야하는지 모르겠어서 일단 넘어감
-
 tokenizer = Tokenizer(num_words=10000, oov_token="<UNK>")
 tokenizer.fit_on_texts(caption)
 word_dic = tokenizer.word_index
@@ -89,7 +99,7 @@ print("--------------------------------")
 sequences = tokenizer.texts_to_sequences(caption)  # 각 단어를 이미 정해진 인덱스로 변환
 # print(sequences)
 print("--------------------------------")
-#padded = pad_sequences(sequences)
+padded = pad_sequences(sequences)
 # print(padded)
 print("--------------------------------")
 
@@ -107,14 +117,27 @@ print(len(tokenizer.word_index))
 
 
 # tf.data.Dataset 생성
-dataset = tf.data.Dataset.from_tensor_slices((img_paths, caption))
-print(dataset)
 
+img_tensor = []
+for i in img_paths:
+    print(i)
+    img_tensor.append(img_load(i, 250))
+print("이미지 로드 끝-----------------------------------------")
+dataset = tf.data.Dataset.from_tensor_slices((img_tensor, padded))
+
+
+print("-----------------------------------------")
+
+cnt = 0
 for i in dataset:
     print(i)
+    cnt = cnt+1
+    if cnt == 3:
+        break
 # Image Data Augmentation
 
 
 # 손실함수 구현
+
 
 # 1-batch train step 구현
