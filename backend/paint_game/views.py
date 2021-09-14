@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
 from rest_framework import status
 
-from .serializers import RoomMemberSerializer
+from .serializers import RoomMemberSerializer,RoomListSerializer
 from .models import Words,Ranking,Room,UserInRoom
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -33,7 +33,7 @@ def room_list(request): #수정요망
     print("방 리스트 받아오기")
     rooms = get_list_or_404(Room)
     print("rooms 받아옴")
-    serializer = RoomMemberSerializer(rooms, many=True)
+    serializer = RoomListSerializer(rooms, many=True)
     print("방 리스트 받아오기 완료")
     return Response(serializer.data)
 
@@ -57,4 +57,5 @@ def room_member(request, room_id):
     print(users)
     serializer = RoomMemberSerializer(users, many=True)
     print("방 인원 출력 완료")
+    # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)

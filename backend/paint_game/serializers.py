@@ -6,7 +6,7 @@ class RoomMemberSerializer(serializers.ModelSerializer):
         model = UserInRoom
         fields = ('room', 'user')
 
-class RoomMemberSerializer(serializers.ModelSerializer):
+class RoomListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = '__all__'
