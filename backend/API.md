@@ -11,6 +11,9 @@
 * 방 만들기
 
 		POST: paint_game/make_room
+* 방 입장하기
+		
+		POST: paint_game/enter_room
 * 방 참여인원 리스트 받아오기
 
 		GET: paint_game/room_member/{room_id}
