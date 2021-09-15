@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import main from '../views/main.vue'
+import login from '../views/login.vue'
 import makeRoom from '../components/makeRoom.vue'
-
+import lobby from '../views/lobby.vue'
 const routes = [
   {
     path: '/',
@@ -18,14 +18,19 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/main',
-    name: 'main',
-    component: main
+    path: '/login',
+    name: 'login',
+    component: login
   },
   {
     path: '/makeRoom',
     name: 'makeRoom',
     component: makeRoom
+  },
+  {
+    path: '/lobby',
+    name: 'lobby',
+    component: lobby
   }
 ]
 
