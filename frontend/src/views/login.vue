@@ -18,26 +18,25 @@ import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 export default {
   name: 'login',
-  setup () {
+  setup() {
     const router = useRouter()
     const credentials = reactive({
-      tmpNickname: ''
+      tmpNickname: "",
     })
-    const goToLobby = () => {
+    const goToLobby = ()=>{
       console.log(credentials.tmpNickname)
       axios({
         method: 'GET',
-        url: '',
-        tmpNickname: ''
+        url:'',
+        tmpNickname:'',
       })
-        .then((res) => {
-          router.push('/lobby')
-        }).catch((err) => {
-          console.log(err)
-          console.log('닉네임 중복')
-          alert('닉네임이 중복됩니다.')
-          router.push('/login')
-        })
+      .then((res) => {
+        router.push('/lobby')
+      }).catch((err) => {
+        console.log('닉네임 중복')
+        alert('닉네임이 중복됩니다.')
+        router.push('/login')
+      })
       router.push('lobby')
 
       console.log(this.tmpNickname)
@@ -50,6 +49,8 @@ export default {
       router
     }
   }
+
+
 }
 </script>
 
