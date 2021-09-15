@@ -37,7 +37,7 @@ export default {
         alert('닉네임이 중복됩니다.')
         router.push('/login')
       })
-      router.push('lobby')
+
 
       console.log(this.tmpNickname)
     }
