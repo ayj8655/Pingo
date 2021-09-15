@@ -3,6 +3,7 @@ import pickle
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing import image
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from data import preprocess
 from utils import utils
 import config
@@ -14,6 +15,12 @@ import matplotlib.pyplot as plt
 #import keras
 import os
 import tensorflow as tf
+
+# ------------------------
+from tensorflow.keras import models
+from tensorflow.keras import layers
+from tensorflow.keras.applications import VGG16
+from tensorflow import keras
 # ----------------------------------------------------------------------------------------
 
 
@@ -55,16 +62,7 @@ if config.do_sampling:
 # 이미지 파일 로드
 
 img_dir = './datasets/images/'
-# print(len(os.listdir(img_dir)))
-# print(os.listdir(img_dir)[:10])
 
-img_name = '36979.jpg'
-img_path = os.path.join(img_dir, img_name)
-img = image.load_img(img_path, target_size=(250, 250))
-img_tensor = image.img_to_array(img)
-img_tensor = np.expand_dims(img_tensor, axis=0)
-# scaling into [0, 1]
-img_tensor /= 255.
 # print(img_tensor[0])
 # plt.rcParams['figure.figsize'] = (10, 10)  # set figure size
 # plt.imshow(img_tensor[0])
@@ -79,7 +77,6 @@ def img_load(img_path, target_size=250):
     img_tensor = image.img_to_array(img)
     img_tensor = np.expand_dims(img_tensor, axis=0)
     # scaling into [0, 1]
-
     img_tensor /= 255.
 
     return img_tensor
@@ -123,21 +120,51 @@ for i in img_paths:
     print(i)
     img_tensor.append(img_load(i, 250))
 print("이미지 로드 끝-----------------------------------------")
-dataset = tf.data.Dataset.from_tensor_slices((img_tensor, padded))
 
+
+def fix_data(x):
+    ds = tf.data.Dataset.from_tensor_slices(x)
+    ds = ds.cache()
+    #ds = ds.shuffle(100, reshuffle_each_iteration=True)
+    ds = ds.repeat()
+    return ds
+#dataset = tf.data.Dataset.from_tensor_slices((img_tensor, padded))
+
+
+train = fix_data(img_tensor)
+val = fix_data(img_tensor)
 
 print("-----------------------------------------")
 
-cnt = 0
-for i in dataset:
-    print(i)
-    cnt = cnt+1
-    if cnt == 3:
-        break
+# cnt = 0
+# for i in dataset:
+#     print(i)
+#     cnt = cnt+1
+#     if cnt == 3:
+#         break
+
+
 # Image Data Augmentation
-
-
+vgg_base = VGG16(weights='imagenet',
+                 include_top=False,
+                 input_shape=(250, 250, 3))
+vgg_base.summary()
+print("-----------------------------------------")
+model = models.Sequential()
+model.add(vgg_base)
+model.add(layers.Flatten())
+model.add(layers.Dense(256, activation='relu'))
+model.add(layers.Dense(2, activation='softmax'))
+model.summary()
+print("-----------------------------------------")
 # 손실함수 구현
-
-
 # 1-batch train step 구현
+model.compile(optimizer=tf.keras.optimizers.RMSprop(lr=2e-5),
+              loss='binary_crossentropy',
+              metrics=['acc'])
+
+history = model.fit(train,
+                    epochs=30,
+                    steps_per_epoch=10,
+                    validation_data=val,
+                    validation_steps=10)
