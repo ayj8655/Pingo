@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import login from '../views/login.vue'
 import makeRoom from '../components/makeRoom.vue'
 import lobby from '../views/lobby.vue'
+import draw from '../components/draw.vue'
 const routes = [
   {
     path: '/',
@@ -31,6 +32,11 @@ const routes = [
     path: '/lobby',
     name: 'lobby',
     component: lobby
+  },
+  {
+    path: '/draw',
+    name: 'draw',
+    component: draw
   }
 ]
 
