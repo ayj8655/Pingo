@@ -62,8 +62,8 @@ plt.show()
 model = tf.keras.Sequential([  # 정확도 : 92.8퍼
     tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), activation='relu',
                            input_shape=(28, 28, 1)),
-    tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),
+    # tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu'),
+    # tf.keras.layers.MaxPooling2D(2, 2),
     tf.keras.layers.Dropout(0.25),
 
     tf.keras.layers.Flatten(),
@@ -79,7 +79,7 @@ model.compile(optimizer='adam',
 
 model.summary()
 
-hist = model.fit(train_images, train_labels, batch_size=128, epochs=5)
+hist = model.fit(train_images, train_labels, epochs=1, validation_data=(test_images,test_labels))
 #model.fit(train_images, train_labels, epochs=10)
 
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
@@ -152,6 +152,7 @@ for i in range(num_images):
     plot_value_array(i, predictions, test_labels)
 plt.show()
 
+print(hist.history.keys())  
 
 plt.plot(hist.history['accuracy'])
 plt.plot(hist.history['val_accuracy'])
