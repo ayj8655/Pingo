@@ -7,7 +7,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+# gpu 오류로 인해서 설정
 os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
 print(tf.__version__)
@@ -33,6 +33,7 @@ plt.grid(False)
 plt.show()
 
 
+# cnn 사용하기 위해서 reshape로 1차원 추가
 train_images = train_images.reshape(60000, 28, 28, 1)
 train_images = train_images / 255.0
 test_images = test_images.reshape(10000, 28, 28, 1)
@@ -58,10 +59,9 @@ plt.show()
 # ])
 
 
-model = tf.keras.Sequential([  # 정확도 : 91퍼
+model = tf.keras.Sequential([  # 정확도 : 92.8퍼
     tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), activation='relu',
                            input_shape=(28, 28, 1)),
-
     tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu'),
     tf.keras.layers.MaxPooling2D(2, 2),
     tf.keras.layers.Dropout(0.25),
@@ -79,7 +79,7 @@ model.compile(optimizer='adam',
 
 model.summary()
 
-hist = model.fit(train_images, train_labels, batch_size=128, epochs=30)
+hist = model.fit(train_images, train_labels, batch_size=128, epochs=5)
 #model.fit(train_images, train_labels, epochs=10)
 
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
@@ -106,8 +106,7 @@ def plot_image(i, predictions_array, true_label, img):
 
     plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
                                          100*np.max(predictions_array),
-                                         class_names[true_label]),
-               color=color)
+                                         class_names[true_label]), color=color)
 
 
 def plot_value_array(i, predictions_array, true_label):
