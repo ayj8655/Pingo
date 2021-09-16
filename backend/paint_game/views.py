@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 # from backend.accounts import models
 from django.shortcuts import get_list_or_404, get_object_or_404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 
 from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer
@@ -11,6 +13,19 @@ from django.apps import apps
 
 
 # Create your views here.
+
+@swagger_auto_schema(method='post', request_body=openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        'room_owner': openapi.Schema(type=openapi.TYPE_STRING),
+        'room_name': openapi.Schema(type=openapi.TYPE_STRING),
+        'room_password': openapi.Schema(type=openapi.TYPE_STRING),
+        'problems': openapi.Schema(type=openapi.TYPE_INTEGER),
+        'max_head_counts': openapi.Schema(type=openapi.TYPE_INTEGER),
+        'is_locked': openapi.Schema(type=openapi.TYPE_BOOLEAN),
+        'is_started': openapi.Schema(type=openapi.TYPE_BOOLEAN),
+    }
+))
 @api_view(['POST'])
 def make_room(request): #만들어준 방의 정보 return
     print("방 만들기")
@@ -38,6 +53,13 @@ def room_list(request): #수정요망
     print("방 리스트 받아오기 완료")
     return Response(serializer.data)
 
+@swagger_auto_schema(method='post', request_body=openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        'user_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+        'room_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+    }
+))
 @api_view(['POST'])
 def enter_room(request):
     print("방 입장")

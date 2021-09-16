@@ -1,5 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from .models import Accounts
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -7,15 +10,23 @@ import datetime
 
 # Create your views here.
 
+r_body_user = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        'user_name': openapi.Schema(type=openapi.TYPE_STRING,),
+    }
+)
+
+@swagger_auto_schema(method='post', request_body=r_body_user)
 @api_view(['POST'])
 def signup(request): #회원가입하고 유저 정보 바로 리턴
     print("유저 임시 로그인(생성)")
     now = datetime.datetime.now()
     new_user = Accounts.objects.create(user_name=request.data.get('user_name'), time_to_expire=now)
     print(new_user.user_name)
-
     return Response({"user_name": new_user.user_name})
 
+@swagger_auto_schema(method='post', request_body=r_body_user)
 @api_view(['POST'])
 def check_duplication(request):
     print("아이디 중복 확인")
