@@ -4,7 +4,7 @@
         <canvas id="jsCanvas" class="canvas" width="700" height="700" ref="canvas" @mousemove="onMouseMove" @mousedown="onMouseDown" @mouseup="onMouseUp" @mouseleave="stopPainting"></canvas>
     </div>
     <div class="controls__range">
-        <input type="range" id="jsRange" v-model="jsRange" min="0.1" max="5" step="0.1">
+        <input type="range" id="jsRange" v-model="data.jsRange" min="0.1" max="5" step="0.1">
     </div>
     <div class='controls__btns'>
         <button id='jsMode'>Fill</button>
@@ -27,11 +27,12 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
 export default {
   setup () {
     const canvas = ref()
+
     const data = reactive({
       painting: false,
       ctx: 0,
@@ -51,12 +52,6 @@ export default {
 
     onMounted(() => {
       prepare()
-    })
-
-    watch(() => {
-      data.jsRange = () => {
-        console.log(data.jsRange)
-      }
     })
 
     const prepare = () => {
@@ -106,6 +101,10 @@ export default {
       data.ctx.strokeStyle = data.colors[num]
     }
 
+    const handleRangeChange = (event) => {
+      console.log(event)
+    }
+    // 붓 사이즈 조절하는거 아직 못함
     return {
       startPainting,
       stopPainting,
@@ -114,7 +113,7 @@ export default {
       onMouseUp,
       prepare,
       setColor,
-      //   handleRangeChange,
+      handleRangeChange,
       data,
       canvas
     }
