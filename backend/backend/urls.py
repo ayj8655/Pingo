@@ -25,12 +25,12 @@ from rest_framework.permissions import AllowAny
 # swagger(drf-yasg) 세팅
 schema_view = get_schema_view(
     openapi.Info(
-        title="Swagger Study API",
-        default_version="v1",
-        description="Swagger Study를 위한 API 문서",
+        title='My API',
+        default_version='v1',
+        description="API 서비스입니다.",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(name="test", email="test@test.com"),
-        license=openapi.License(name="Test License"),
+        contact=openapi.Contact(email="edujunho.hphk@gmail.com"),
+        license=openapi.License(name="SSAFY License"),
     ),
     public=True,
     permission_classes=(AllowAny,),
@@ -41,8 +41,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('paint_game/', include('paint_game.urls')),
-    url(r'^swagger(?P<format>\.json|\.yaml)/v1$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    url(r'^swagger/v1/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    url(r'^redoc/v1/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc-v1'),
+    path('swagger/', schema_view.with_ui('swagger')),
 ]
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
