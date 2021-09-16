@@ -7,3 +7,12 @@ images/
 __pycache__/
 *.py[cod]
 *$py.class
+
+### VisualStudioCode ###
+.vscode/*
+my_test.py
+#pycharm
+.idea/
+## 테스트한다고 임시로 ignore추가함
+annotations/
+train2014/
