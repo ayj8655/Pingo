@@ -30,6 +30,7 @@ export default {
         url: '',
         tmpNickname: ''
       })
+<<<<<<< HEAD
         .then((res) => {
           router.push('/lobby')
         }).catch((err) => {
@@ -39,6 +40,9 @@ export default {
           router.push('/login')
         })
       router.push('lobby')
+=======
+
+>>>>>>> c2e26446b7114f46d622e3fea6c8d2f91cf352c3
 
       console.log(this.tmpNickname)
     }
