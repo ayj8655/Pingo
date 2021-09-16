@@ -1,16 +1,25 @@
-`python manage.py migrate` 로 db 테이블 생성
-
-가상환경(anaconda envs) 내용 저장
-`conda env export > conda_requirements.txt`
-conda환경 설치
-`conda env create -f conda_requirements.txt`
-
 pip 내용만 저장
-`pip freeze > requirements.txt`
+`pip list --format=freeze > requirements.txt`
 가상환경에 패키지 설치
 `pip install -r requirements.txt`
 목록에 해당하는 패키지 삭제
 `pip uninstall -r requirements.txt`
+
+가상환경(anaconda envs) 내용 저장
+`conda list --export > requirements_conda.txt`
+
+conda패키지 설치
+`conda install --file requirements_conda.txt`
+
+❗❗ pip install로 설치한 패키지도 `conda list --export` 시에 기록되는데,
+
+이 중에서 conda install로 설치가 불가능한 패키지들이 있음 (ex: pyjwt, django > 3.x , djangorestframework, numpy==1.19.5 등등)
+
+이런 것들의 목록이 콘솔에 나오기 때문에 주석 처리하고 설치하면 됨
+
+<br>
+
+`python manage.py migrate` 로 db 테이블 생성
 
 
 ## Conventions
