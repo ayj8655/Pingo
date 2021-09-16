@@ -23,6 +23,7 @@
             <div class="controls__color" @click="setColor(8)" style="background-color: #5856d6"></div>
         </div>
     </div>
+
 </div>
 </template>
 
