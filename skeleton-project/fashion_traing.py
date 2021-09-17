@@ -57,9 +57,10 @@ model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
+model.summary()
 
 # 5. 모델 훈련
-model.fit(train_images, train_labels, epochs=30)
+hist = model.fit(train_images, train_labels, epochs=5, validation_data=(test_images,test_labels))
 
 
 # 6. 정확도 평가하기
@@ -79,4 +80,27 @@ plt.figure(figsize=(2*2*num_cols, 2*num_rows))
 for i in range(num_images):
     plt.subplot(num_rows, 2*num_cols, 2*i+1)
     plot_image(i, predictions, test_labels, test_images)
+plt.show()
+
+
+
+print(hist.history.keys())  
+
+plt.plot(hist.history['accuracy'])
+plt.plot(hist.history['val_accuracy'])
+plt.title('Accuracy Trend')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'validation'], loc='best')
+plt.grid()
+plt.show()
+
+
+plt.plot(hist.history['loss'])
+plt.plot(hist.history['val_loss'])
+plt.title('Loss Trend')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'validation'], loc='best')
+plt.grid()
 plt.show()
