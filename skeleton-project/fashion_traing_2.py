@@ -79,7 +79,7 @@ model.compile(optimizer='adam',
 
 model.summary()
 
-hist = model.fit(train_images, train_labels, epochs=5, validation_data=(test_images,test_labels))
+#hist = model.fit(train_images, train_labels, epochs=5, validation_data=(test_images,test_labels))
 #model.fit(train_images, train_labels, epochs=10)
 
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
