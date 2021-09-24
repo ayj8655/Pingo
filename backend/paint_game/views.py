@@ -29,6 +29,7 @@ from django.apps import apps
 @api_view(['POST'])
 def make_room(request): #만들어준 방의 정보 return
     print("방 만들기")
+    print(request.data)
     accounts_model = apps.get_model('accounts', 'Accounts')
     room_owner = get_object_or_404(accounts_model, user_name=request.data.get('room_owner'))
     new_room = Room.objects.create(
