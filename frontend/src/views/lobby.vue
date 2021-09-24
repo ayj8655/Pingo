@@ -14,7 +14,7 @@
         <template v-slot:footer>
         </template>
       </Modal>
-
+      <h1>{{roomList}}</h1>
 
       </section>
 
@@ -34,26 +34,30 @@ export default {
 
   },
 
+
   setup () {
+
+
     const roomList = []
-    const isShow = ref(true)
+    const isShow = ref(false)
     const switchModal = ()=>{
       isShow.value = !isShow.value
     }
-    // onMounted(() => {
-    //   axios.get({
-    //     url: ''
-    //   }).then(res => {
-    //     console.log(res)
-    //   })
-    // })
+    onMounted(()=> {
+      axios({
+        method: 'GET',
+        url: 'http://localhost:8000/paint_game/room_list/',
+
+      }).then((res) => {
+        roomList.push(res)
+      }
+
+      )
+    })
     const createRoom = () => {
       isShow.value = !isShow.value
       console.log(isShow)
-      // axios.post({
-      //   url: ''
-      //   // 보류 socket
-      // })
+
     }
 
     return {
