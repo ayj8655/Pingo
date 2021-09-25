@@ -65,7 +65,7 @@ def image_download(keyword):
         try:
             url = i
             start = time.time()
-            urllib.request.urlretrieve(url, "./"+keyword+"_high resolution/"+keyword+"_"+str(k-forbidden)+".jpg")
+            urllib.request.urlretrieve(url, "./"+keyword+"_high resolution/"+keyword+"_"+str(k-forbidden)+".png")
             print(str(k+1)+'/'+str(len(links))+' '+keyword+' 다운로드 중....... Download time : '+str(time.time() - start)[:5]+' 초')
         except:
             forbidden+=1
