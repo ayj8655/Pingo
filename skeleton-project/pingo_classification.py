@@ -25,6 +25,7 @@ import os
 #     pass
 
 from tensorflow.python.client import device_lib
+from tensorflow.python.ops.gen_array_ops import reshape
 
 print(device_lib.list_local_devices())
 
@@ -59,8 +60,13 @@ validation_dataset = tf.keras.preprocessing.image_dataset_from_directory(
 
 class_names = train_dataset.class_names
 print(class_names)
+print("-----------------------------------------")
+print(train_dataset)
+print("-----------------------------------------")
+
 
 for image_batch, labels_batch in train_dataset:
+
     print(image_batch.shape)
     print(labels_batch.shape)
     break
@@ -107,16 +113,13 @@ model = tf.keras.models.Sequential(
             16, (3, 3), activation="relu", input_shape=(150, 150, 1)
         ),
         tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Dropout(0.25),
         tf.keras.layers.Conv2D(32, (3, 3), activation="relu"),
         tf.keras.layers.MaxPooling2D(2, 2),
         tf.keras.layers.Conv2D(64, (3, 3), activation="relu"),
         tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Conv2D(128, (3, 3), activation="relu"),
-        tf.keras.layers.MaxPooling2D(2, 2),
         tf.keras.layers.Dropout(0.25),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(512, activation="relu"),
+        tf.keras.layers.Dense(256, activation="relu"),
         tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Dense(10, activation="softmax"),
     ]
@@ -129,11 +132,12 @@ model.compile(
     optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
 )
 
-initial_epochs = 10000
+initial_epochs = 50
 history = model.fit(
     train_dataset, validation_data=validation_dataset, epochs=initial_epochs
 )
 
+model.save("pingo.h5")
 score = model.evaluate(validation_dataset)
 print("loss=", score[0])  # loss
 print("accuracy=", score[1])  # acc

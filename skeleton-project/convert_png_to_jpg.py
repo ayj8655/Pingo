@@ -15,12 +15,28 @@ def convert_png_to_jpg(path):
     for file_path in all_image_files:  # 모든 png파일 경로에 대하여
         img = Image.open(file_path).convert("RGB")  # 이미지를 불러온다.
 
-        directories = file_path.split("/")  # 절대경로상의 모든 디렉토리를 얻어낸다.
+        directories = file_path.split("/")  # 절대경로상의 모든 디렉토리를 얻어낸다.\
+        directories = file_path.split("\\")  # 절대경로상의 모든 디렉토리를 얻어낸다.\
+        print(directories)
+
         directories[-2] += "_jpg"  # 저장될 디렉토리의 이름 지정
-        directories[-1] = directories[-1][:-4] + ".jpg"  # 저장될 파일의 이름 지정
+
+        print(directories)
+        temp = directories[-1].split(".")
+        print(temp)
+
+        directories[-1] = temp[0] + ".jpg"  # 저장될 파일의 이름 지정
+        print("-----------아래가 -0 -----------------------")
+        print(directories[-1])
+
+        print(directories)
+
         save_filepath = "/".join(directories)  # 절대경로명으로 바꾸기
+
+        print(save_filepath)
+
         img.save(save_filepath, quality=100)  # jpg파일로 저장한다.
 
 
-path = "./datasets/pingo/"
+path = "./imgconvert"
 convert_png_to_jpg(path)
