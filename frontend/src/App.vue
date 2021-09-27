@@ -48,6 +48,56 @@
   background: linear-gradient(to right, #3883BC 0%, 50%, #FFF9BA 100%);
 
 }
+
+/* 공통사용 버튼 */
+#blue-button {
+  height: 3rem;
+  width: 18rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1.3rem;
+  background: #3883BC;
+  color: white;
+  font-weight: bold;
+  margin: 10px;
+}
+
+#blue-button:hover {
+  /* height: 3.3rem;
+  width: 18.5rem; */
+  transition: 0.1s;
+  background-color: #FFF9BA;
+  /* box-shadow: 0 0 0 1px #1a3d58 inset; */
+  cursor: pointer;
+  color: #3883BC;
+
+
+}
+
+#yellow-button {
+  height: 3rem;
+  width: 18rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1.3rem;
+  background: #FFF9BA;
+  color: #3883BC;
+  font-weight: bold;
+  margin: 10px;
+}
+
+#yellow-button:hover {
+  /* height: 3.3rem;
+  width: 18.5rem; */
+  transition: 0.1s;
+  background-color: white;
+  /* box-shadow: 0 0 0 1px #1a3d58 inset; */
+  cursor: pointer;
+  color: #3883BC;
+  font-size: 1.5rem;
+
+
+}
 /* Gradient in Hex */
 /* linear-gradient(to right, #3883BC 0%, 50%, #FFF9BA 100%); */
 

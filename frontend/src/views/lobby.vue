@@ -1,7 +1,22 @@
 <template>
-    <div id="back">
-      <div> <h3>Lobby</h3></div>
-      <button @click="createRoom">방만들기</button>
+    <div id="back" class="lobby-frame">
+      <!-- <div> <h3>Lobby</h3></div> -->
+      <section class="lobby-left-box">
+        <section>
+          <button id="yellow-button" @click="createRoom">방만들기</button>
+        </section>
+        <section class="lobby-left">
+
+        </section>
+
+      </section>
+
+      <section class="lobby-right">
+        <h1>오른쪽</h1>
+        <h1>{{roomList}}</h1>
+      </section>
+
+
       <section>
       <Modal :isShow='isShow' @switchModal='switchModal'>
         <template v-slot:header>
@@ -14,7 +29,7 @@
         <template v-slot:footer>
         </template>
       </Modal>
-      <h1>{{roomList}}</h1>
+
 
       </section>
 
@@ -70,6 +85,44 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.lobby-frame {
+  box-sizing: border-box;
+    min-height: 600px;
+    min-width: 900px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 35px 40px;
+    padding-top: 15px !important;
+}
 
+.lobby-left-box{
+  display: flex;
+  flex-direction: column;
+}
+
+.lobby-left{
+  background-color: white;
+  max-width: 400px;
+  flex-basis: 400px;
+  flex: 1 1 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: 10px;
+
+
+}
+
+.lobby-right{
+  background-color: white;
+
+  flex-basis: 100px;
+  flex: 1 1 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: 10px;
+
+}
 </style>
