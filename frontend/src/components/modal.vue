@@ -27,7 +27,6 @@ export default {
       required: true
     },
     popupId: {
-
       default: () => `popup-${_.uniqueId()}`,
     },
     width: {
@@ -42,12 +41,10 @@ export default {
     left: {
       default: () => "50%",
     },
-
   },
   setup (props) {
     // 모달 사이즈 지정
     onMounted(() => {
-
       ModalApi.setModalSize(
         props.popupId,
         props.width,
@@ -87,7 +84,6 @@ export default {
   /* 박스 그림자 */
   box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
 
-
   /* 임시 지정 */
   width: 400px;
   height: 500px;
@@ -125,5 +121,4 @@ export default {
 input {
   border: 1px solid black;
 }
-
 </style>
