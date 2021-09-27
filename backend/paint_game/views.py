@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http.response import JsonResponse
 # from backend.accounts import models
 from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg import openapi
@@ -10,6 +11,9 @@ from .models import Words,Ranking,Room,UserInRoom
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
+from django.conf import settings
+import os
+import base64
 
 
 # Create your views here.
@@ -83,3 +87,34 @@ def room_member(request, room_id):
     print("방 인원 출력 완료")
     # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def canvasToImage(request):
+    data = request.data['data']
+    # print(request.data)
+    # data = request.POST.__getitem__('data')
+    # print(data)
+    # print("--------------------")
+    # print("--------------------")
+    # data = data[22:] # 앞의 'data:image/png;base64 부분 제거
+    new_data = data + '='*(4 - (len(data) % 4))
+    # new_data = data
+    new_data = new_data[22:]
+    print(new_data)
+    number = 1
+
+    # 저장할 경로 및 파일명을 지정
+    path = str(os.path.join(settings.BASE_DIR, 'resultImg/'))
+    filename = 'image' + str(number) + '.jpg'
+
+    # "wb"(바이너리파일 쓰기전용)으로 파일을 open
+    image = open(path + filename, 'wb')
+    
+    # 'base64.b64decode()'를 통하여 디코딩을 하고 파일에 써준다.
+    image.write(base64.b64decode(new_data))
+    image.close()
+    ################이미지 저장###############
+    # django media??
+
+    answer = {'filename': filename}
+    return JsonResponse(answer)

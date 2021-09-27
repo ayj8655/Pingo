@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'paint_game',
     'rest_framework',
     'drf_yasg',
-    
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', #1
         'NAME': 'ssafy_painting_game', #2
         'USER': 'root', #3                      
-        'PASSWORD': 'ssafy',  #4              
+        'PASSWORD': 'root',  #4              
         'HOST': 'localhost',   #5                
         'PORT': '3306', #6
     }
@@ -135,3 +136,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
