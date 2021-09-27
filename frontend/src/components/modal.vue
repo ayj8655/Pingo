@@ -19,29 +19,29 @@ export default {
   name: 'modal',
   emits: ['switchModal'], // 하나의 태그로 묶이지 않은 경우 명시적으로 emit을 선언해주어야 한다
   props: {
-    isShow : {
+    isShow: {
       type: Boolean,
-      required: true,
+      required: true
     },
-    popupId : {
-      default : ()=> `popup-${_.uniqueId()}`
+    popupId: {
+      default: () => `popup-${_.uniqueId()}`
     },
-    width : {
-      default : ()=>'400px'
+    width: {
+      default: () => '400px'
     },
-    height : {
-      default : ()=>'500px'
+    height: {
+      default: () => '500px'
     },
-    top : {
-      default : ()=>'50%'
+    top: {
+      default: () => '50%'
     },
-    left : {
-      default : ()=>'50%'
+    left: {
+      default: () => '50%'
     }
   },
-  setup(props) {
+  setup (props) {
     // 모달 사이즈 지정
-    onMounted(()=>{
+    onMounted(() => {
       ModalApi.setModalSize(props.popupId, props.width, props.height, props.top, props.left) // 너비, 높이
     })
   }
@@ -92,7 +92,6 @@ export default {
     flex-direction: column;
   }
 
-
   /* 백그라운드에 들어감 */
   .show {
     /* 보이게 하겠다. background에 들어감 */
@@ -109,7 +108,6 @@ export default {
     /* 위치 변화 css 내용 전부 0.5초 주겠다 */
     transition: all 0.5s;
   }
-
 
   input {
     border: 1px solid black;
