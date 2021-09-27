@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="back">
       <div> <h3>Lobby</h3></div>
       <button @click="createRoom">방만들기</button>
       <section>

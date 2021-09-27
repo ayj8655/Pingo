@@ -46,7 +46,7 @@ export default {
     const togglePassword = () => {
       data.is_locked.value = !data.is_locked.value
     }
-    const roomMaking = (data) => {
+    const roomMaking = () => {
       console.log('data', data)
       axios({
         method: 'POST',

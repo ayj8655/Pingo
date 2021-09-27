@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div id='back'>
       <div>
-          <h3>코드를 입력하고 AI와 그림 퀴즈 맞춰요</h3>
+          <p>AI와 그림 퀴즈 맞춰요</p>
       </div>
       <div>
           <input type="text" placeholder="Temporary Nickname" v-model="credentials.user_name" @keydown.enter="goToLobby">
-          <button @click="checkDuplication">중복검사</button>
+          <!-- <button @click="checkDuplication">중복검사</button> -->
           <br>
           <button @click="goToLobby">Enter</button>
       </div>
@@ -26,22 +26,31 @@ export default {
     })
     const checkDuplication = () => {
       console.log('아이디 중복 검사')
-      axios({
-        method: 'POST',
-        url: 'http://localhost:8000/accounts/check_duplication/',
-        data: {
-          user_name: credentials.user_name,
-        }
+      // axios({
+      //   method: 'POST',
+      //   url: 'http://localhost:8000/accounts/check_duplication/',
+      //   data: {
+      //     user_name: credentials.user_name,
+      //   }
 
-      }).then((res) => {
-        console.log(res)
-      })
+      // }).then((res) => {
+      //   console.log(res)
+      // })
     }
     console.log('credential', credentials.user_name)
 
     const goToLobby = () => {
       const user = {'user_name': credentials.user_name}
       // console.log(user)
+      console.log('아이디 중복 검사')
+      axios({
+        method: 'POST',
+        url: 'http://localhost:8000/accounts/check_duplication/',
+        data: {
+          user_name: credentials.user_name,
+        }
+        }).then((res) => {
+
 
       axios({
         method: 'POST',
@@ -58,6 +67,7 @@ export default {
         })
       // router.push('lobby')
 
+      })
       console.log(credentials.user_name)
     }
     // 백엔드에 닉네임 중복인지 아닌지 요청보내기
