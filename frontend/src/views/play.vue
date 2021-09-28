@@ -1,5 +1,5 @@
 <template>
-  <draw>
+  <draw/>
 </template>
 
 <script>

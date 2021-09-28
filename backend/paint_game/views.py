@@ -4,8 +4,14 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 
+<<<<<<< HEAD
 from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer, PaintSerializer
 from .models import Paint, Words,Ranking,Room,UserInRoom
+=======
+
+from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer , PaintSerializer
+from .models import Words,Ranking,Room,UserInRoom , Paint
+>>>>>>> 589bc50d21c4609305b14b11e0002c2def86e4de
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
@@ -110,7 +116,6 @@ def room_member(request, room_id):
 @api_view(['POST'])
 def saving(request):
     serializer = PaintSerializer(data=request.data)
-    print(serializer)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
@@ -124,3 +129,4 @@ def paints_of_round(request, room_id, category):
     paints = Paint.objects.filter(room=room_id, category=category_dict.get(category))
     serializer = PaintSerializer(paints, many=True)
     return Response(serializer.data)
+
