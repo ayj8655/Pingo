@@ -2,7 +2,11 @@
 
 # Image Files
 images/
-
+catsAndDogs/
+rps/
+rps-test-set/
+pingo/
+datas/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
