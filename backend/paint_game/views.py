@@ -1,12 +1,8 @@
-from django.http import HttpResponse
-from django.http.response import JsonResponse
-
 # from backend.accounts import models
 from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-
 
 from .serializers import (
     RoomMemberSerializer,
@@ -14,16 +10,21 @@ from .serializers import (
     MakeRoomSerializer,
     PaintSerializer,
 )
-from .models import Words, Ranking, Room, UserInRoom, Paint
+from .models import Paint, Words, Ranking, Room, UserInRoom
+
+from .serializers import (
+    RoomMemberSerializer,
+    RoomListSerializer,
+    MakeRoomSerializer,
+    PaintSerializer,
+)
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
-from django.conf import settings
-import os
-import base64
-
 
 # ayj
+import os
 import tensorflow as tf
 import numpy as np
 
@@ -31,6 +32,19 @@ import numpy as np
 
 
 # Create your views here.
+category_dict = {
+    "banana": 1,
+    "bulb": 2,
+    "calculator": 3,
+    "carrot": 4,
+    "clock": 5,
+    "crecent": 6,
+    "diamond": 7,
+    "icecream": 8,
+    "strawberry": 9,
+    "t-shirt": 10,
+}
+
 ###### chat 테스트
 from django.shortcuts import render
 
@@ -127,44 +141,7 @@ def room_member(request, room_id):
     return Response(serializer.data)
 
 
-@api_view(["POST"])
-def canvasToImage(request):
-    data = request.data["data"]
-    # print(request.data)
-    # data = request.POST.__getitem__('data')
-    # print(data)
-    # print("--------------------")
-    # print("--------------------")
-    # data = data[22:] # 앞의 'data:image/png;base64 부분 제거
-    new_data = data + "=" * (4 - (len(data) % 4))
-    # new_data = data
-    new_data = new_data[22:]
-    # print(new_data)
-    number = 1
-    serializer = PaintSerializer(data={"image": new_data})
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        print(serializer)
-        print("??")
-    # 저장할 경로 및 파일명을 지정
-    path = str(os.path.join(settings.BASE_DIR, "resultImg/"))
-    filename = "image" + str(number) + ".jpg"
-
-    # "wb"(바이너리파일 쓰기전용)으로 파일을 open
-    image = open(path + filename, "wb")
-
-    # 'base64.b64decode()'를 통하여 디코딩을 하고 파일에 써준다.
-    image.write(base64.b64decode(new_data))
-    image.close()
-    ################이미지 저장###############
-    # django media??
-
-    answer = {"filename": filename}
-    return JsonResponse(answer)
-
-
+@swagger_auto_schema(method="post", request_body=PaintSerializer)
 @api_view(["POST"])
 def saving(request):
     serializer = PaintSerializer(data=request.data)
@@ -172,7 +149,16 @@ def saving(request):
         serializer.save()
         return Response(serializer.data)
     else:
+        print("저장 실패")
         return Response(serializer.errors)
+
+
+@swagger_auto_schema(method="get")
+@api_view(["GET"])
+def paints_of_round(request, room_id, category):
+    paints = Paint.objects.filter(room=room_id, category=category_dict.get(category))
+    serializer = PaintSerializer(paints, many=True)
+    return Response(serializer.data)
 
 
 @api_view(["GET"])
