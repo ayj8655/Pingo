@@ -159,7 +159,7 @@ def ayj(request):
         "t-shirt",
     ]
 
-    test_path = "./media/room_"+request.data.get("room")+"/"+request.data.get("category")+"/"+request.data.get("user")+".png"
+    test_path = "./media/room_"+request.data.get("room_id")+"/"+request.data.get("category")+"/"+request.data.get("user_name")+".png"
     img = tf.keras.preprocessing.image.load_img(
         test_path, target_size=IMG_SIZE, color_mode="grayscale"
     )
