@@ -17,18 +17,7 @@ export default {
       router.push({name:'play',
                   params: {room_id: room_id }})
     })
-    onMounted(()=> {
-      axios({
-        method: 'GET',
-        url: 'http://localhost:8000/paint_game/room_member/{room_id}',
 
-      }).then((res) => {
-        console.log(roomList)
-        roomList.value.push(res.data)
-      }).catch((err) => {
-        console.log(err)
-      })
-    })
 
     return {
       start

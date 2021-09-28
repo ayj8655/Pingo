@@ -26,12 +26,14 @@
 import { reactive, ref } from '@vue/reactivity'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { useStore} from 'vuex'
 export default {
   name: 'makeRoom',
 
 
   setup({emit}) {
     const username = localStorage.getItem('username')
+    const store = useStore()
 
     const data = reactive({
       room_id: "",
@@ -69,7 +71,11 @@ export default {
 
       }).then((res)=>{
         // 방번호로 보내기
-        router.push('room')
+        console.log('res.data', res.data.room_id)
+        const room_id = res.data.room_id
+        router.push({name:'room',
+                      params: {room_id: room_id}})
+
       }).catch((err)=>{
         console.log("방만들기 실패")
         console.log(err)
@@ -83,7 +89,8 @@ export default {
       secret,
       togglePassword,
       roomMaking,
-      refreshRoom
+      refreshRoom,
+      store
 
     }
   }
