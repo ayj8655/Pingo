@@ -142,7 +142,7 @@ def paints_of_round(request, room_id, category):
     return Response(serializer.data)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def ayj(request):
     model = tf.keras.models.load_model("./models/pingo_96_28.h5")
     IMG_SIZE = (100, 100)
@@ -159,7 +159,7 @@ def ayj(request):
         "t-shirt",
     ]
 
-    test_path = "./media/room_1/banana/kim_yDtpmX1.png"
+    test_path = "./media/room_"+request.data.get("room")+"/"+request.data.get("category")+"/"+request.data.get("user")+".png"
     img = tf.keras.preprocessing.image.load_img(
         test_path, target_size=IMG_SIZE, color_mode="grayscale"
     )
