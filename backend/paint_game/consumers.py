@@ -7,8 +7,8 @@ from channels.db import database_sync_to_async
 
 def get_users():
     users = Accounts.objects.all()
-    for user in users:
-        print(user.user_name)
+    for _ in users:
+        continue
     return users
 
 def create_user():
@@ -38,11 +38,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         # await database_sync_to_async(create_user)()
-
+        users = await database_sync_to_async(get_users)()
+        print(users)
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
-        print(text_data_json)
+        print("46:", text_data_json)
 
         # Send message to room group
         await self.channel_layer.group_send(
@@ -55,8 +56,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     # Receive message from room group
     async def chat_message(self, event):
+        print("59:", event)
         message = event['message']
-        print(event)
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message
