@@ -3,12 +3,13 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 import datetime
 from accounts.models import Accounts
-from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
 
 def get_users():
-        users = Accounts.objects.all()
-        return users
+    users = Accounts.objects.all()
+    for user in users:
+        print(user.user_name)
+    return users
 
 def create_user():
     now = datetime.datetime.now()
@@ -36,14 +37,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
     # Receive message from WebSocket
     async def receive(self, text_data):
-        users = await database_sync_to_async(get_users)()
-        for user in users:
-            print(user.user_name)
+        # await database_sync_to_async(create_user)()
+
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
         print(text_data_json)
-        
+
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
