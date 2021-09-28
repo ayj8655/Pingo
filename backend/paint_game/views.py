@@ -5,14 +5,25 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 
-from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer
-from .models import Words,Ranking,Room,UserInRoom
+from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer, PaintSerializer
+from .models import Words,Ranking,Room,UserInRoom, Paint
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
 
 
 # Create your views here.
+###### chat 테스트
+from django.shortcuts import render
+
+from paint_game import serializers
+def index(request):
+    return render(request, 'paint_game/index.html')
+def room(request, room_name):
+    return render(request, 'paint_game/room.html', {
+        'room_name': room_name
+    })
+#######
 
 @swagger_auto_schema(method='post', request_body=openapi.Schema(
     type=openapi.TYPE_OBJECT,
@@ -29,6 +40,7 @@ from django.apps import apps
 @api_view(['POST'])
 def make_room(request): #만들어준 방의 정보 return
     print("방 만들기")
+    print(request.data)
     accounts_model = apps.get_model('accounts', 'Accounts')
     room_owner = get_object_or_404(accounts_model, user_name=request.data.get('room_owner'))
     new_room = Room.objects.create(
@@ -82,3 +94,15 @@ def room_member(request, room_id):
     print("방 인원 출력 완료")
     # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+def saving(request):
+    print(request.data)
+    serializer = PaintSerializer(data=request.data)
+    print(serializer)
+    if serializer.is_valid():
+        tmp = serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
