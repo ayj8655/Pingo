@@ -7,23 +7,6 @@ import PIL.Image as Image
 import tensorflow as tf
 import os
 
-# def validate_image(file_name):
-#     tf.py_function(tf.print, inp=[file_name], Tout=[])
-#     image = tf.io.read_file(file_name)
-#     image = tf.io.decode_image(image, channels=3)
-#     return image
-
-# os.chdir(r'./datasets/pingo/banana')
-
-# accepted_extensions = ('jpg', 'png', 'bmp', 'gif')
-
-# files = list(filter(lambda x: x.lower().endswith(accepted_extensions), os.listdir()))
-
-# ds = tf.data.Dataset.from_tensor_slices(files).map(validate_image)
-
-# for i in ds:
-#     pass
-
 from tensorflow.python.client import device_lib
 from tensorflow.python.ops.gen_array_ops import reshape
 
@@ -34,9 +17,9 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 print(tf.__version__)
 
 data_dir = "./datasets/pingo"
-IMG_SIZE = (150, 150)
-BATCH_SIZE = 16
-
+IMG_SIZE = (100, 100)
+BATCH_SIZE = 64
+initial_epochs = 50
 
 train_dataset = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
@@ -84,6 +67,14 @@ for images, labels in train_dataset.take(1):
         plt.title(class_names[labels[i]])
         plt.axis("off")
 
+plt.figure(figsize=(10, 10))
+for images, labels in train_dataset.take(3):
+    for i in range(9):
+        ax = plt.subplot(3, 3, i + 1)
+        plt.imshow(images[i].numpy().astype("uint8"))
+        plt.title(class_names[labels[i]])
+        plt.axis("off")
+
 # plt.show()
 
 
@@ -110,16 +101,14 @@ preprocess_input = tf.keras.layers.experimental.preprocessing.Rescaling(scale=1.
 model = tf.keras.models.Sequential(
     [
         tf.keras.layers.Conv2D(
-            16, (3, 3), activation="relu", input_shape=(150, 150, 1)
+            16, (3, 3), activation="relu", input_shape=(100, 100, 1)
         ),
         tf.keras.layers.MaxPooling2D(2, 2),
         tf.keras.layers.Conv2D(32, (3, 3), activation="relu"),
         tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Conv2D(64, (3, 3), activation="relu"),
-        tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Dropout(0.25),
+        tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256, activation="relu"),
+        tf.keras.layers.Dense(512, activation="relu"),
         tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Dense(10, activation="softmax"),
     ]
@@ -127,12 +116,11 @@ model = tf.keras.models.Sequential(
 
 model.summary()
 
-
 model.compile(
     optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
 )
 
-initial_epochs = 50
+
 history = model.fit(
     train_dataset, validation_data=validation_dataset, epochs=initial_epochs
 )
@@ -156,7 +144,7 @@ print(
 
 test_path = "./datasets/pingo/banana_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -172,7 +160,7 @@ print(
 )
 test_path = "./datasets/pingo/bulb_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -188,7 +176,7 @@ print(
 )
 test_path = "./datasets/pingo/calculator_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -204,7 +192,7 @@ print(
 )
 test_path = "./datasets/pingo/carrot_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -220,7 +208,7 @@ print(
 )
 test_path = "./datasets/pingo/clock_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -236,7 +224,7 @@ print(
 )
 test_path = "./datasets/pingo/crescent_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -252,7 +240,7 @@ print(
 )
 test_path = "./datasets/pingo/diamond_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -268,7 +256,7 @@ print(
 )
 test_path = "./datasets/pingo/icecream_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -284,7 +272,7 @@ print(
 )
 test_path = "./datasets/pingo/strawberry_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -300,7 +288,7 @@ print(
 )
 test_path = "./datasets/pingo/t-shirt_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=(150, 150), color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="grayscale"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -341,5 +329,5 @@ plt.title("Training and Validation Loss")
 plt.xlabel("epoch")
 
 
-# plt.show()
+plt.show()
 
