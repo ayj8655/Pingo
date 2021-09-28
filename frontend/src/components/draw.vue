@@ -63,7 +63,7 @@ export default {
       data.ctx = canvas.value.getContext('2d')
       //   console.log(data.ctx)
       canvas.value.fillStyle = 'white'
-      canvas.value.fillRect(0, 0, 700, 700)
+      // canvas.value.fillRect(0, 0, 700, 700)
       data.ctx.strokeStyle = '#2c2c2c'
       data.ctx.lineWidth = data.jsRange
 
@@ -83,7 +83,7 @@ export default {
     //   prepare()
       const x = event.offsetX
       const y = event.offsetY
-      console.log(x, y)
+      // console.log(x, y)
 
       if (!data.painting) {
         data.ctx.beginPath()
@@ -112,22 +112,26 @@ export default {
     }
 
     const sendImage = () => {
-      const image = canvas.value.toDataURL('image/png')
-      console.log(image)
-      const link = document.createElement('a')
-      link.href = image
-      // link.download = 'PaintJS'
-      // link.click()
-      const payload = { data: image }
-      console.log(payload)
-      axios.post('http://127.0.0.1:8000/paint_game/image/', payload)
-        .then(res => {
-          console.log('hi')
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      canvas.value.toBlob(function (blob) {
+        const formData = new FormData()
+        // 이부분에 접속한 유저, 들어온 방, 정해진 category 를 지정해줘야 함
+        formData.append('user', 1)
+        formData.append('room', 1)
+        formData.append('category', 1)
+        formData.append('image', blob, 'filename.png')
+        axios.post(
+          'http://127.0.0.1:8000/paint_game/saving/',
+          formData,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        )
+          .then(res => {
+            console.log(res)
+            console.log('성공')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      })
     }
 
     // 임시 방편인데 새로고침 말고 더 좋은 방법 없으려나...
