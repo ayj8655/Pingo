@@ -15,7 +15,8 @@ export default {
       // const router = userRouter()
       console.log(this.$route.params)
       const room_id = this.$route.params
-      this.$router.push({name:'play', params: {room_id: room_id }})
+      console.log(room_id.room_id)
+      this.$router.push({name:'play', params: {room_id: room_id.room_id }})
     }
   }
   // setup() {
