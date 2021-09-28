@@ -16,7 +16,13 @@ setup(){
   onMounted(() => {
     axios({
       method: 'GET',
-      url: "http://localhost:8000/paint_game/ayj"
+      url: "http://localhost:8000/paint_game/ayj",
+      data: {
+          'user_name':localStorage.getItem('user_name'),
+          'room_id':localStorage.getItem('room_id'),
+          'category': 'banana' //여기 나중에 수정
+        }
+
 
     })
     .then((res) => {

@@ -122,9 +122,12 @@ export default {
       canvas.value.toBlob(function (blob) {
         const formData = new FormData()
         // 이부분에 접속한 유저, 들어온 방, 정해진 category 를 지정해줘야 함
-        formData.append('user', 1)
-        formData.append('room', 1)
-        formData.append('category', 1)
+        const userId = localStorage.getItem('user_id')
+        const roomId = localStorage.getItem('room_id')
+        console.log(userId, roomId)
+        formData.append('user', userId)
+        formData.append('room', roomId)
+        formData.append('category', 'banana')
         formData.append('image', blob, 'filename.png')
         axios.post(
           'http://127.0.0.1:8000/paint_game/saving/',
