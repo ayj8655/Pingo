@@ -130,6 +130,7 @@ export default {
     })
 
     const moveRoom = ((room_id) => {
+      localStorage.setItem('room_id', room_id)
       router.push({name:'room',
                     params: {room_id: room_id }})
     })
