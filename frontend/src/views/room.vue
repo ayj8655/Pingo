@@ -1,24 +1,22 @@
 <template>
-
   <button id="yellow-button" @click="start">start</button>
-
 </template>
 
 <script>
-import {onMounted, ref} from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { onMounted, ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
 export default {
-
   methods: {
-    start(){
+    start() {
       // const router = userRouter()
-      console.log(this.$route.params)
-      const room_id = this.$route.params
-      console.log(room_id.room_id)
-      this.$router.push({name:'play', params: {room_id: room_id.room_id }})
-    }
-  }
+      console.log(this.$route.params);
+      const room_id = this.$route.params;
+      localStorage.setItem("room_id", room_id.room_id);
+      console.log(room_id.room_id);
+      this.$router.push({ name: "play", params: { room_id: room_id.room_id } });
+    },
+  },
   // setup() {
   //   const router = useRouter()
   //   const start = () => {
@@ -31,9 +29,8 @@ export default {
   //     start
   //   }
   // }
-}
+};
 </script>
 
 <style>
-
 </style>

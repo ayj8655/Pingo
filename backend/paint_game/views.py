@@ -13,9 +13,11 @@ from .models import Words, Ranking, Room, UserInRoom, Paint
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
+
 # ayj
 import tensorflow as tf
 import numpy as np
+
 # ayj
 
 # Create your views here.
@@ -34,12 +36,16 @@ category_dict = {
 
 ###### chat 테스트
 from django.shortcuts import render
+
+
 def index(request):
     return render(request, "paint_game/index.html")
 
 
 def room(request, room_name):
     return render(request, "paint_game/room.html", {"room_name": room_name})
+
+
 #######
 
 
@@ -126,7 +132,7 @@ def room_member(request, room_id):
 @api_view(["POST"])
 def saving(request):
     # request.data['category']가 str이기 때문에 PK로 바꿔주는 작업
-    request.data['category'] = category_dict[request.data['category']]
+    request.data["category"] = category_dict[request.data["category"]]
     serializer = PaintSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -161,7 +167,15 @@ def ayj(request):
         "t-shirt",
     ]
 
-    test_path = "./media/room_"+request.data.get("room_id")+"/"+request.data.get("category")+"/"+request.data.get("user_name")+".png"
+    test_path = (
+        "./media/room_"
+        + request.data.get("room_id")
+        + "/"
+        + request.data.get("category")
+        + "/"
+        + request.data.get("user_name")
+        + ".png"
+    )
     img = tf.keras.preprocessing.image.load_img(
         test_path, target_size=IMG_SIZE, color_mode="grayscale"
     )
@@ -183,6 +197,9 @@ def ayj(request):
     )
 
     return Response(
-        {"score": 100 * np.max(score), "class_name": class_names[np.argmax(score)]}
+        {
+            "score": 100 * np.max(predictions[0]),
+            "class_name": class_names[np.argmax(predictions[0])],
+        }
     )
 
