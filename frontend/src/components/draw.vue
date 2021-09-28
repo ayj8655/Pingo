@@ -30,11 +30,12 @@
 <script>
 import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 export default {
   setup () {
     const canvas = ref()
-
+    const router = useRouter()
     const data = reactive({
       painting: false,
       erasing: false,
@@ -127,6 +128,8 @@ export default {
           .then(res => {
             console.log(res)
             console.log('성공')
+            router.push('/play/score')
+
           })
           .catch(err => {
             console.log(err)
@@ -156,7 +159,8 @@ export default {
       eraseAll,
       erase,
       data,
-      canvas
+      canvas,
+      router
     }
   }
 }
