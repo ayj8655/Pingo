@@ -6,8 +6,8 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 
-from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer, PaintSerializer
-from .models import Words,Ranking,Room,UserInRoom, Paint
+from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer #, PaintSerializer
+from .models import Words,Ranking,Room,UserInRoom #, Paint
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
@@ -130,11 +130,11 @@ def canvasToImage(request):
     answer = {'filename': filename}
     return JsonResponse(answer)
 
-@api_view(['POST'])
-def saving(request):
-    serializer = PaintSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors)
+# @api_view(['POST'])
+# def saving(request):
+#     serializer = PaintSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data)
+#     else:
+#         return Response(serializer.errors)

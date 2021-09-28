@@ -15,7 +15,7 @@
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
-            + '/ws/chat/'
+            + '/ws/game/'
             + roomName
             + '/'
         );
@@ -42,7 +42,7 @@
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'message': message,
-                type: "z"
+                type: "game"
             }));
             messageInputDom.value = '';
         };
