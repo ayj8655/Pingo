@@ -30,7 +30,7 @@ export default {
   name: 'makeRoom',
 
 
-  setup() {
+  setup({emit}) {
     const username = localStorage.getItem('username')
 
     const data = reactive({
@@ -69,18 +69,21 @@ export default {
 
       }).then((res)=>{
         // 방번호로 보내기
-        // router.push('')
+        router.push('room')
       }).catch((err)=>{
         console.log("방만들기 실패")
         console.log(err)
       })
     }
-
+    const refreshRoom = () => {
+      emit('refreshRoom')
+    }
     return {
       data,
       secret,
       togglePassword,
-      roomMaking
+      roomMaking,
+      refreshRoom
 
     }
   }

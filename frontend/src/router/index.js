@@ -4,6 +4,9 @@ import login from '../views/login.vue'
 import makeRoom from '../components/makeRoom.vue'
 import lobby from '../views/lobby.vue'
 import draw from '../components/draw.vue'
+import room from '../views/room.vue'
+import play from '../views/play.vue'
+
 const routes = [
   {
     path: '/',
@@ -37,6 +40,16 @@ const routes = [
     path: '/draw',
     name: 'draw',
     component: draw
+  },
+  {
+    path: '/room/:room_id',
+    name: 'room',
+    component: room
+  },
+  {
+    path: '/play/:room_id',
+    name: 'play',
+    component: play
   }
 ]
 
