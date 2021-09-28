@@ -1,5 +1,6 @@
 <template>
 <h1>{{score}}</h1>
+<h1>AI는 당신의 그림을 "{{classes}}"(으)로 예측했습니다.</h1>
 
 </template>
 
@@ -10,6 +11,7 @@ import axios from 'axios'
 export default {
   setup() {
     const score = ref({})
+    const classes = ref({})
     onMounted(() => {
       axios({
         method: 'POST',
@@ -23,11 +25,13 @@ export default {
       .then((res) => {
         console.log(res.data)
         score.value = res.data.score
+        classes.value = res.data.class_name
       })
     })
     return {
       score,
-      onMounted
+      onMounted,
+      classes
     }
   }
 }
