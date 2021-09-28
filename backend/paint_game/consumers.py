@@ -3,11 +3,18 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 import datetime
 from accounts.models import Accounts
-from .models import Words,Ranking,Room,UserInRoom
+from .models import Words,Ranking,Room,UserInRoom, Paint
 from channels.db import database_sync_to_async
 
 def get_users():
     users = Accounts.objects.all()
+    ''' (확실하진 않으나) estimate를 위해서.. 
+        for _ in users:
+            continue
+        이 작업이 없으면 async함수 안에서 users = await database_sync_to_async(get_users)() 로 
+        users를 쓸 수 없음 
+        ex) print(user) 여기서 에러 발생
+    '''
     for _ in users:
         continue
     return users
@@ -47,6 +54,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         # await database_sync_to_async(create_user)()
         # users = await database_sync_to_async(get_users)()
+        # print(users)
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         print("text_data:", text_data_json)

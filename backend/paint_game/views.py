@@ -3,33 +3,20 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-
 from .serializers import (
     RoomMemberSerializer,
     RoomListSerializer,
     MakeRoomSerializer,
     PaintSerializer,
 )
-from .models import Paint, Words, Ranking, Room, UserInRoom
-
-from .serializers import (
-    RoomMemberSerializer,
-    RoomListSerializer,
-    MakeRoomSerializer,
-    PaintSerializer,
-)
-
+from .models import Words, Ranking, Room, UserInRoom, Paint
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
-
 # ayj
-import os
 import tensorflow as tf
 import numpy as np
-
 # ayj
-
 
 # Create your views here.
 category_dict = {
@@ -47,18 +34,12 @@ category_dict = {
 
 ###### chat 테스트
 from django.shortcuts import render
-
-from paint_game import serializers
-
-
 def index(request):
     return render(request, "paint_game/index.html")
 
 
 def room(request, room_name):
     return render(request, "paint_game/room.html", {"room_name": room_name})
-
-
 #######
 
 
@@ -178,7 +159,7 @@ def ayj(request):
         "t-shirt",
     ]
 
-    test_path = "./media/room_1/banana/안영진_ZPcNQa3.png"
+    test_path = "./media/room_1/banana/kim_yDtpmX1.png"
     img = tf.keras.preprocessing.image.load_img(
         test_path, target_size=IMG_SIZE, color_mode="grayscale"
     )
