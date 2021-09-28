@@ -87,7 +87,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', #1
         'NAME': 'ssafy_painting_game', #2
         'USER': 'root', #3                      
+<<<<<<< HEAD
         'PASSWORD': 'ssafy',  #4
+=======
+        'PASSWORD': 'ssafy',  #4              
+>>>>>>> 72d8a620c4ae0ac780b83e1f5b188a2f15be1922
         'HOST': 'localhost',   #5                
         'PORT': '3306', #6
     }

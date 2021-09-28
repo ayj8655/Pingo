@@ -6,8 +6,13 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 
+<<<<<<< HEAD
 from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer #, PaintSerializer
 from .models import Words,Ranking,Room,UserInRoom #, Paint
+=======
+from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer, PaintSerializer
+from .models import Words,Ranking,Room,UserInRoom
+>>>>>>> 72d8a620c4ae0ac780b83e1f5b188a2f15be1922
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
@@ -111,9 +116,15 @@ def canvasToImage(request):
     new_data = data + '='*(4 - (len(data) % 4))
     # new_data = data
     new_data = new_data[22:]
-    print(new_data)
+    # print(new_data)
     number = 1
-
+    serializer = PaintSerializer(data={'image':new_data})
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        print(serializer)
+        print("??")
     # 저장할 경로 및 파일명을 지정
     path = str(os.path.join(settings.BASE_DIR, 'resultImg/'))
     filename = 'image' + str(number) + '.jpg'
@@ -130,6 +141,7 @@ def canvasToImage(request):
     answer = {'filename': filename}
     return JsonResponse(answer)
 
+<<<<<<< HEAD
 # @api_view(['POST'])
 # def saving(request):
 #     serializer = PaintSerializer(data=request.data)
@@ -138,3 +150,14 @@ def canvasToImage(request):
 #         return Response(serializer.data)
 #     else:
 #         return Response(serializer.errors)
+=======
+@api_view(['POST'])
+def saving(request):
+    serializer = PaintSerializer(data=request.data)
+    print(serializer)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
+>>>>>>> 72d8a620c4ae0ac780b83e1f5b188a2f15be1922
