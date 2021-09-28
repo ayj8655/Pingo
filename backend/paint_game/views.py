@@ -6,8 +6,8 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 
-from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer
-from .models import Words,Ranking,Room,UserInRoom
+from .serializers import RoomMemberSerializer,RoomListSerializer,MakeRoomSerializer, PaintSerializer
+from .models import Words,Ranking,Room,UserInRoom, Paint
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
@@ -17,6 +17,17 @@ import base64
 
 
 # Create your views here.
+###### chat 테스트
+from django.shortcuts import render
+
+from paint_game import serializers
+def index(request):
+    return render(request, 'paint_game/index.html')
+def room(request, room_name):
+    return render(request, 'paint_game/room.html', {
+        'room_name': room_name
+    })
+#######
 
 @swagger_auto_schema(method='post', request_body=openapi.Schema(
     type=openapi.TYPE_OBJECT,
@@ -118,3 +129,12 @@ def canvasToImage(request):
 
     answer = {'filename': filename}
     return JsonResponse(answer)
+
+@api_view(['POST'])
+def saving(request):
+    serializer = PaintSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
