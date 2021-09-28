@@ -22,16 +22,17 @@ r_body_user = openapi.Schema(
 def signup(request): #회원가입하고 유저 정보 바로 리턴
     print("유저 임시 로그인(생성)")
     now = datetime.datetime.now()
+    print('request', request)
     new_user = Accounts.objects.create(user_name=request.data.get('user_name'), time_to_expire=now)
     print(new_user.user_name)
-    return Response({"user_name": new_user.user_name})
+    return Response({"user_name": new_user.user_name, "user_id":new_user.user_id})
 
 @swagger_auto_schema(method='post', request_body=r_body_user)
 @api_view(['POST'])
 def check_duplication(request):
     print("아이디 중복 확인")
     user_name = request.data.get('user_name')
-    print("아이디는"+user_name)
+    # print("아이디는"+user_name)
     try:
         # 중복 검사 실패
         existing_name = Accounts.objects.get(user_name=user_name)
