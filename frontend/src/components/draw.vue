@@ -36,6 +36,10 @@ export default {
   setup () {
     const canvas = ref()
     const router = useRouter()
+<<<<<<< HEAD
+=======
+
+>>>>>>> e11f92a319951e6f7e5533abc07b5d71dd3a3758
     const data = reactive({
       painting: false,
       erasing: false,
@@ -112,6 +116,8 @@ export default {
       console.log(event)
     }
 
+    
+
     const sendImage = () => {
       canvas.value.toBlob(function (blob) {
         const formData = new FormData()
@@ -127,6 +133,7 @@ export default {
         )
           .then(res => {
             console.log(res)
+            router.push('/play/score')
             console.log('성공')
             router.push('/play/score')
 
