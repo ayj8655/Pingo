@@ -125,6 +125,8 @@ def room_member(request, room_id):
 @swagger_auto_schema(method="post", request_body=PaintSerializer)
 @api_view(["POST"])
 def saving(request):
+    # request.data['category']가 str이기 때문에 PK로 바꿔주는 작업
+    request.data['category'] = category_dict[request.data['category']]
     serializer = PaintSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

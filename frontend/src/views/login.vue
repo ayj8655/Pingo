@@ -69,6 +69,7 @@ export default {
       }).then((res) => {
         console.log('data.data', res.data)
         localStorage.setItem('user_name', res.data.user_name)
+        localStorage.setItem('user_id', res.data.user_id)
         router.push('/lobby')
         }).catch((err) => {
           console.log(err)
