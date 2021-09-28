@@ -15,8 +15,8 @@ setup(){
   const classes = ref({})
   onMounted(() => {
     axios({
-      method: 'GET',
-      url: "http://localhost:8000/paint_game/ayj",
+      method: 'POST',
+      url: "http://localhost:8000/paint_game/ayj/",
       data: {
           'user_name':localStorage.getItem('user_name'),
           'room_id':localStorage.getItem('room_id'),

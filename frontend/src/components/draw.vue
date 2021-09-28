@@ -36,10 +36,6 @@ export default {
   setup () {
     const canvas = ref()
     const router = useRouter()
-<<<<<<< HEAD
-=======
-
->>>>>>> e11f92a319951e6f7e5533abc07b5d71dd3a3758
     const data = reactive({
       painting: false,
       erasing: false,
