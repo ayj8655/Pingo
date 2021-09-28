@@ -25,7 +25,9 @@ class UserInRoom(models.Model):
     user = models.ForeignKey(Accounts, on_delete=models.CASCADE)
 
 def get_name(instance, filename):
-    # return f'{instance.image}/img/{filename}'
-    return f'img/{filename}'
+    return f'room_{instance.room.room_id}/{instance.category.word}/{instance.user.user_name}.png'
 class Paint(models.Model):
+    user = models.ForeignKey(Accounts, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    category = models.ForeignKey(Words, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=get_name)
