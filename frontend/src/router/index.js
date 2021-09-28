@@ -6,6 +6,11 @@ import lobby from '../views/lobby.vue'
 import draw from '../components/draw.vue'
 import room from '../views/room.vue'
 import play from '../views/play.vue'
+import score from '../views/score.vue'
+<<<<<<< HEAD
+
+=======
+>>>>>>> e11f92a319951e6f7e5533abc07b5d71dd3a3758
 
 const routes = [
   {
@@ -50,6 +55,11 @@ const routes = [
     path: '/play/:room_id',
     name: 'play',
     component: play
+  },
+  {
+    path: '/play/score',
+    name: 'score',
+    component: score
   }
 ]
 
