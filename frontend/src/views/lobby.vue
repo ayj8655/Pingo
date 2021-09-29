@@ -35,8 +35,14 @@
         </template>
 
         <template v-slot:body>
-          <h1>방만들기</h1>
-          <makeRoom @refreshRoom="refreshRoom" />
+          <div v-if="roomMaking">
+            <h1>방만들기</h1>
+            <makeRoom @refreshRoom="refreshRoom" />
+          </div>
+          <div v-if="password">
+            <h1>비번입력</h1>
+            <lockRoom />
+          </div>
         </template>
         <template v-slot:footer>
         </template>
@@ -52,6 +58,7 @@
 import axios from 'axios'
 import { computed, onMounted, onBeforeMount, ref, reactive } from 'vue'
 import makeRoom from '../components/lobby/makeRoom.vue'
+import lockRoom from '../components/lobby/lockRoom.vue'
 import roomItem from '../components/lobby/roomItem.vue'
 import Modal from '@/components/Modal.vue'
 import { useRouter } from 'vue-router'
@@ -60,7 +67,8 @@ export default {
   components: {
     makeRoom,
     Modal,
-    roomItem
+    roomItem,
+    lockRoom
 
   },
 
@@ -83,9 +91,15 @@ export default {
     var roomList = ref([])
     const userList = ref([])
     const isShow = ref(false)
+    const roomMaking = ref(false)
+    const isLocked = ref(false)
+    const password = ref(false)
     const switchModal = ()=>{
       isShow.value = !isShow.value
+      if(roomMaking.value === true){roomMaking.value = !roomMaking.value}
+      if(password.value === true){password.value = !password.value}
     }
+
     onMounted(()=> {
       axios({
         method: 'GET',
@@ -100,6 +114,7 @@ export default {
     })
     const createRoom = () => {
       isShow.value = !isShow.value
+      roomMaking.value = !roomMaking.value
       console.log(isShow)
     }
 
@@ -131,8 +146,10 @@ export default {
 
     const moveRoom = ((room_id) => {
       localStorage.setItem('room_id', room_id)
-      router.push({name:'room',
-                    params: {room_id: room_id }})
+      isShow.value = !isShow.value
+      password.value = !password.value
+      // router.push({name:'room',
+      //               params: {room_id: room_id }})
     })
 
 
@@ -141,11 +158,14 @@ export default {
       roomList,
       createRoom,
       isShow,
+      isLocked,
+      password,
       switchModal,
       userList,
       refreshRoom,
       roomItem,
-      moveRoom
+      moveRoom,
+      roomMaking
     }
   }
 }
