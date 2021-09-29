@@ -11,7 +11,7 @@ import score from '../components/room/score.vue'
 const routes = [
 
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: login
   },
