@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import draw from '../components/draw.vue'
+import draw from './draw.vue'
 export default {
   components: { draw },
 
