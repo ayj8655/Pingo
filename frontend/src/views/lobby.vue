@@ -72,19 +72,7 @@ export default {
 
   },
 
-  // created(data){
-  //   axios({
-  //       method: 'GET',
-  //       url: 'http://localhost:8000/paint_game/room_list/',
 
-  //     }).then((res) => {
-  //       // this.roomList.push(res)
-
-
-  //     }).catch((err) => {
-  //       console.log(err)
-  //     })
-  // },
   setup () {
 
     const router = useRouter()
@@ -149,12 +137,24 @@ export default {
     const moveRoom = ((room) => {
       localStorage.setItem('room_id', room.room_id)
       console.log('room', room)
-      if(room.is_locked === true){isLocked.value = true}
-      isShow.value = !isShow.value
-      password.value = !password.value
-      // router.push({name:'room',
-      //               params: {room_id: room.room_id }})
-    })
+      if(room.is_locked === true){(isLocked.value = true) && (isShow.value = !isShow.value)
+      && (password.value = !password.value) }
+      else {axios({
+        method: 'POST',
+        url: "http://localhost:8000/paint_game/enter_room/",
+        data: {
+          user_id: localStorage.getItem('user_id'),
+          room_id: room.room_id
+        }
+      }).then((res) => {
+        console.log(res)
+      }).then(
+        router.push({name:'room',
+                    params: {room_id: room.room_id }})
+      )
+
+
+    }})
 
 
 
