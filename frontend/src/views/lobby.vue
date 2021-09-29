@@ -19,7 +19,7 @@
           <roomItem v-for="room in roomList[0]"
           :key='room.room_id'
           :room='room'
-          @click="moveRoom(room.room_id)"/>
+          @click="moveRoom(room)"/>
 
 
         </ul>
@@ -39,7 +39,7 @@
             <h1>방만들기</h1>
             <makeRoom @refreshRoom="refreshRoom" />
           </div>
-          <div v-if="password">
+          <div v-if="password && isLocked">
             <h1>비번입력</h1>
             <lockRoom />
           </div>
@@ -96,8 +96,10 @@ export default {
     const password = ref(false)
     const switchModal = ()=>{
       isShow.value = !isShow.value
+      console.log(roomMaking.value, password.value, isLocked.value)
       if(roomMaking.value === true){roomMaking.value = !roomMaking.value}
       if(password.value === true){password.value = !password.value}
+      if(isLocked.value === true){isLocked.value = !password.value}
     }
 
     onMounted(()=> {
@@ -144,12 +146,14 @@ export default {
       })
     })
 
-    const moveRoom = ((room_id) => {
-      localStorage.setItem('room_id', room_id)
+    const moveRoom = ((room) => {
+      localStorage.setItem('room_id', room.room_id)
+      console.log('room', room)
+      if(room.is_locked === true){isLocked.value = true}
       isShow.value = !isShow.value
       password.value = !password.value
       // router.push({name:'room',
-      //               params: {room_id: room_id }})
+      //               params: {room_id: room.room_id }})
     })
 
 
