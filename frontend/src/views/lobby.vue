@@ -51,8 +51,8 @@
 <script>
 import axios from 'axios'
 import { computed, onMounted, onBeforeMount, ref, reactive } from 'vue'
-import makeRoom from '../components/makeRoom.vue'
-import roomItem from '../components/roomItem.vue'
+import makeRoom from '../components/lobby/makeRoom.vue'
+import roomItem from '../components/lobby/roomItem.vue'
 import Modal from '@/components/Modal.vue'
 import { useRouter } from 'vue-router'
 export default {
