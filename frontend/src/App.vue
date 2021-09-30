@@ -42,7 +42,7 @@
 }
 
 #back {
-  min-height: 100%;
+  min-height: 70%;
   width: 100%;
   height: 100%;
   background: linear-gradient(to right, #3883BC 0%, 50%, #FFF9BA 100%);
