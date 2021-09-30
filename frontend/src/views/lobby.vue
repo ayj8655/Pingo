@@ -19,7 +19,7 @@
           <roomItem v-for="room in roomList[0]"
           :key='room.room_id'
           :room='room'
-          @click="moveRoom(room.room_id)"/>
+          @click="moveRoom(room)"/>
 
 
         </ul>
@@ -35,8 +35,14 @@
         </template>
 
         <template v-slot:body>
-          <h1>방만들기</h1>
-          <makeRoom @refreshRoom="refreshRoom" />
+          <div v-if="roomMaking">
+            <h1>방만들기</h1>
+            <makeRoom @refreshRoom="refreshRoom" />
+          </div>
+          <div v-if="password && isLocked">
+            <h1>비번입력</h1>
+            <lockRoom />
+          </div>
         </template>
         <template v-slot:footer>
         </template>
@@ -52,6 +58,7 @@
 import axios from 'axios'
 import { computed, onMounted, onBeforeMount, ref, reactive } from 'vue'
 import makeRoom from '../components/lobby/makeRoom.vue'
+import lockRoom from '../components/lobby/lockRoom.vue'
 import roomItem from '../components/lobby/roomItem.vue'
 import Modal from '@/components/Modal.vue'
 import { useRouter } from 'vue-router'
@@ -60,32 +67,29 @@ export default {
   components: {
     makeRoom,
     Modal,
-    roomItem
+    roomItem,
+    lockRoom
 
   },
 
-  // created(data){
-  //   axios({
-  //       method: 'GET',
-  //       url: 'http://localhost:8000/paint_game/room_list/',
 
-  //     }).then((res) => {
-  //       // this.roomList.push(res)
-
-
-  //     }).catch((err) => {
-  //       console.log(err)
-  //     })
-  // },
   setup () {
 
     const router = useRouter()
     var roomList = ref([])
     const userList = ref([])
     const isShow = ref(false)
+    const roomMaking = ref(false)
+    const isLocked = ref(false)
+    const password = ref(false)
     const switchModal = ()=>{
       isShow.value = !isShow.value
+      console.log(roomMaking.value, password.value, isLocked.value)
+      if(roomMaking.value === true){roomMaking.value = !roomMaking.value}
+      if(password.value === true){password.value = !password.value}
+      if(isLocked.value === true){isLocked.value = !password.value}
     }
+
     onMounted(()=> {
       axios({
         method: 'GET',
@@ -100,6 +104,7 @@ export default {
     })
     const createRoom = () => {
       isShow.value = !isShow.value
+      roomMaking.value = !roomMaking.value
       console.log(isShow)
     }
 
@@ -129,11 +134,32 @@ export default {
       })
     })
 
-    const moveRoom = ((room_id) => {
-      localStorage.setItem('room_id', room_id)
-      router.push({name:'room',
-                    params: {room_id: room_id }})
-    })
+    const moveRoom = ((room) => {
+      localStorage.setItem('room_id', room.room_id)
+      console.log('room', room)
+      if(room.is_started === true){
+        alert('게임이 진행중일 때는 입장할 수 없습니다.')
+
+      }
+
+      else if(room.is_locked === true){(isLocked.value = true) && (isShow.value = !isShow.value)
+      && (password.value = !password.value) }
+      else {axios({
+        method: 'POST',
+        url: "http://localhost:8000/paint_game/enter_room/",
+        data: {
+          user_id: localStorage.getItem('user_id'),
+          room_id: room.room_id
+        }
+      }).then((res) => {
+        console.log(res)
+      }).then(
+        router.push({name:'room',
+                    params: {room_id: room.room_id }})
+      )
+
+
+    }})
 
 
 
@@ -141,11 +167,14 @@ export default {
       roomList,
       createRoom,
       isShow,
+      isLocked,
+      password,
       switchModal,
       userList,
       refreshRoom,
       roomItem,
-      moveRoom
+      moveRoom,
+      roomMaking
     }
   }
 }
