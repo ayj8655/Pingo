@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-        <canvas id="jsCanvas" class="canvas" width="700" height="700" ref="canvas" @mousemove="onMouseMove" @mousedown="onMouseDown" @mouseup="onMouseUp" @mouseleave="stopPainting"></canvas>
+        <canvas id="jsCanvas" class="canvas" ref="canvas" @mousemove="onMouseMove" @mousedown="onMouseDown" @mouseup="onMouseUp" @mouseleave="stopPainting"></canvas>
     </div>
     <div class="controls__range">
         <input type="range" id="jsRange" v-model="data.jsRange" min="0.1" max="5" step="0.1">
@@ -112,7 +112,7 @@ export default {
       console.log(event)
     }
 
-    
+
 
     const sendImage = () => {
       canvas.value.toBlob(function (blob) {
@@ -185,11 +185,12 @@ body {
 }
 
 .canvas {
-    width: 700px;
-    height: 700px;
+    width: 600px;
+    height: 600px;
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0, 1px 3px rgba(0, 0, 0, 0.08);
+
 }
 
 .controls {

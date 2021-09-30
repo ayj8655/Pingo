@@ -19,13 +19,13 @@ export default {
         url: "http://localhost:8000/paint_game/enter_room/",
         data: {
           user_id: localStorage.getItem('user_id'),
-          room_id: room.room_id
+          room_id: room_id
         }
       }).then((res) => {
         console.log(res)
       }).then(
         router.push({name:'room',
-                    params: {room_id: room.room_id }})
+                    params: {room_id: room_id }})
       )
     }
 
