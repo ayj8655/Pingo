@@ -14,7 +14,7 @@ class Room(models.Model):
     room_id = models.AutoField(primary_key=True)
     room_owner = models.ForeignKey(Accounts, on_delete=models.CASCADE)
     room_name = models.CharField(max_length=50)
-    room_password = models.CharField(max_length=50, null=True)
+    room_password = models.CharField(max_length=50)
     problems = models.IntegerField()
     max_head_counts = models.IntegerField()
     is_locked = models.BooleanField()
