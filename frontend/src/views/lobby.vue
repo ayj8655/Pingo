@@ -137,7 +137,12 @@ export default {
     const moveRoom = ((room) => {
       localStorage.setItem('room_id', room.room_id)
       console.log('room', room)
-      if(room.is_locked === true){(isLocked.value = true) && (isShow.value = !isShow.value)
+      if(room.is_started === true){
+        alert('게임이 진행중일 때는 입장할 수 없습니다.')
+
+      }
+
+      else if(room.is_locked === true){(isLocked.value = true) && (isShow.value = !isShow.value)
       && (password.value = !password.value) }
       else {axios({
         method: 'POST',
