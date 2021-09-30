@@ -12,7 +12,7 @@
       </div>
 
       <div class="room-box-right">
-        <i :class="['fas fa-pen', !room.is_started && 'state']" ></i>
+        <i :class="['fas fa-pen', !room.is_started && 'state']"  ></i>
         <i :class="['fas fa-lock', !room.is_locked && 'state']" ></i>
       </div>
     </div>
@@ -81,9 +81,11 @@ export default {
     justify-content: space-between;
     margin-right: 1rem;
 
+
   }
+
   .state{
-    color: #e6e6e6;
+    color: #cecece;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 
