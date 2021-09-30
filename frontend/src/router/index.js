@@ -5,13 +5,13 @@ import makeRoom from '../components/lobby/makeRoom.vue'
 import lobby from '../views/lobby.vue'
 import draw from '../components/room/draw.vue'
 import room from '../views/room.vue'
-import play from '../components/room/play.vue'
-import score from '../components/room/score.vue'
+// import play from '../components/room/play.vue'
+// import score from '../components/room/score.vue'
 
 const routes = [
 
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: login
   },
@@ -35,16 +35,16 @@ const routes = [
     name: 'room',
     component: room
   },
-  {
-    path: '/play/:room_id',
-    name: 'play',
-    component: play
-  },
-  {
-    path: '/play/score',
-    name: 'score',
-    component: score
-  }
+  // {
+  //   path: '/play/:room_id',
+  //   name: 'play',
+  //   component: play
+  // },
+  // {
+  //   path: '/play/score',
+  //   name: 'score',
+  //   component: score
+  // }
 ]
 
 const router = createRouter({
