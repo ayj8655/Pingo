@@ -16,7 +16,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 data_dir = "./datasets/pingo"
 IMG_SIZE = (100, 100)
 BATCH_SIZE = 256
-initial_epochs = 10000
+initial_epochs = 1
 
 
 # image_dataset_from_directory를 이용해서 해당 폴더에서 이미지 가져오기
