@@ -47,7 +47,7 @@ export default {
       room_password: "",
       problems: "",
       max_head_counts: "",
-      is_locked: "",
+      is_locked: false,
       is_started: false,
     });
     console.log("data", data);
