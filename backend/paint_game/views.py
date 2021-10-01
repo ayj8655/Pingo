@@ -103,6 +103,7 @@ def room_list(request):  # 수정요망
         properties={
             "user_id": openapi.Schema(type=openapi.TYPE_INTEGER),
             "room_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+            "room_password":openapi.Schema(type=openapi.TYPE_STRING),
         },
     ),
 )
@@ -112,6 +113,10 @@ def enter_room(request):
     accounts_model = apps.get_model("accounts", "Accounts")
     user = get_object_or_404(accounts_model, user_id=request.data.get("user_id"))
     room = get_object_or_404(Room, room_id=request.data.get("room_id"))
+    print(room.is_locked)
+    if room.is_locked == True and room.room_password != request.data.get("room_password") :
+        print("비밀번호가 틀립니다")
+        return Response({'message' : '비밀번호가 틀립니다.'})
     new_user_in_room = UserInRoom.objects.create(room=room, user=user,)
     print("방 입장 완료")
     return Response(status=status.HTTP_200_OK)
