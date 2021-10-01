@@ -32,7 +32,7 @@ def classfication_image(path, target):
     if target == class_names[np.argmax(score)]:
         return 1
     else:
-        return 2
+        return 222222
 
 
 def convert_png_to_jpg_save(path):
