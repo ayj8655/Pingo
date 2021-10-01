@@ -21,11 +21,12 @@ IMG_SIZE = (100, 100)
 BATCH_SIZE = 64
 initial_epochs = 50
 
+# image_dataset_from_directory를 이용해서 해당 폴더에서 이미지 가져오기
 train_dataset = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
     subset="training",
-    seed=333,
+    seed=456,
     image_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
     color_mode="grayscale",
@@ -35,27 +36,27 @@ validation_dataset = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
     subset="validation",
-    seed=333,
+    seed=456,
     image_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
     color_mode="grayscale",
 )
 
+# 클래스 이름 가져오기
 class_names = train_dataset.class_names
 print(class_names)
 print("-----------------------------------------")
 print(train_dataset)
 print("-----------------------------------------")
 
-
+# 이미지 shape 알아보기위해
 for image_batch, labels_batch in train_dataset:
-
     print(image_batch.shape)
     print(labels_batch.shape)
     break
 
+# 캐싱, 셔플, 프리페치
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-
 train_dataset = train_dataset.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 validation_dataset = validation_dataset.cache().prefetch(buffer_size=AUTOTUNE)
 
@@ -77,13 +78,18 @@ for images, labels in train_dataset.take(3):
 
 # plt.show()
 
-
+# 전처리 -> 픽셀값 조정
+rescale = tf.keras.Sequential(
+    [tf.keras.layers.experimental.preprocessing.Rescaling(1.0 / 255)]
+)
+# 전처리 -> 데이터 증강
 data_augmentation = tf.keras.Sequential(
     [
         tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
         tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
     ]
 )
+
 
 for image, _ in train_dataset.take(1):
     plt.figure(figsize=(10, 10))
@@ -95,13 +101,14 @@ for image, _ in train_dataset.take(1):
         plt.axis("off")
 # plt.show()
 
-preprocess_input = tf.keras.layers.experimental.preprocessing.Rescaling(scale=1.0 / 255)
 
-
+# 모델 정의
 model = tf.keras.models.Sequential(
     [
+        rescale,
+        data_augmentation,
         tf.keras.layers.Conv2D(
-            16, (3, 3), activation="relu", input_shape=(100, 100, 1)
+            16, (3, 3), activation="relu", input_shape=(100, 100, 3)
         ),
         tf.keras.layers.MaxPooling2D(2, 2),
         tf.keras.layers.Conv2D(32, (3, 3), activation="relu"),
@@ -110,26 +117,41 @@ model = tf.keras.models.Sequential(
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(512, activation="relu"),
         tf.keras.layers.Dropout(0.5),
+        tf.keras.layers.Conv2D(256, (3, 3), activation="relu"),
+        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Dropout(0.5),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512, activation="relu"),
+        tf.keras.layers.Dropout(0.2),
         tf.keras.layers.Dense(10, activation="softmax"),
     ]
 )
 
 model.summary()
 
+# 모델 컴파일
 model.compile(
     optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
 )
 
 
+# 학습 시작
 history = model.fit(
     train_dataset, validation_data=validation_dataset, epochs=initial_epochs
 )
 
 model.save("pingo.h5")
 score = model.evaluate(validation_dataset)
+
+# 모델 요약 출력
+model.summary()
+
+
 print("loss=", score[0])  # loss
 print("accuracy=", score[1])  # acc
 
+save_accuracy = str(round(score[1], 3))
+save_loss = str(round(score[0], 3))
 
 predictions = model.predict(validation_dataset)
 
@@ -144,7 +166,7 @@ print(
 
 test_path = "./datasets/pingo/banana_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -160,7 +182,7 @@ print(
 )
 test_path = "./datasets/pingo/bulb_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -176,7 +198,7 @@ print(
 )
 test_path = "./datasets/pingo/calculator_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -192,7 +214,7 @@ print(
 )
 test_path = "./datasets/pingo/carrot_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -208,7 +230,7 @@ print(
 )
 test_path = "./datasets/pingo/clock_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -224,7 +246,7 @@ print(
 )
 test_path = "./datasets/pingo/crescent_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -240,7 +262,7 @@ print(
 )
 test_path = "./datasets/pingo/diamond_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -256,7 +278,7 @@ print(
 )
 test_path = "./datasets/pingo/icecream_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -272,7 +294,7 @@ print(
 )
 test_path = "./datasets/pingo/strawberry_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -288,7 +310,7 @@ print(
 )
 test_path = "./datasets/pingo/t-shirt_test.png"
 img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="grayscale"
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
 )
 
 img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -330,4 +352,5 @@ plt.xlabel("epoch")
 
 
 plt.show()
+plt.savefig("./models/pingo_" + save_accuracy + "_" + save_loss + ".png")
 
