@@ -106,5 +106,5 @@ def image_download(keyword):
 # 실행
 # =============================================================================
 if __name__ == "__main__":
-    pool = Pool(processes=5)  # N개의 프로세스를 사용합니다.
+    pool = Pool(processes=2)  # N개의 프로세스를 사용합니다.
     pool.map(image_download, keyword)
