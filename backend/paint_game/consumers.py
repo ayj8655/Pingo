@@ -5,7 +5,7 @@ import datetime
 from accounts.models import Accounts
 from .models import Room, UserInRoom, Paint
 from accounts.models import Accounts
-from accounts.serializers import AccountsSerializer
+# from accounts.serializers import AccountsSerializer
 from channels.db import database_sync_to_async
 
 def get_users():
@@ -16,7 +16,7 @@ def get_users():
         ex) print(users) 여기서 에러 발생
     '''        
     users = list(Accounts.objects.all())
-    serializer = AccountsSerializer(users, many=True)
+    # serializer = AccountsSerializer(users, many=True)
     return users
 
 def create_user():
