@@ -4,11 +4,20 @@ from PIL import Image
 import tensorflow as tf
 import numpy as np
 
+new_model = tf.keras.models.load_model("./models/pingo_0.925_0.263.h5")
+
+IMG_SIZE = (300, 300)
+
 
 def classfication_image(path, target):
-    img = tf.keras.preprocessing.image.load_img(
-        path, target_size=IMG_SIZE, color_mode="rgb"
-    )
+
+    try:
+        img = tf.keras.preprocessing.image.load_img(
+            path, target_size=IMG_SIZE, color_mode="rgb"
+        )
+    except:
+        print("이미지로드에러")
+        return 2
 
     img_array = tf.keras.preprocessing.image.img_to_array(img)
     img_array = tf.expand_dims(img_array, 0)
@@ -25,17 +34,18 @@ def classfication_image(path, target):
 
     print(
         "원본은 banana 추측은 {} with a {:.2f} percent confidence.".format(
-            class_names[np.argmax(score)], 100 * np.max(score)
+            class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
         )
     )
 
-    if target == class_names[np.argmax(score)]:
+    if target == class_names[np.argmax(predictions[0])]:
         return 1
     else:
-        return 222222
+        return 2
 
 
 def convert_png_to_jpg_save(path):
+
     # jpg파일을 저장하기 위한 디렉토리의 생성
 
     file_list = os.listdir(path)
@@ -58,11 +68,14 @@ def convert_png_to_jpg_save(path):
             # result = classfication_image(file_path, "t-shirt")
             result = 1
             if result == 1:
-                img = Image.open(file_path).convert("RGB")  # 이미지를 불러온다.
+                try:
+                    img = Image.open(file_path).convert("RGB")  # 이미지를 불러온다.
+                except:
+                    print("이미지로드에러")
+                    continue
 
                 directories = file_path.split("/")  # 절대경로상의 모든 디렉토리를 얻어낸다.\
                 directories = file_path.split("\\")  # 절대경로상의 모든 디렉토리를 얻어낸다.\
-                print(directories)
 
                 directories[-2] += "_jpg"  # 저장될 디렉토리의 이름 지정
 
@@ -90,18 +103,25 @@ def convert_png_to_jpg(path, class_name):
 
     # 모든 png 파일의 절대경로를 저장
     # all_image_files = glob.glob(path + "/*.png")
-    all_image_files = glob.glob(path + "/" + class_name + "/*.jpg")
+    all_image_files = glob.glob(path + "/" + class_name + "/*.png")
 
     for file_path in all_image_files:  # 모든 png파일 경로에 대하여
 
         result = classfication_image(file_path, class_name)
 
         if result == 1:
-            img = Image.open(file_path).convert("RGB")  # 이미지를 불러온다.
+
+            try:
+                img = Image.open(file_path).convert("RGB")  # 이미지를 불러온다.
+            except:
+                print("이미지로드에러")
+                continue
 
             directories = file_path.split("/")  # 절대경로상의 모든 디렉토리를 얻어낸다.\
             directories = file_path.split("\\")  # 절대경로상의 모든 디렉토리를 얻어낸다.\
-            print(directories)
+            print("===============================")
+            print(file_path)
+            print("===============================")
 
             directories[-2] += "_ai"  # 저장될 디렉토리의 이름 지정
 
@@ -121,11 +141,10 @@ def convert_png_to_jpg(path, class_name):
 
             img.save(save_filepath, quality=100)  # jpg파일로 저장한다.
 
+            if os.path.isfile(file_path):
+                os.remove(file_path)
 
-# new_model = tf.keras.models.load_model("pingo_0.948_0.366.h5")
-new_model = tf.keras.models.load_model("pingo_0.955_0.236.h5")
 
-IMG_SIZE = (100, 100)
 class_names = [
     "banana",
     "bulb",
@@ -141,12 +160,11 @@ class_names = [
 
 
 path = "./datas"
-
 # for class_name in class_names:
-# convert_png_to_jpg(path, class_name)
+convert_png_to_jpg(path, "bulb")
 
 
-# path = "./datas"
+path = "./datas"
 # convert_png_to_jpg_save(path)
 # --------------------------------------------------------
 

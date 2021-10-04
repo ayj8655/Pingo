@@ -4,7 +4,11 @@ import os
 import numpy as np
 import PIL.Image as Image
 
+# 시간측정
+import time
+import datetime
 
+# 시간측정끝
 from tensorflow.python.client import device_lib
 from tensorflow.python.ops.gen_array_ops import reshape
 
@@ -14,10 +18,13 @@ from tensorflow.python.ops.gen_array_ops import reshape
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # print(tf.__version__)
 
+start = time.time()  # 시작 시간 저장
+
 data_dir = "./datasets/pingo"
-IMG_SIZE = (100, 100)
+IMG_SIZE = (300, 300)
 BATCH_SIZE = 256
-initial_epochs = 10
+initial_epochs = 10000
+
 
 # image_dataset_from_directory를 이용해서 해당 폴더에서 이미지 가져오기
 train_dataset = tf.keras.preprocessing.image_dataset_from_directory(
@@ -27,8 +34,9 @@ train_dataset = tf.keras.preprocessing.image_dataset_from_directory(
     seed=456,
     image_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
-    color_mode="grayscale",
-    label_mode="categorical",
+    color_mode="rgb",
+    # color_mode="grayscale",
+    # label_mode="categorical",
 )
 
 validation_dataset = tf.keras.preprocessing.image_dataset_from_directory(
@@ -38,8 +46,9 @@ validation_dataset = tf.keras.preprocessing.image_dataset_from_directory(
     seed=456,
     image_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
-    color_mode="grayscale",
-    label_mode="categorical",
+    color_mode="rgb",
+    # color_mode="grayscale",
+    # label_mode="categorical",
 )
 
 # 클래스 이름 가져오기
@@ -55,6 +64,7 @@ for image_batch, labels_batch in train_dataset:
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 train_dataset = train_dataset.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 validation_dataset = validation_dataset.cache().prefetch(buffer_size=AUTOTUNE)
+
 
 # plt.figure(figsize=(10, 10))
 # for images, labels in train_dataset.take(1):
@@ -104,56 +114,31 @@ model = tf.keras.models.Sequential(
         rescale,
         data_augmentation,
         tf.keras.layers.Conv2D(
-            16, (3, 3), activation="relu", input_shape=(100, 100, 3)
+            16, (3, 3), activation="relu", input_shape=(300, 300, 3)
         ),
         tf.keras.layers.MaxPooling2D(2, 2),
         tf.keras.layers.Conv2D(32, (3, 3), activation="relu"),
         tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Dropout(0.25),
         tf.keras.layers.Conv2D(64, (3, 3), activation="relu"),
         tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Dropout(0.25),
         tf.keras.layers.Conv2D(128, (3, 3), activation="relu"),
         tf.keras.layers.MaxPooling2D(2, 2),
-        tf.keras.layers.Dropout(0.25),
-        tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(256, activation="relu"),
         tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Conv2D(256, (3, 3), activation="relu"),
         tf.keras.layers.MaxPooling2D(2, 2),
         tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(512, activation="relu"),
-        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(1024, activation="relu"),
+        tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Dense(10, activation="softmax"),
     ]
 )
 
-# 93% 0.53
-# model = tf.keras.models.Sequential(
-#     [
-#         tf.keras.layers.Conv2D(
-#             32, (3, 3), activation="relu", input_shape=(100, 100, 1)
-#         ),
-#         tf.keras.layers.MaxPooling2D(2, 2),
-#         tf.keras.layers.Conv2D(64, (3, 3), activation="relu"),
-#         tf.keras.layers.MaxPooling2D(2, 2),
-#         tf.keras.layers.Conv2D(128, (3, 3), activation="relu"),
-#         tf.keras.layers.MaxPooling2D(2, 2),
-#         tf.keras.layers.Dropout(0.5),
-#         tf.keras.layers.Flatten(),
-#         tf.keras.layers.Dense(512, activation="relu"),
-#         tf.keras.layers.Dropout(0.5),
-#         tf.keras.layers.Dense(10, activation="softmax"),
-#     ]
-# )
-
-model.summary()
 
 # 모델 컴파일
 model.compile(
     optimizer="adam",
-    loss="categorical_crossentropy",
+    loss="sparse_categorical_crossentropy",
     metrics=["accuracy"]
     # optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
 )
@@ -163,11 +148,11 @@ print("-----------------------------------------")
 print(train_dataset)
 print("-----------------------------------------")
 
+
 # 학습 시작
 history = model.fit(
     train_dataset, validation_data=validation_dataset, epochs=initial_epochs
 )
-
 
 score = model.evaluate(validation_dataset)
 
@@ -180,9 +165,24 @@ print("accuracy=", score[1])  # acc
 
 save_accuracy = str(round(score[1], 3))
 save_loss = str(round(score[0], 3))
+save_BATCH_SIZE = str(BATCH_SIZE)
+save_initial_epochs = str(initial_epochs)
 
-model.save("pingo.h5")
+# print(accuracy) #정확도
+# print(loss)     #로스
 
+model.save(
+    "./models/pingo_"
+    + save_BATCH_SIZE
+    + "_"
+    + save_initial_epochs
+    + "_"
+    + save_accuracy
+    + "_"
+    + save_loss
+    + ".h5"
+)
+# model.save("./models/pingo.h5")
 
 predictions = model.predict(validation_dataset)
 
@@ -190,7 +190,7 @@ predictions = model.predict(validation_dataset)
 score = tf.nn.softmax(predictions[0])
 print(
     "This image most likely belongs to {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 
@@ -208,7 +208,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 banana 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 test_path = "./datasets/pingo/bulb_test.png"
@@ -224,7 +224,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 bulb 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 test_path = "./datasets/pingo/calculator_test.png"
@@ -240,7 +240,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 calculator 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 test_path = "./datasets/pingo/carrot_test.png"
@@ -256,7 +256,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 carrot 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 test_path = "./datasets/pingo/clock_test.png"
@@ -272,7 +272,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 clock 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 test_path = "./datasets/pingo/crescent_test.png"
@@ -288,7 +288,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 crescent 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 test_path = "./datasets/pingo/diamond_test.png"
@@ -304,7 +304,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 diamond 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 test_path = "./datasets/pingo/icecream_test.png"
@@ -320,7 +320,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 icecream 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 test_path = "./datasets/pingo/strawberry_test.png"
@@ -336,7 +336,7 @@ score = tf.nn.softmax(predictions[0])
 
 print(
     "원본은 strawberry 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 
@@ -355,37 +355,20 @@ predictions = model.predict(img_array)
 score = tf.nn.softmax(predictions[0])
 
 print(predictions)
-print(score)
-print(predictions.astype(int))
-print(predictions.astype(float))
-print(predictions[0][0])
-print(predictions[0][1])
-print(predictions[0][2])
-print(predictions[0][3])
-print(predictions[0][4])
-print(predictions[0][5])
-print(predictions[0][6])
-print(predictions[0][7])
-print(predictions[0][8])
-print(predictions[0][9])
-print(format(predictions[0][0], ".20f"))
-print(format(predictions[0][1], ".20f"))
-print(format(predictions[0][2], ".20f"))
-print(format(predictions[0][3], ".20f"))
-print(format(predictions[0][4], ".20f"))
-print(format(predictions[0][5], ".20f"))
-print(format(predictions[0][6], ".20f"))
-print(format(predictions[0][7], ".20f"))
-print(format(predictions[0][8], ".20f"))
-print(format(predictions[0][9], ".20f"))
 
 
 print(
     "원본은 t-shirt 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(score)], 100 * np.max(score)
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 
+end = time.time()
+sec = end - start
+result = datetime.timedelta(seconds=sec)
+print(result)
+result_list = str(datetime.timedelta(seconds=sec)).split(".")
+print(result_list[0])
 
 acc = history.history["accuracy"]
 val_acc = history.history["val_accuracy"]
@@ -413,5 +396,15 @@ plt.xlabel("epoch")
 
 
 plt.show()
-plt.savefig("./models/pingo_" + save_accuracy + "_" + save_loss + ".png")
+plt.savefig(
+    "./models/pingo_"
+    + save_BATCH_SIZE
+    + "_"
+    + save_initial_epochs
+    + "_"
+    + save_accuracy
+    + "_"
+    + save_loss
+    + ".png"
+)
 

@@ -25,13 +25,11 @@ export default {
   name: 'roomItem',
   props: {
     room: {
-      type: Object,
+      type: Object
     }
   },
   emit: {
-
   }
-
 }
 </script>
 
@@ -50,7 +48,6 @@ export default {
     justify-content: space-between;
     flex-basis: 40%;
   }
-
   .room-box:hover {
     display: flex;
     justify-content: left;
@@ -61,7 +58,6 @@ export default {
     box-shadow: 2px 2px 6px 0 #94906b;
     cursor: pointer;
     justify-content: space-between;
-
   }
   .room-box-left{
     display: flex;
@@ -73,21 +69,16 @@ export default {
   .room-box-left p {
     margin: 0;
     font-size: 0.8rem;
-
   }
   .room-box-right{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-right: 1rem;
-
-
   }
-
   .state{
     color: #cecece;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-
   }
 </style>

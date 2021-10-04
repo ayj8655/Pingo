@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="lock-room-box">
     <input type="text" v-model="password">
     <button @click="enterRoom">입장</button>
   </div>
@@ -38,5 +38,7 @@ export default {
 </script>
 
 <style>
-
+#lock-room-box{
+  height: 200px;
+}
 </style>
