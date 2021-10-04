@@ -27,19 +27,17 @@ def signup(request): #회원가입하고 유저 정보 바로 리턴
     print(new_user.user_name)
     return Response({"user_name": new_user.user_name, "user_id":new_user.user_id})
 
-@swagger_auto_schema(method='post', request_body= openapi.Schema(
+@swagger_auto_schema(method='delete', request_body= openapi.Schema(
     type=openapi.TYPE_OBJECT,
     properties={
         'user_id': openapi.Schema(type=openapi.TYPE_INTEGER,),
     }
 ))
-@api_view(['POST'])
+@api_view(["DELETE"])
 def delete(request): #회원삭제
     print("유저 로그아웃(삭제)")
-    print('request', request.data)
-    Accounts.objects.get(user_id=request.data.get('user_id')).delete()
-    print('유저 삭제 완료')
-    return Response({"message": '유저 삭제 완료'})
+    Accounts.objects.filter(user_id=request.data.get('user_id')).delete()
+    return Response({"detail": '유저 삭제 완료'})
 
 @swagger_auto_schema(method='post', request_body=r_body_user)
 @api_view(['POST'])

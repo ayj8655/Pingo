@@ -1,6 +1,7 @@
 # from backend.accounts import models
 import shutil
 import os
+from django.db.models.query_utils import Q
 from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -89,15 +90,11 @@ def make_room(request):  # 만들어준 방의 정보 return
 
 @api_view(["GET"])
 def room_list(request):  # 수정요망
+    # bs = Accounts.objects.prefetch_related('userinroom_set').filter(Q(userinroom__isnull=True))
+    # print(bs.query)
     print("방 리스트 받아오기")
-    rooms = get_list_or_404(Room)
-    print("rooms 받아옴")
+    rooms = Room.objects.all()
     serializer = RoomListSerializer(rooms, many=True)
-    print("방 리스트 받아오기 완료")
-    print(Response(serializer.data))
-    # for a in serializer.data:
-        # print(a.items())
-        # print(dir(a.values()))
     return Response(serializer.data)
 
 
@@ -115,25 +112,29 @@ def room_list(request):  # 수정요망
 @api_view(["POST"])
 def enter_room(request):
     print("방 입장")
-    accounts_model = apps.get_model("accounts", "Accounts")
-    user = get_object_or_404(accounts_model, user_id=request.data.get("user_id"))
+    user_id=request.data.get("user_id")
     room = get_object_or_404(Room, room_id=request.data.get("room_id"))
-    print(room.is_locked)
     if room.is_locked == True and room.room_password != request.data.get("room_password"):
         print("비밀번호가 틀립니다")
-        return Response({'message' : '비밀번호가 틀립니다.'})
-    UserInRoom.objects.create(room=room, user=user,)
-    print("방 입장 완료")
+        return Response({'detail' : '비밀번호가 틀립니다.'}, status=status.HTTP_401_UNAUTHORIZED)
+    if not UserInRoom.objects.filter(room=room, user_id=user_id).exists():
+        UserInRoom.objects.create(room=room, user_id=user_id)
     return Response(status=status.HTTP_200_OK)
 
-
+@api_view(["DELETE"])
+def leave_room(request):
+    print("방 퇴장")
+    user_id=request.data.get("user_id")
+    room_id=request.data.get("room_id")
+    print(user_id, room_id)
+    UserInRoom.objects.filter(room=room_id, user_id=user_id).delete()
+    return Response({'detail': '삭제 성공'})
 @api_view(["GET"])
 def room_member(request, room_id):
     print("방 인원 출력")
     users_in_room = get_list_or_404(UserInRoom, room=room_id)
     print(users_in_room)
     serializer = RoomMemberSerializer(users_in_room, many=True)
-    print("방 인원 출력 완료")
     # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)
     
