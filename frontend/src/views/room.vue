@@ -2,16 +2,16 @@
   <div class="ai-back" >
     <button id="yellow-button" @click="start" v-if="!isStarted">start</button>
     <div class="word-box">
-      <div class="word" v-if="isStarted">
-        <p>제시어</p>
+      <div v-if="isStarted">
+        <playRoom/>
       </div>
       <div id="timerBox">
         <p>{{settime.value}}</p>
       </div>
     </div>
 
-    <div :class="['chat-only', isStarted && 'chat-and-draw']" >
-      <!-- 그림판 -->
+    <!-- <div :class="['chat-only', isStarted && 'chat-and-draw']" >
+      그림판
       <div class="draw" v-if="isStarted">
         <draw/>
       </div>
@@ -20,7 +20,7 @@
       </div>
     </div>
 
-  </div>
+  </div> -->
   <!-- 시작버튼(누르면 없어지고 제시어 등장) -->
 
 </template>
@@ -29,12 +29,12 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 // import axios from 'axios'
 import { useRoute } from 'vue-router'
-import draw from '../components/room/draw.vue'
 import chating from '../components/room/chating.vue'
+import playRoom from '@/components/room/playRoom.vue'
 import axios from 'axios'
 import { useStore } from 'vuex'
 export default {
-  components: { draw, chating },
+  components: { chating, playRoom },
   setup () {
     const route = useRoute()
     const store = useStore()

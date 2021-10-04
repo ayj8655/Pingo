@@ -1,11 +1,12 @@
 <template>
   <div>
     <div>
-        <canvas id="jsCanvas" class="canvas" ref="canvas" @mousemove="onMouseMove" @mousedown="onMouseDown" @mouseup="onMouseUp" @mouseleave="stopPainting"></canvas>
+        <canvas id="jsCanvas" class="canvas" ref="canvas" @mousemove="onMouseMove" @mousedown="onMouseDown" @mouseup="onMouseUp" @mouseleave="stopPainting"
+        width="600" height="600"></canvas>
     </div>
-    <div class="controls__range">
+    <!-- <div class="controls__range">
         <input type="range" id="jsRange" v-model="data.jsRange" min="0.1" max="5" step="0.1">
-    </div>
+    </div> -->
     <div class='controls__btns'>
         <button id='jsMode' @click="eraseAll">Erase All</button>
         <button id='jsSave' @click="sendImage">Save</button>
@@ -31,6 +32,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import store from '@/store/index.js'
 
 export default {
   setup () {
@@ -51,7 +53,7 @@ export default {
         7: '#0579ff',
         8: '#5856d6'
       },
-      jsRange: 2.5
+      jsRange: 8.5
     })
 
     onMounted(() => {
@@ -84,7 +86,7 @@ export default {
     //   prepare()
       const x = event.offsetX
       const y = event.offsetY
-      // console.log(x, y)
+      console.log(x, y)
 
       if (!data.painting) {
         data.ctx.beginPath()
@@ -112,8 +114,6 @@ export default {
       console.log(event)
     }
 
-
-
     const sendImage = () => {
       canvas.value.toBlob(function (blob) {
         const formData = new FormData()
@@ -132,10 +132,9 @@ export default {
         )
           .then(res => {
             console.log(res)
-            router.push('/play/score')
+            // router.push('/playRoom/' + localStorage.getItem('room_id') + '/score')
             console.log('성공')
-            router.push('/play/score')
-
+            // router.push('/play/score')
           })
           .catch(err => {
             console.log(err)
@@ -145,12 +144,15 @@ export default {
 
     // 임시 방편인데 새로고침 말고 더 좋은 방법 없으려나...
     const eraseAll = () => {
-      data.ctx.clearRect(0, 0, 700, 700)
+      data.ctx.clearRect(0, 0, 600, 600)
     }
 
-    const erase = () => {
-
+    const toNextLevel = () => {
+      sendImage()
+      store.dispatch('setPlayState')
+      console.log('to nxt level', store.state.playState)
     }
+
     // 붓 사이즈 조절하는거 아직 못함
     return {
       startPainting,
@@ -163,12 +165,29 @@ export default {
       handleRangeChange,
       sendImage,
       eraseAll,
-      erase,
+      toNextLevel,
       data,
       canvas,
       router
     }
+  },
+  mounted () {
+    clearTimeout()
+    console.log('play mounted')
+    setTimeout(this.toNextLevel, 10000)
+  },
+  unmounted () {
+    clearTimeout()
   }
+  // setup() { 
+  //   const toPlay = () => {
+  //     store.dispatch('setPlayState')
+  //     console.log('to nxt level', store.state.playState)
+  //   }
+  //   return {
+  //     toPlay
+  //   }
+  // }
 }
 </script>
 
