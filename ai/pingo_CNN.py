@@ -23,7 +23,7 @@ start = time.time()  # 시작 시간 저장
 data_dir = "./datasets/pingo"
 IMG_SIZE = (300, 300)
 BATCH_SIZE = 256
-initial_epochs = 500
+initial_epochs = 10000
 
 
 # image_dataset_from_directory를 이용해서 해당 폴더에서 이미지 가져오기
@@ -355,16 +355,6 @@ predictions = model.predict(img_array)
 score = tf.nn.softmax(predictions[0])
 
 print(predictions)
-# print(format(predictions[0][0], ".20f"))
-# print(format(predictions[0][1], ".20f"))
-# print(format(predictions[0][2], ".20f"))
-# print(format(predictions[0][3], ".20f"))
-# print(format(predictions[0][4], ".20f"))
-# print(format(predictions[0][5], ".20f"))
-# print(format(predictions[0][6], ".20f"))
-# print(format(predictions[0][7], ".20f"))
-# print(format(predictions[0][8], ".20f"))
-# print(format(predictions[0][9], ".20f"))
 
 
 print(
