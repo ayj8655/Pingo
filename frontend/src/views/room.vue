@@ -23,32 +23,29 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
-import axios from "axios";
-import { useRouter } from "vue-router";
-import draw from "../components/room/draw.vue"
-import chating from "../components/room/chating.vue"
+import { onBeforeUnmount, ref } from 'vue'
+// import axios from 'axios'
+import { useRoute } from 'vue-router'
+import draw from '../components/room/draw.vue'
+import chating from '../components/room/chating.vue'
 export default {
   components: { draw, chating },
-  setup() {
-    // const start(() => {
-    //   // const router = userRouter()
-    //   console.log(this.$route.params);
-    //   const room_id = this.$route.params;
-    //   localStorage.setItem("room_id", room_id.room_id);
-    //   console.log(room_id.room_id);
-    //   this.$router.push({ name: "play", params: { room_id: room_id.room_id } });
-    // },)
+  setup () {
+    const route = useRoute()
     const isStarted = ref(false)
+    localStorage.setItem('room_id', route.params.room_id)
     const start = () => {
       isStarted.value = !isStarted.value
     }
+    onBeforeUnmount(() => {
+      localStorage.removeItem('room_id')
+    })
 
     return {
       start,
       isStarted
     }
-}
+  }
 }
 </script>
 
@@ -77,8 +74,6 @@ export default {
   padding: auto;
   /* flex-grow: 2; */
   /* 캔버스 크기가 고정되어 안커짐 */
-
-
 }
 .big-chat{
   height: 800px;
@@ -111,7 +106,6 @@ export default {
   margin: 10px;
   align-content: center;
 }
-
 .word p {
   font-size: 1.4rem !important;
   margin: 0.6rem;

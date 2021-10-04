@@ -6,62 +6,51 @@
           <button id="yellow-button" @click="createRoom">방만들기</button>
         </section>
         <section class="lobby-left">
-
-
+          <div v-for="user in userList" :key="user.user_id">
+            <p>{{user.user_name}}</p>
+          </div>
         </section>
-
       </section>
-
       <section class="lobby-right">
         <!-- <h1>오른쪽</h1> -->
         <!-- <h1>{{roomList}}</h1> -->
         <ul>
-          <roomItem v-for="room in roomList[0]"
+          <roomItem v-for="room in roomList"
           :key='room.room_id'
           :room='room'
           @click="moveRoom(room)"/>
-
-
         </ul>
-
-
-
       </section>
-
-
       <section>
-      <Modal :isShow='isShow' @switchModal='switchModal'>
-        <template v-slot:header>
-        </template>
-
-        <template v-slot:body>
-          <div v-if="roomMaking">
-            <h1>방만들기</h1>
-            <makeRoom @refreshRoom="refreshRoom" />
-          </div>
-          <div v-if="password && isLocked">
-            <h1>비번입력</h1>
-            <lockRoom />
-          </div>
-        </template>
-        <template v-slot:footer>
-        </template>
-      </Modal>
-
-
+        <Modal :isShow='isShow' @switchModal='switchModal'>
+          <template v-slot:header>
+          </template>
+          <template v-slot:body>
+            <div v-if="roomMaking">
+              <h1>방만들기</h1>
+              <makeRoom @refreshRoom="refreshRoom" />
+            </div>
+            <div v-if="password && isLocked">
+              <h1>비번입력</h1>
+              <lockRoom />
+            </div>
+          </template>
+          <template v-slot:footer>
+          </template>
+        </Modal>
       </section>
-
     </div>
 </template>
 
 <script>
 import axios from 'axios'
-import { computed, onMounted, onBeforeMount, ref, reactive } from 'vue'
+import { onMounted, ref } from 'vue'
 import makeRoom from '../components/lobby/makeRoom.vue'
 import lockRoom from '../components/lobby/lockRoom.vue'
 import roomItem from '../components/lobby/roomItem.vue'
 import Modal from '@/components/Modal.vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 export default {
   name: 'Lobby',
   components: {
@@ -71,97 +60,87 @@ export default {
     lockRoom
 
   },
-
-
   setup () {
-
     const router = useRouter()
+    const store = useStore()
     var roomList = ref([])
     const userList = ref([])
     const isShow = ref(false)
     const roomMaking = ref(false)
     const isLocked = ref(false)
     const password = ref(false)
-    const switchModal = ()=>{
+    const switchModal = () => {
       isShow.value = !isShow.value
       console.log(roomMaking.value, password.value, isLocked.value)
-      if(roomMaking.value === true){roomMaking.value = !roomMaking.value}
-      if(password.value === true){password.value = !password.value}
-      if(isLocked.value === true){isLocked.value = !password.value}
+      if (roomMaking.value === true) { roomMaking.value = !roomMaking.value }
+      if (password.value === true) { password.value = !password.value }
+      if (isLocked.value === true) { isLocked.value = !password.value }
     }
-
-    onMounted(()=> {
+    const lobbySocket = store.state.lobbySocket
+    lobbySocket.onmessage = (e) => {
+      const data = JSON.parse(e.data)
+      console.log('lobby 68line', data)
+      if (data.res === 'getUserList') {
+        userList.value = data.value
+      } else if (data.res === 'getRoomList') {
+        roomList.value = data.value
+      }
+    }
+    lobbySocket.onopen = () => {
+      store.dispatch('lobbySend',
+        {
+          space: 'lobby',
+          req: 'getUserList'
+        }
+      )
+    }
+    onMounted(() => {
+      if (lobbySocket.readyState === 1) {
+        store.dispatch('lobbySend',
+          {
+            space: 'lobby',
+            req: 'getUserList'
+          }
+        )
+      }
       axios({
         method: 'GET',
-        url: 'http://localhost:8000/paint_game/room_list/',
-
+        url: 'http://localhost:8000/paint_game/room_list/'
       }).then((res) => {
-        console.log(roomList)
-        roomList.value.push(res.data)
+        roomList.value = res.data
       }).catch((err) => {
-        console.log(err)
+        console.dir(err)
       })
     })
+
     const createRoom = () => {
       isShow.value = !isShow.value
       roomMaking.value = !roomMaking.value
       console.log(isShow)
     }
 
-    const refreshRoom = () => {
-      axios({
-        method: 'GET',
-        url: 'http://localhost:8000/paint_game/room_list/',
-
-      }).then((res) => {
-        roomList.push(res)
-
-      }).catch((err) => {
-        console.log(err)
-      })
-    }
-
-    computed(() => {
-      axios({
-        method: 'GET',
-        url: 'http://localhost:8000/paint_game/room_list/',
-
-      }).then((res) => {
-        roomList.push(res)
-
-      }).catch((err) => {
-        console.log(err)
-      })
-    })
-
-    const moveRoom = ((room) => {
+    const moveRoom = (room) => {
       localStorage.setItem('room_id', room.room_id)
       console.log('room', room)
-      if(room.is_started === true){
+      if (room.is_started === true) {
         alert('게임이 진행중일 때는 입장할 수 없습니다.')
-
+      } else if (room.is_locked === true) {
+        (isLocked.value = true) && (isShow.value = !isShow.value) && (password.value = !password.value)
+      } else {
+        axios({
+          method: 'POST',
+          url: 'http://localhost:8000/paint_game/enter_room/',
+          data: {
+            user_id: localStorage.getItem('user_id'),
+            room_id: room.room_id
+          }
+        })
+          .then((res) => {
+            console.log(res)
+            router.push({name:'room', params: {room_id: room.room_id }})
+          })
       }
-
-      else if(room.is_locked === true){(isLocked.value = true) && (isShow.value = !isShow.value)
-      && (password.value = !password.value) }
-      else {axios({
-        method: 'POST',
-        url: "http://localhost:8000/paint_game/enter_room/",
-        data: {
-          user_id: localStorage.getItem('user_id'),
-          room_id: room.room_id
-        }
-      }).then((res) => {
-        console.log(res)
-      }).then(
-        router.push({name:'room',
-                    params: {room_id: room.room_id }})
-      )
-
-
-    }})
-
-
+    }
 
     return {
       roomList,
@@ -171,7 +150,6 @@ export default {
       password,
       switchModal,
       userList,
-      refreshRoom,
       roomItem,
       moveRoom,
       roomMaking
@@ -206,13 +184,10 @@ export default {
   box-sizing: border-box;
   border-radius: 5px;
   margin: 10px;
-
-
 }
 
 .lobby-right{
   background-color: white;
-
   flex-basis: 100px;
   flex: 1 1 100%;
   box-sizing: border-box;

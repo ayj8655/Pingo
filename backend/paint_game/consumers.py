@@ -2,10 +2,13 @@ import json
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 import datetime
+
+from django.db.models.query_utils import Q
 from accounts.models import Accounts
 from .models import Room, UserInRoom, Paint
 from accounts.models import Accounts
 from accounts.serializers import AccountsSerializer
+from paint_game.serializers import RoomListSerializer
 from channels.db import database_sync_to_async
 
 def get_users():
@@ -15,10 +18,14 @@ def get_users():
         users를 쓸 수 없음 
         ex) print(users) 여기서 에러 발생
     '''        
-    users = list(Accounts.objects.all())
+    users = list(Accounts.objects.prefetch_related('userinroom_set').filter(Q(userinroom__isnull=True)))
     serializer = AccountsSerializer(users, many=True)
-    return users
+    return serializer
 
+def get_rooms():
+    rooms = list(Room.objects.all())
+    serializer = RoomListSerializer(rooms, many=True)
+    return serializer
 def create_user():
     now = datetime.datetime.now()
     print(now)
@@ -35,7 +42,6 @@ def game_start(room_num):
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
-
         self.room_group_name = 'game_%s' % self.room_name
 
         # Join room group
@@ -56,31 +62,38 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        print("text_data:", text_data_json)
-        flag = text_data_json['type']
-        if flag == 'chat':
-            # Send message to room group
-            await self.group_send('send_message', message)
-        elif flag == 'game':
+        print("text_data_json:", text_data_json, type(text_data_json))
+        space = text_data_json['space']
+        if space == 'lobby':
+            req = text_data_json['req']
+            payload = {"res": req}
+            if req == 'getUserList':
+                users = await database_sync_to_async(get_users)()
+                payload['value'] = users.data
+                # Send message to room group
+            elif req == 'getRoomList':
+                rooms = await database_sync_to_async(get_rooms)()
+                payload['value'] = rooms.data
+            await self.group_send('send_message', payload)
+
+        elif space == 'room':
             await database_sync_to_async(game_start)(self.room_name)
             await self.group_send('send_message', 'game started')
 
     # Receive message from room group
     async def send_message(self, event):
         print("event:", event)
-        message = event['message']
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
+        await self.send(text_data=json.dumps(
+            event['payload']
+        ))
 
-    def group_send(self, type, message):
+    def group_send(self, type_, payload):
         return self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': type,
-                'message': message
+                'type': type_,
+                'payload': payload,
             }
         )
 # class GameConsumer(AsyncWebsocketConsumer):

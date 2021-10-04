@@ -29,39 +29,37 @@
 </template>
 
 <script>
-import { reactive, ref } from "@vue/reactivity";
-import axios from "axios";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { reactive, ref } from '@vue/reactivity'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 export default {
-  name: "makeRoom",
+  name: 'makeRoom',
 
-  setup({ emit }) {
-    const username = localStorage.getItem("username");
-    const store = useStore();
+  setup (props, { emit }) {
+    const username = localStorage.getItem('username')
+    const store = useStore()
 
     const data = reactive({
-      room_id: "",
+      room_id: '',
       room_owner: username,
-      room_name: "",
-      room_password: "",
-      problems: "",
-      max_head_counts: "",
+      room_name: '',
+      room_password: '',
+      problems: '',
+      max_head_counts: '',
       is_locked: false,
-      is_started: false,
-    });
-    console.log("data", data);
-    const router = useRouter();
-    const secret = ref(false);
+      is_started: false
+    })
+    const router = useRouter()
+    const secret = ref(false)
     // const isShow = props.isShow
     const togglePassword = () => {
-      data.is_locked.value = !data.is_locked.value;
-    };
+      data.is_locked.value = !data.is_locked.value
+    }
     const roomMaking = () => {
-      console.log("data", data);
       axios({
-        method: "POST",
-        url: "http://localhost:8000/paint_game/make_room/",
+        method: 'POST',
+        url: 'http://localhost:8000/paint_game/make_room/',
         data: {
           room_name: data.room_name,
           room_owner: localStorage.user_name,
@@ -69,35 +67,36 @@ export default {
           problems: data.problems,
           max_head_counts: data.max_head_counts,
           is_locked: data.is_locked,
-          is_started: false,
-        },
-
+          is_started: false
+        }
         // 보류 socket
       })
         .then((res) => {
           // 방번호로 보내기
-          console.log("res.data", res.data.room_id);
-          const room_id = res.data.room_id;
-          router.push({ name: "room", params: { room_id: room_id } });
+          console.log('res.data', res.data.room_id)
+          const room_id = res.data.room_id
+          router.push({ name: 'room', params: { room_id: room_id } })
+          store.dispatch('lobbySend',
+            {
+              space: 'lobby',
+              req: 'getRoomList'
+            }
+          )
+
         })
         .catch((err) => {
-          console.log("방만들기 실패");
-          console.log(err);
-        });
-    };
-    const refreshRoom = () => {
-      emit("refreshRoom");
-    };
+          console.log('방만들기 실패')
+          console.log(err)
+        })
+    }
     return {
       data,
       secret,
       togglePassword,
-      roomMaking,
-      refreshRoom,
-      store,
-    };
-  },
-};
+      roomMaking
+    }
+  }
+}
 </script>
 
 <style>
