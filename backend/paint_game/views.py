@@ -87,6 +87,22 @@ def make_room(request):  # 만들어준 방의 정보 return
     print("방 만들기 완료")
     return Response(serializer.data)
 
+@swagger_auto_schema(
+    method="delete",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "room_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+        },
+    ),
+)
+@api_view(["DELETE"])
+def delete_room(request):
+    print("방 폭☆파")
+    room_id=request.data.get("room_id")
+    print("방id",room_id)
+    Room.objects.filter(room=room_id).delete()
+    return Response({'detail': '삭제 성공'})
 
 @api_view(["GET"])
 def room_list(request):  # 수정요망
