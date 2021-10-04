@@ -1,14 +1,10 @@
 <template >
   <div class="ai-back" >
-    <button id="yellow-button" @click="start" v-if="!isStarted">start</button>
-    <div class="word-box">
-      <div class="word" v-if="isStarted">
-        <p>제시어</p>
-      </div>
-    </div>
+    <button id="yellow-button" @click="start">start</button>
+  </div>
 
-    <div :class="['chat-only', isStarted && 'chat-and-draw']" >
-      <!-- 그림판 -->
+    <!-- <div :class="['chat-only', isStarted && 'chat-and-draw']" >
+      그림판
       <div class="draw" v-if="isStarted">
         <draw/>
       </div>
@@ -17,7 +13,7 @@
       </div>
     </div>
 
-  </div>
+  </div> -->
   <!-- 시작버튼(누르면 없어지고 제시어 등장) -->
 
 </template>
@@ -28,28 +24,40 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import draw from "../components/room/draw.vue"
 import chating from "../components/room/chating.vue"
+
 export default {
   components: { draw, chating },
-  setup() {
-    // const start(() => {
-    //   // const router = userRouter()
-    //   console.log(this.$route.params);
-    //   const room_id = this.$route.params;
-    //   localStorage.setItem("room_id", room_id.room_id);
-    //   console.log(room_id.room_id);
-    //   this.$router.push({ name: "play", params: { room_id: room_id.room_id } });
-    // },)
-    const isStarted = ref(false)
-    const start = () => {
-      isStarted.value = !isStarted.value
-    }
+  // setup() {
+  //   const start = () => {
+  //     // const router = userRouter()
+  //     // console.log(this.$route.params)
+  //     const room_id = this.$route.params
+  //     localStorage.setItem("room_id", room_id.room_id)
+  //     console.log(room_id.room_id)
+  //     this.$router.push({ name: "playRoom", params: { room_id: room_id.room_id } })
+  //   }
+  //   // const isStarted = ref(false)
+  //   // const start = () => {
+  //   //   isStarted.value = !isStarted.value
+  //   // }
 
-    return {
-      start,
-      isStarted
+  //   return {
+  //     start,
+  //     // isStarted
+  //   }
+
+  methods: {
+    start () {
+      // const router = userRouter()
+      console.log(this.$route.params)
+      const room_id = this.$route.params
+      console.log(room_id.room_id)
+      this.$router.push({name:'playRoom', params: {room_id: room_id.room_id }})
     }
+  }
+
 }
-}
+
 </script>
 
 <style>
