@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+import subprocess
 
 from .models import Accounts
 from rest_framework.decorators import api_view
@@ -24,6 +25,7 @@ def signup(request): #회원가입하고 유저 정보 바로 리턴
     now = datetime.datetime.now() + datetime.timedelta(hours=1)
     print('request', request.data)
     new_user = Accounts.objects.create(user_name=request.data.get('user_name'), time_to_expire=now)
+    subprocess.run('mkdir crontest', shell=True)
     return Response({"user_name": new_user.user_name, "user_id":new_user.user_id})
 
 @swagger_auto_schema(method='delete', request_body= openapi.Schema(
