@@ -86,7 +86,6 @@ export default {
     //   prepare()
       const x = event.offsetX
       const y = event.offsetY
-      console.log(x, y)
 
       if (!data.painting) {
         data.ctx.beginPath()
@@ -179,7 +178,7 @@ export default {
   unmounted () {
     clearTimeout()
   }
-  // setup() { 
+  // setup() {
   //   const toPlay = () => {
   //     store.dispatch('setPlayState')
   //     console.log('to nxt level', store.state.playState)

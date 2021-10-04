@@ -53,7 +53,7 @@ export default {
     const roomMaking = () => {
       axios({
         method: 'POST',
-        url: 'http://localhost:8000/paint_game/make_room/',
+        url: '/paint_game/make_room/',
         data: {
           room_name: data.room_name,
           room_owner: localStorage.user_name,
@@ -147,6 +147,4 @@ export default {
   cursor: pointer;
   /* margin-bottom: 1rem !important; */
 }
-
-
 </style>
