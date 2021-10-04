@@ -5,6 +5,9 @@
       <div class="word" v-if="isStarted">
         <p>제시어</p>
       </div>
+      <div id="timerBox">
+        <p>{{timer}}</p>
+      </div>
     </div>
 
     <div :class="['chat-only', isStarted && 'chat-and-draw']" >
@@ -40,13 +43,34 @@ export default {
     //   this.$router.push({ name: "play", params: { room_id: room_id.room_id } });
     // },)
     const isStarted = ref(false)
+    // const timer = ref(60)
     const start = () => {
+
       isStarted.value = !isStarted.value
+      const room_id = localStorage.getItem('room_id')
+
     }
+
+    const time = 1500
+    const sec = ""
+    const miliSec = ""
+    const timer = setInterval(function() {
+      sec = parseInt(time/100);
+      // miliSec = (time%100)
+      document.getElementById('timerBox').innerHTML = sec + '초';
+      time--;
+
+      if (time<= 0) {
+        clearInterval(timer),
+        ocument.getElementById('timerBox').innerHTML = '종료'
+      }
+    }, 100)
 
     return {
       start,
-      isStarted
+      isStarted,
+      timer,
+      setInterval
     }
 }
 }
