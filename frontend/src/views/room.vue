@@ -23,23 +23,82 @@
 </template>
 
 <script>
-import { onBeforeUnmount, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 // import axios from 'axios'
 import { useRoute } from 'vue-router'
 import draw from '../components/room/draw.vue'
 import chating from '../components/room/chating.vue'
+import axios from 'axios'
+import { useStore } from 'vuex'
 export default {
   components: { draw, chating },
   setup () {
     const route = useRoute()
-    const isStarted = ref(false)
+    const store = useStore()
     localStorage.setItem('room_id', route.params.room_id)
+    const isStarted = ref(false)
+    const enterRoom = () => {
+      axios.post('http://localhost:8000/paint_game/enter_room/', {
+        user_id: localStorage.getItem('user_id'),
+        room_id: route.params.room_id
+      })
+        .then((res) => {
+          if (store.state.lobbySocket.readyState === 1) {
+            store.dispatch('lobbySend',
+              {
+                space: 'lobby',
+                req: 'getUserList'
+              }
+            )
+          }
+        })
+    }
+
+    const leaveRoom = () => {
+      axios.delete('http://localhost:8000/paint_game/leave_room/', {
+        data: {
+          user_id: localStorage.getItem('user_id'),
+          room_id: localStorage.getItem('room_id')
+        }
+      })
+        .then((res) => {
+          console.log(res)
+          localStorage.removeItem('room_id')
+          store.dispatch('lobbySend',
+            {
+              space: 'lobby',
+              req: 'getUserList'
+            }
+          )
+        })
+        .catch((err) => {
+          console.dir(err)
+        })
+    }
     const start = () => {
       isStarted.value = !isStarted.value
+      store.dispatch('roomSend', {
+        space: 'room',
+        req: 'gameStart'
+      })
     }
-    onBeforeUnmount(() => {
-      localStorage.removeItem('room_id')
+
+    store.commit('roomSocketConnect', route.params.room_id)
+    store.state.roomSocket.onmessage = (e) => {
+      const data = JSON.parse(e.data)
+      console.log('room 43line', data)
+    }
+
+    onMounted(() => {
+      enterRoom()
     })
+    onBeforeUnmount(() => {
+      leaveRoom()
+    })
+
+    window.onbeforeunload = () => {
+      leaveRoom()
+    }
 
     return {
       start,

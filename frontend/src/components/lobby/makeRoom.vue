@@ -39,7 +39,6 @@ export default {
   setup (props, { emit }) {
     const username = localStorage.getItem('username')
     const store = useStore()
-
     const data = reactive({
       room_id: '',
       room_owner: username,
@@ -73,16 +72,15 @@ export default {
       })
         .then((res) => {
           // 방번호로 보내기
-          console.log('res.data', res.data.room_id)
-          const room_id = res.data.room_id
-          router.push({ name: 'room', params: { room_id: room_id } })
           store.dispatch('lobbySend',
             {
               space: 'lobby',
               req: 'getRoomList'
             }
           )
-
+          console.log('res.data', res.data.room_id)
+          const room_id = res.data.room_id
+          router.push({ name: 'room', params: { room_id: room_id } })
         })
         .catch((err) => {
           console.log('방만들기 실패')

@@ -28,7 +28,7 @@
           <template v-slot:body>
             <div v-if="roomMaking">
               <h1>방만들기</h1>
-              <makeRoom @refreshRoom="refreshRoom" />
+              <makeRoom/>
             </div>
             <div v-if="password && isLocked">
               <h1>비번입력</h1>
@@ -69,6 +69,17 @@ export default {
     const roomMaking = ref(false)
     const isLocked = ref(false)
     const password = ref(false)
+    const lobbySocket = store.state.lobbySocket
+
+    const getUserList = () => {
+      store.dispatch('lobbySend',
+        {
+          space: 'lobby',
+          req: 'getUserList'
+        }
+      )
+    }
+
     const switchModal = () => {
       isShow.value = !isShow.value
       console.log(roomMaking.value, password.value, isLocked.value)
@@ -76,7 +87,23 @@ export default {
       if (password.value === true) { password.value = !password.value }
       if (isLocked.value === true) { isLocked.value = !password.value }
     }
-    const lobbySocket = store.state.lobbySocket
+
+    const createRoom = () => {
+      isShow.value = !isShow.value
+      roomMaking.value = !roomMaking.value
+    }
+
+    const moveRoom = (room) => {
+      localStorage.setItem('room_id', room.room_id)
+      if (room.is_started === true) {
+        alert('게임이 진행중일 때는 입장할 수 없습니다.')
+      } else if (room.is_locked === true) {
+        (isLocked.value = true) && (isShow.value = !isShow.value) && (password.value = !password.value)
+      } else {
+        router.push({ name: 'room', params: { room_id: room.room_id } })
+      }
+    }
+
     lobbySocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
       console.log('lobby 68line', data)
@@ -87,21 +114,12 @@ export default {
       }
     }
     lobbySocket.onopen = () => {
-      store.dispatch('lobbySend',
-        {
-          space: 'lobby',
-          req: 'getUserList'
-        }
-      )
+      getUserList()
     }
+
     onMounted(() => {
       if (lobbySocket.readyState === 1) {
-        store.dispatch('lobbySend',
-          {
-            space: 'lobby',
-            req: 'getUserList'
-          }
-        )
+        getUserList()
       }
       axios({
         method: 'GET',
@@ -112,35 +130,6 @@ export default {
         console.dir(err)
       })
     })
-
-    const createRoom = () => {
-      isShow.value = !isShow.value
-      roomMaking.value = !roomMaking.value
-      console.log(isShow)
-    }
-
-    const moveRoom = (room) => {
-      localStorage.setItem('room_id', room.room_id)
-      console.log('room', room)
-      if (room.is_started === true) {
-        alert('게임이 진행중일 때는 입장할 수 없습니다.')
-      } else if (room.is_locked === true) {
-        (isLocked.value = true) && (isShow.value = !isShow.value) && (password.value = !password.value)
-      } else {
-        axios({
-          method: 'POST',
-          url: 'http://localhost:8000/paint_game/enter_room/',
-          data: {
-            user_id: localStorage.getItem('user_id'),
-            room_id: room.room_id
-          }
-        })
-          .then((res) => {
-            console.log(res)
-            router.push({name:'room', params: {room_id: room.room_id }})
-          })
-      }
-    }
 
     return {
       roomList,

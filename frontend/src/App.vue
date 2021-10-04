@@ -8,10 +8,32 @@
   </div>
 
 </template>
+<script>
+import axios from 'axios'
+export default {
+  setup () {
+    const signOut = (e) => {
+      e.preventDefault()
+      e.returnValue = ''
+      axios.delete('http://localhost:8000/accounts/delete/', {
+        data: {
+          user_id: localStorage.getItem('user_id')
+        }
+      })
+      localStorage.removeItem('user_id')
+      localStorage.removeItem('user_name')
+    }
 
+    window.addEventListener('beforeunload', signOut)
+    window.onkeydown = (e) => {
+      if ((e.ctrlKey && e.keyCode === 82) || (e.which || e.keyCode) === 116) {
+        window.removeEventListener('beforeunload', signOut)
+      }
+    }
+  }
+}
+</script>
 <style>
-
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -29,7 +51,6 @@
 }
 
 #nav {
-
 }
 
 #nav a {
@@ -70,8 +91,6 @@
   /* box-shadow: 0 0 0 1px #1a3d58 inset; */
   cursor: pointer;
   color: #3883BC;
-
-
 }
 
 #yellow-button {
@@ -95,8 +114,6 @@
   cursor: pointer;
   color: #3883BC;
   font-size: 1.5rem;
-
-
 }
 /* Gradient in Hex */
 /* linear-gradient(to right, #3883BC 0%, 50%, #FFF9BA 100%); */
