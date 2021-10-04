@@ -6,7 +6,7 @@
         <p>제시어</p>
       </div>
       <div id="timerBox">
-        <p>{{timer}}</p>
+        <p>{{settime.value}}</p>
       </div>
     </div>
 
@@ -51,26 +51,27 @@ export default {
 
     }
 
-    const time = ref(1500)
+    const settime = ref(1500)
     const sec = ref('')
-    const miliSec = ref('')
-    // const timer = setInterval(function(sec, miliSec) {
-    //   sec = parseInt(time/100);
-    //   miliSec = parseInt(time%100)
-    //   document.getElementById('timerBox').innerHTML = sec + '초';
-    //   time--;
 
-    //   if (time<= 0) {
-    //     clearInterval(timer),
-    //     ocument.getElementById('timerBox').innerHTML = '종료'
-    //   }
-    // }, 100)
+    const timer = setInterval(function() {
+      sec.value = parseInt(settime.value/100);
+
+      document.getElementById('timerBox').innerHTML = sec.value + '초';
+      settime.value -= 10;
+
+      if (settime.value <= 0) {
+        clearInterval(timer),
+        document.getElementById('timerBox').innerHTML = '종료'
+      }
+    }, 100)
 
     return {
       start,
       isStarted,
-      // timer,
-      setInterval
+      timer,
+      setInterval,
+      settime
     }
 }
 }

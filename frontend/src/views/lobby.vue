@@ -41,7 +41,6 @@
 
         <template v-slot:body>
           <div v-if="roomMaking">
-
             <makeRoom @refreshRoom="refreshRoom" />
           </div>
           <div v-if="password && isLocked">
