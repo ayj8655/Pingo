@@ -1,5 +1,5 @@
 <template >
-  <div class="ai-back" >
+  <div class="ai-back">
     <button id="yellow-button" @click="start" v-if="!isStarted">start</button>
     <div class="word-box">
       <div v-if="isStarted">
@@ -18,11 +18,9 @@
       <div :class="['big-chat', isStarted && 'chat']" >
         <chating />
       </div>
-    </div>
-
-  </div> -->
+    </div>-->
+  </div>
   <!-- 시작버튼(누르면 없어지고 제시어 등장) -->
-
 </template>
 
 <script>
@@ -86,7 +84,6 @@ export default {
       })
     }
 
-
     const settime = ref(1500)
     const sec = ref('')
 
@@ -101,7 +98,6 @@ export default {
         document.getElementById('timerBox').innerHTML = '종료'
       }
     }, 100)
-
     store.commit('roomSocketConnect', route.params.room_id)
     store.state.roomSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
