@@ -20,20 +20,15 @@ export default createStore({
     SET_PLAYSTATE (state) {
       if (state.playState === 'playReady') {
         state.playState = 'play'
-      }
-      else if (state.playState === 'play') {
+      } else if (state.playState === 'play') {
         state.playState = 'roundEnd'
-      }
-      else if (state.playState === 'roundEnd') {
+      } else if (state.playState === 'roundEnd') {
         state.playState = 'showEveryone'
-      }
-      else if (state.playState === 'showEveryone') {
+      } else if (state.playState === 'showEveryone') {
         state.playState = 'score'
-      }
-      else if (state.playState === 'score') {
+      } else if (state.playState === 'score') {
         state.playState = 'playReady'
-      }
-      else {
+      } else {
 
       }
     },

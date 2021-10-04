@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-i5l&2lxs-l&gp(m2sj4-ywu@py(i8wq%2jx@@xx17nykgq=opq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','j5b307.p.ssafy.io']
+ALLOWED_HOSTS = ['localhost','j5b307.p.ssafy.io', '127.0.0.1']
 
 
 # Application definition
@@ -86,7 +86,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",  # 1
         "NAME": "ssafy_painting_game",  # 2
         "USER": "root",  # 3
-        "PASSWORD": "root",  # 4
+        "PASSWORD": "ssafy",  # 4
         "HOST": "localhost",  # 5
         "PORT": "3306",  # 6
     }

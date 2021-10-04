@@ -276,9 +276,10 @@ def game_end(request):
     room_id = request.data.get("room_id")
     user_id = request.data.get("user_id")
     directory = f"./media/room_{room_id}" 
+    print(room_id, user_id)
 
     try:
-        # my_score = Score.objects.get(room_id=room_id,user_id=user_id)
+        my_score = Score.objects.get(room_id=room_id,user_id=user_id)
         # room_n 디렉토리 제거
         shutil.rmtree(directory)
 
@@ -292,7 +293,7 @@ def game_end(request):
         if paint_set.exists():
             paint_set.delete()
 
-        return Response({"detail":"end process is done."})
+        return Response({"detail":"end process is done.", "total_score":my_score.score})
 
     except OSError as e:
         return Response({"detail": f"Error: {e.filename} - {e.strerror}."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
