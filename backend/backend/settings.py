@@ -149,5 +149,5 @@ CHANNEL_LAYERS = {
 
 #Crontab
 CRONJOBS = [
-    ('* * * * *', 'backend.cron.update')
+    ('* * * * *', 'paint_game.cron.update')
 ]
