@@ -128,7 +128,7 @@ export default {
       }
       axios({
         method: 'GET',
-        url: 'http://localhost:8000/paint_game/room_list/'
+        url: '/paint_game/room_list/'
       }).then((res) => {
         roomList.value = res.data
       }).catch((err) => {

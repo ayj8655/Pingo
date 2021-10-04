@@ -39,7 +39,7 @@ export default {
     localStorage.setItem('room_id', route.params.room_id)
     const isStarted = ref(false)
     const enterRoom = () => {
-      axios.post('http://localhost:8000/paint_game/enter_room/', {
+      axios.post('/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
         room_id: route.params.room_id
       })
@@ -56,7 +56,7 @@ export default {
     }
 
     const leaveRoom = () => {
-      axios.delete('http://localhost:8000/paint_game/leave_room/', {
+      axios.delete('/paint_game/leave_room/', {
         data: {
           user_id: localStorage.getItem('user_id'),
           room_id: localStorage.getItem('room_id')
