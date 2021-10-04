@@ -51,25 +51,25 @@ export default {
 
     }
 
-    const time = 1500
-    const sec = ""
-    const miliSec = ""
-    const timer = setInterval(function() {
-      sec = parseInt(time/100);
-      // miliSec = (time%100)
-      document.getElementById('timerBox').innerHTML = sec + '초';
-      time--;
+    const time = ref(1500)
+    const sec = ref('')
+    const miliSec = ref('')
+    // const timer = setInterval(function(sec, miliSec) {
+    //   sec = parseInt(time/100);
+    //   miliSec = parseInt(time%100)
+    //   document.getElementById('timerBox').innerHTML = sec + '초';
+    //   time--;
 
-      if (time<= 0) {
-        clearInterval(timer),
-        ocument.getElementById('timerBox').innerHTML = '종료'
-      }
-    }, 100)
+    //   if (time<= 0) {
+    //     clearInterval(timer),
+    //     ocument.getElementById('timerBox').innerHTML = '종료'
+    //   }
+    // }, 100)
 
     return {
       start,
       isStarted,
-      timer,
+      // timer,
       setInterval
     }
 }
