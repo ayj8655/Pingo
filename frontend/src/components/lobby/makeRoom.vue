@@ -1,29 +1,24 @@
 <template>
-  <div>
-    <div><h3>make Room</h3></div>
-    <div>
-      <label for="">방 이름: </label>
-      <input type="text" placeholder="방 제목" v-model="data.room_name" />
-      <br />
-      <label for=""> 인원수: </label>
+  <div id="create-room-box">
+    <div id="room-making-box" >
+
+      <input type="text" placeholder="방 이름" v-model="data.room_name" />
+
       <input
         type="number"
-        placeholder="인원 제한"
+        placeholder="0명"
         min="0"
         max="100"
         v-model="data.max_head_counts"
       />
-      <br />
-      <label for="">판 수: </label>
-      <input type="number" placeholder="몇판" v-model="data.problems" />
-      <br />
-      <label for="">비밀방?</label>
-      <input type="checkbox" @click="togglePassword" v-model="data.is_locked" />
-      <br />
-      <label for="">비밀번호</label>
-      <input type="password" v-model="data.room_password" />
-      <br />
-      <button id="blue-button" @click="roomMaking">방 만들기</button>
+
+      <input type="number" placeholder="라운드" v-model="data.problems" />
+      <div class="check-box">
+        <label for="">비밀방?</label>
+        <input class="check-input" type="checkbox" @click="togglePassword" v-model="data.is_locked" />
+      </div>
+      <input type="password" placeholder="비밀번호" v-model="data.room_password" />
+      <button id="blue-button" style="width: 15.5rem" @click="roomMaking">방 만들기</button>
     </div>
   </div>
 </template>
@@ -101,4 +96,60 @@ export default {
 </script>
 
 <style>
+#create-room-box{
+  display: flex;
+  justify-content: center;
+  background-color: #FFF9BA;
+  height: 500px;
+}
+#room-making-box{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fff;
+  /* border: 1px black solid; */
+  width: 22rem;
+  height: 25rem;
+  border-radius: 5px;
+  margin: auto;
+}
+#room-making-box input {
+  width: 15rem;
+  height: 2rem;
+  border-radius: 5px;
+  margin: auto;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  border: 0.5px gray solid;
+}
+#room-making-box p {
+  margin: 0.1rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+#room-making-box label {
+  margin: 0.1rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+#room-making-box button {
+  margin: auto;
+}
+
+.check-box{
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+
+}
+.check-input{
+  height:1.5rem !important;
+  width:1.5rem !important;
+  margin: 0 !important;
+  margin-left: 1rem !important;
+  cursor: pointer;
+  /* margin-bottom: 1rem !important; */
+}
+
+
 </style>
