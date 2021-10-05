@@ -28,6 +28,7 @@ import { reactive, ref } from '@vue/reactivity'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { domain } from '@/domain.js'
 export default {
   name: 'makeRoom',
 
@@ -48,12 +49,12 @@ export default {
     const secret = ref(false)
     // const isShow = props.isShow
     const togglePassword = () => {
-      data.is_locked.value = !data.is_locked.value
+      data.is_locked = !data.is_locked
     }
     const roomMaking = () => {
       axios({
         method: 'POST',
-        url: '/paint_game/make_room/',
+        url: domain + '/paint_game/make_room/',
         data: {
           room_name: data.room_name,
           room_owner: localStorage.user_name,
@@ -73,9 +74,9 @@ export default {
               req: 'getRoomList'
             }
           )
-          console.log('res.data', res.data.room_id)
+          console.log('res.data', res.data)
           const room_id = res.data.room_id
-          router.push({ name: 'room', params: { room_id: room_id } })
+          router.push({ name: 'room', params: { room_id: room_id, password: data.room_password }, })
         })
         .catch((err) => {
           console.log('방만들기 실패')

@@ -12,7 +12,8 @@ from .serializers import (
     MakeRoomSerializer,
     PaintSerializer,
     CategorySerializer,
-    ScoreSerializer
+    RoomMemberSerializer2,
+    ScoreSerializer,
 )
 from .models import Categories, Score, Room, UserInRoom, Paint
 from accounts.models import Accounts
@@ -74,7 +75,6 @@ def room(request, room_name):
 @api_view(["POST"])
 def make_room(request):  # 만들어준 방의 정보 return
     print("방 만들기")
-    print(request.data)
     accounts_model = apps.get_model("accounts", "Accounts")
     room_owner = get_object_or_404(
         accounts_model, user_name=request.data.get("room_owner")
@@ -89,7 +89,6 @@ def make_room(request):  # 만들어준 방의 정보 return
         is_started=request.data.get("is_started"),
     )
     serializer = MakeRoomSerializer(new_room)
-    print("방 만들기 완료")
     return Response(serializer.data)
 
 @swagger_auto_schema(
@@ -105,14 +104,11 @@ def make_room(request):  # 만들어준 방의 정보 return
 def delete_room(request):
     print("방 폭☆파")
     room_id=request.data.get("room_id")
-    print("방id",room_id)
     Room.objects.filter(room=room_id).delete()
     return Response({'detail': '삭제 성공'})
 
 @api_view(["GET"])
 def room_list(request):  # 수정요망
-    # bs = Accounts.objects.prefetch_related('userinroom_set').filter(Q(userinroom__isnull=True))
-    # print(bs.query)
     print("방 리스트 받아오기")
     rooms = Room.objects.all()
     serializer = RoomListSerializer(rooms, many=True)
@@ -156,18 +152,15 @@ def enter_room(request):
 @api_view(["DELETE"])
 def leave_room(request):
     print("방 퇴장")
-    user_id = request.data.get("user_id")
-    room_id = request.data.get("room_id")
-    print(user_id, room_id)
+    user_id=request.data.get("user_id")
+    room_id=request.data.get("room_id")
     UserInRoom.objects.filter(room=room_id, user_id=user_id).delete()
-    return Response({"detail": "삭제 성공"})
-
+    return Response({'detail': '삭제 성공'})
 
 @api_view(["GET"])
 def room_member(request, room_id):
     print("방 인원 출력")
     users_in_room = get_list_or_404(UserInRoom, room=room_id)
-    print(users_in_room)
     serializer = RoomMemberSerializer(users_in_room, many=True)
     # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)
@@ -176,7 +169,6 @@ def room_member(request, room_id):
 def room_headcount(request, room_id):
     print("방 인원 출력")
     users_in_room = get_list_or_404(UserInRoom, room=room_id)
-    print(users_in_room)
     headcount = len(users_in_room)
     return Response({'headcount' : headcount})
     
@@ -201,13 +193,9 @@ def get_categories(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    categories = Categories.objects.order_by("?")
-    if 0 <= number <= len(categories):
-        categories = categories[:number]
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data)
-    else:
-        return Response({"detail": "exceed the maximum value"})
+    categories = Categories.objects.order_by("?")[:number]
+    serializer = CategorySerializer(categories, many=True)
+    return Response(serializer.data)
 
 
 @swagger_auto_schema(method="post", request_body=PaintSerializer)
@@ -308,7 +296,7 @@ def ayj(request):
         dir_path = f"./media/dataset/unsuccessful/{category}/"
     os.makedirs(dir_path, exist_ok=True)
     numbers = len(os.listdir(dir_path))
-    shutil.copy(test_path, dir_path + f"new_{category}_{numbers}.png")
+    shutil.copy(test_path, dir_path+f"new_{category}_{numbers}.jpg")
 
     return Response({"class_name": class_name, "score": score,})
 
@@ -328,10 +316,9 @@ def game_end(request):
     room_id = request.data.get("room_id")
     user_id = request.data.get("user_id")
     directory = f"./media/room_{room_id}" 
-    print(room_id, user_id)
-
     try:
-        my_score = Score.objects.get(room_id=room_id,user_id=user_id)
+        scores = Score.objects.filter(room_id=room_id).order_by('-score')
+        serializer = ScoreSerializer(scores, many=True)
         # room_n 디렉토리 제거
         shutil.rmtree(directory)
 
@@ -341,22 +328,16 @@ def game_end(request):
             room.is_started = False
             room.save()
         paint_set = room.paint_set.filter(user_id=user_id)
-        # room을 fk로 갖는 paints 삭제
+        # room을 fk로 갖는 자신의 paints 삭제
         if paint_set.exists():
             paint_set.delete()
+        return Response(serializer.data)
 
-        return Response({"detail":"end process is done.", "total_score":my_score.score})
 
     except OSError as e:
-        return Response(
-            {"detail": f"Error: {e.filename} - {e.strerror}."},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        )
-    except Score.DoesNotExist as e:
-        return Response(
-            {"detail": "Score matching query does not exist"},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        return Response({"detail": f"Error: {e.filename} - {e.strerror}."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Room.DoesNotExist as e:
+        return Response({"detail": "Room matching query does not exist"},  status=status.HTTP_400_BAD_REQUEST)
 
 @swagger_auto_schema(method="get")
 @api_view(["GET"])

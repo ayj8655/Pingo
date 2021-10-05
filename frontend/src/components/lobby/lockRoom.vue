@@ -11,15 +11,17 @@
 <script>
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { domain } from '@/domain.js'
 export default {
-  setup() {
+  setup () {
     const password = ''
     const room_id = localStorage.getItem('room_id')
     const router = useRouter()
     const enterRoom = () => {
       axios({
         method: 'POST',
-        url: "http://localhost:8000/paint_game/enter_room/",
+        // url: "http://localhost:8000/paint_game/enter_room/",
+        url: domain + '/paint_game/enter_room/',
         data: {
           user_id: localStorage.getItem('user_id'),
           room_id: room_id,
@@ -28,8 +30,7 @@ export default {
       }).then((res) => {
         console.log(res)
       }).then(
-        router.push({name:'room',
-                    params: {room_id: room_id }})
+        router.push({ name: 'room', params: { room_id: room_id } })
       ).catch((err) => {
         alert('비밀번호가 틀립니다')
       }
