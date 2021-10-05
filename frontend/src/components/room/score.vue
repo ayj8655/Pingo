@@ -20,14 +20,17 @@ export default {
     onMounted(() => {
       clearTimeout()
       console.log('score mounted')
+      const roundCnt = store.state.roundCnt
+      const category = store.state.keywords[roundCnt]
 
       axios({
         method: 'POST',
+
         url: "http://localhost:8000/paint_game/ayj/",
         data: {
           'user_name':localStorage.getItem('user_name'),
           'room_id':localStorage.getItem('room_id'),
-          'category': 'banana' //여기 나중에 수정
+          'category': category
         }
       })
         .then((res) => {
@@ -44,11 +47,9 @@ export default {
       store.dispatch('increaseRoundcnt')
       console.log('roundcount', store.state.roundCnt)
 
-      if (store.state.roundCnt >= 5) {
-        store.dispatch('resetGame')
+      if (store.state.roundCnt >= store.state.keywords.length()) {
         const room = localStorage.getItem('room_id')
         console.log(room)
-        router.push({ name: 'room', params: { room_id: room } })
       }
       else {
         store.dispatch('setPlayState')

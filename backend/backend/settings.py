@@ -87,7 +87,7 @@ DATABASES = {
         "NAME": "ssafy_painting_game",  # 2
         "USER": "root",  # 3
         "PASSWORD": "ssafy",  # 4
-        "HOST": "localhost",  # 5
+        "HOST": "j5b307.p.ssafy.io",  # 5
         "PORT": "3306",  # 6
     }
 }

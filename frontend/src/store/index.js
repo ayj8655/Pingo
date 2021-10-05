@@ -11,13 +11,16 @@ export default createStore({
     roomSocket: {},
     keywords: ['banana', 'blub', 'calculator', 'carrot', 'clock'],
     playState: 'playReady',
-    roundCnt: 3
+    roundCnt: 0
   },
   mutations: {
     roomSocketConnect (state, roomId) {
       state.roomSocket = new WebSocket('ws://localhost:8000/ws/game/' + roomId + '/')
     },
     SET_PLAYSTATE (state) {
+      if (state.roundCnt >= state.keywords.length) {
+        state.playState = 'gameRanking'
+      }
       if (state.playState === 'playReady') {
         state.playState = 'play'
       } else if (state.playState === 'play') {
