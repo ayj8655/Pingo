@@ -3,7 +3,7 @@ import os
 
 def update():
     print("업데이트 알림 시작")
-    dirpath = "../media/"
+    dirpath = "/home/jenkins/workspace/test/backend/media/"
     numbers = len(os.listdir(dirpath))
     # numbers = '1'
     email = EmailMessage(
