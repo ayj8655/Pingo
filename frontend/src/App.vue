@@ -10,12 +10,13 @@
 </template>
 <script>
 import axios from 'axios'
+import { domain } from '@/domain.js'
 export default {
   setup () {
     const signOut = (e) => {
       e.preventDefault()
       e.returnValue = ''
-      axios.delete('http://localhost:8000/accounts/delete/', {
+      axios.delete(domain + '/accounts/delete/', {
         data: {
           user_id: localStorage.getItem('user_id')
         }
