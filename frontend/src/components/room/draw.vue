@@ -60,15 +60,15 @@ export default {
 
     onMounted(() => {
       prepare()
-      console.log('prepare')
+      // console.log('prepare')
     })
 
     const prepare = () => {
       console.log(canvas.value)
       data.ctx = canvas.value.getContext('2d')
       //   console.log(data.ctx)
-      canvas.value.fillStyle = 'white'
-      // canvas.value.fillRect(0, 0, 700, 700)
+      data.ctx.fillStyle = 'white'
+      data.ctx.fillRect(0, 0, 600, 600)
       data.ctx.strokeStyle = '#2c2c2c'
       data.ctx.lineWidth = data.jsRange
 
@@ -144,8 +144,6 @@ export default {
           })
           .catch(err => {
             console.log(err)
-            eraseAll()
-            data.isPlaying = !data.isPlaying
           })
       })
     }
@@ -153,10 +151,14 @@ export default {
     // 임시 방편인데 새로고침 말고 더 좋은 방법 없으려나...
     const eraseAll = () => {
       data.ctx.clearRect(0, 0, 600, 600)
+      data.ctx.fillStyle = 'white'
+      data.ctx.fillRect(0, 0, 600, 600)
     }
 
     const toNextLevel = () => {
-      sendImage()
+      if (data.isPlaying === true) {
+        sendImage()
+      }
       store.dispatch('setPlayState')
       console.log('to nxt level', store.state.playState)
     }

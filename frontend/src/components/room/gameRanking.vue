@@ -4,8 +4,8 @@
         <h1>Game Ranking</h1>
       </div>
       <div>
-          <button>Again?</button>
-          <button>Exit</button>
+          <button @click='playAgain'>초기화면으로</button>
+          <button @click='toLobby'>로비로</button>
       </div>
   </div>
 </template>
@@ -18,21 +18,26 @@ export default {
   name: 'gameRanking',
   setup () {
     const router = useRouter()
-    const toRoom = () => {
-      const room = localStorage.getItem('room_id')
-      router.push({ name: 'room', params: { room_id: room.room_id } })
+    const playAgain = () => {
+      store.dispatch('resetGame')
+      store.dispatch('toRoom')
+    }
+    const toLobby = () => {
+      store.dispatch('resetGame')
+      router.push('/lobby')
     }
     return {
-      toRoom,
+      playAgain,
+      toLobby,
       router
     }
   },
   mounted () {
-    console.log(store.state.roundCnt)
-    clearTimeout()
+    // console.log(store.state.roundCnt)
+    // clearTimeout()
     console.log('gameRanking mounted')
-    store.dispatch('resetGame')
-    setTimeout(this.toRoom, 5000)
+    // store.dispatch('resetGame')
+    // setTimeout(this.toRoom, 5000)
     // const router = useRouter()
     // router.push()
   },

@@ -3,6 +3,7 @@
   <div>
 
       <h1>playReady</h1>
+      <h3>라운드 {{this.roundCnt+1}}</h3>
       <p>{{keyword}}</p>
   </div>
     </slot>
@@ -26,7 +27,7 @@ export default {
     clearTimeout()
   },
   setup () {
-    const roundCnt = store.state.roundCnt
+    var roundCnt = store.state.roundCnt
     const keyword = store.state.keywords[roundCnt]
     const toNextLevel = () => {
       store.dispatch('setPlayState')
@@ -34,6 +35,7 @@ export default {
     }
     return {
       toNextLevel,
+      roundCnt,
       keyword
     }
   }
