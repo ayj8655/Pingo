@@ -1,12 +1,25 @@
 import os
 
-if os.path.isdir('./') :
-    dirpath = "./"
-    numbers = os.listdir(dirpath)
-else :
-    numbers = '없다고!!!'
-print(numbers)
-print(os.path.isdir('c:/2nd-project/S05P21B307/backend/paint_game'))
-print(os.listdir("./"))
-print(os.getcwd())
+amount = 0
+now_dir = os.getcwd()
+
+categories = [
+        "banana",
+        "bulb",
+        "calculator",
+        "carrot",
+        "clock",
+        "crecent",
+        "diamond",
+        "icecream",
+        "strawberry",
+        "t-shirt",
+    ]
+
+for category in categories:
+    if os.path.isdir("/home/jenkins/workspace/test/backend/media/dataset/success/"+category) :
+        amount += os.listdir("/home/jenkins/workspace/test/backend//media/dataset/success/"+category)
+
+print(now_dir)
+
 # C:\Documents\Newsletters\Summer2018

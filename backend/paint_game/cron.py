@@ -33,3 +33,7 @@ def update():
         email.send()
         # os.makedirs("/home/jenkins/workspace/test/backend/media/dataset/success/", exist_ok=True)
     print("업데이트 알림 끗")
+    print(now_dir)
+
+if __name__ == "__main__":
+    update()
