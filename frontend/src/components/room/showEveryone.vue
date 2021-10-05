@@ -2,10 +2,12 @@
   <div>
       <h1>showEveryOne</h1>
       <br>
-      <!-- <h3>???</h3> -->
-      <div v-for="(img, idx) in allImage" :key='idx' width="500" height="500">
-          <img :src="img.image" alt="???">
-      </div>
+      <!-- 이거 왜 안되냐 ㅠㅠㅠ -->
+      <ul>
+        <li v-for="(img, idx) in allImage" :key='idx'>
+            <img :src='img.image' :alt='img.image'>
+        </li>
+      </ul>
   </div>
 </template>
 
@@ -23,8 +25,8 @@ export default {
     axios.get('http://localhost:8000/paint_game/paints_of_round/' + this.room_id + '/banana')
       .then((res) => {
         // console.log(res)
-        this.allImage.push(res.data)
-        console.log(this.allImage)
+        this.allImage.push(res.data[0])
+        console.log('allimage', this.allImage)
       })
       .then(() => {
         setTimeout(this.toNextLevel, 3000)

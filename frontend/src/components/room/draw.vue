@@ -9,7 +9,8 @@
     </div> -->
     <div class='controls__btns'>
         <button id='jsMode' @click="eraseAll">Erase All</button>
-        <button id='jsSave' @click="sendImage">Save</button>
+        <button v-show="data.isPlaying" id='jsSave' @click="sendImage" >Save</button>
+        <!-- <button :disabled="!data.isPlaying" id='jsSave' @click="sendImage" >Save</button> -->
     </div>
     <div class='controls'>
         <div class='controls__colors' id="jsColors">
@@ -53,7 +54,8 @@ export default {
         7: '#0579ff',
         8: '#5856d6'
       },
-      jsRange: 8.5
+      jsRange: 8.5,
+      isPlaying: true
     })
 
     onMounted(() => {
@@ -119,13 +121,16 @@ export default {
         // 이부분에 접속한 유저, 들어온 방, 정해진 category 를 지정해줘야 함
         const userId = localStorage.getItem('user_id')
         const roomId = localStorage.getItem('room_id')
+        const roundCnt = store.state.roundCnt
+        const category = store.state.keywords[roundCnt]
+
         console.log(userId, roomId)
         formData.append('user', userId)
         formData.append('room', roomId)
-        formData.append('category', 'banana')
-        formData.append('image', blob, 'filename.png')
+        formData.append('category', category)
+        formData.append('image', blob, 'filename.jpg')
         axios.post(
-          'http://127.0.0.1:8000/paint_game/saving/',
+          '/paint_game/saving/',
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         )
@@ -134,9 +139,13 @@ export default {
             // router.push('/playRoom/' + localStorage.getItem('room_id') + '/score')
             console.log('성공')
             // router.push('/play/score')
+            eraseAll()
+            data.isPlaying = !data.isPlaying
           })
           .catch(err => {
             console.log(err)
+            eraseAll()
+            data.isPlaying = !data.isPlaying
           })
       })
     }

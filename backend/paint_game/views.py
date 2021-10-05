@@ -234,7 +234,7 @@ def ayj(request):
     room_id = request.data.get("room_id")
     user_name = request.data.get("user_name")
     category = request.data.get("category")
-    test_path = f"./media/room_{room_id}/{category}/{user_name}.png"
+    test_path = f"./media/room_{room_id}/{category}/{user_name}.jpg"
     img = tf.keras.preprocessing.image.load_img(
         test_path, target_size=IMG_SIZE, color_mode="grayscale"
     )

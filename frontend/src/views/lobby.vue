@@ -64,6 +64,8 @@ import roomItem from '../components/lobby/roomItem.vue'
 import Modal from '@/components/Modal.vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import store from '@/store/index.js'
+
 export default {
   name: 'Lobby',
   components: {
@@ -113,6 +115,7 @@ export default {
     }
 
     const moveRoom = (room) => {
+      store.dispatch('resetGame')
       localStorage.setItem('room_id', room.room_id)
       if (room.is_started === true) {
         alert('게임이 진행중일 때는 입장할 수 없습니다.')
