@@ -4,7 +4,8 @@ import os
 def update():
     print("업데이트 알림 시작")
     dirpath = "./media/"
-    numbers = len(os.listdir(dirpath))
+    # numbers = len(os.listdir(dirpath))
+    numbers = '1'
     email = EmailMessage(
         '장고 이메일 테스트',  # 제목
         '이것은 테스트 이메일 입니다.' + str(numbers) + '개의 파일이 있습니다.',  # 내용
