@@ -1,6 +1,8 @@
 <template>
   <div>
-      <h1>play</h1>
+      <h2 id="timerBox">
+
+      </h2>
       <div>
         <draw/>
       </div>
@@ -13,24 +15,33 @@
 <script>
 import draw from '@/components/room/draw.vue'
 import chating from '@/components/room/chating.vue'
+import { onMounted, ref } from '@vue/runtime-core'
 
 export default {
   name: 'play',
   components: { draw, chating },
-  // mounted () {
-  //   console.log('play mounted')
-  //   setTimeout(this.toPlay, 3000)
-  // },
-  // setup() { 
-  //   const toPlay = () => {
-  //     store.dispatch('setPlayState')
-  //     console.log('to nxt level', store.state.playState)
-  //   }
-  //   return {
-  //     toPlay
-  //   }
-  // }
-}
+  setup(){
+    onMounted(()=> {
+
+      const settime = ref(1590)
+      const sec = ref(0)
+
+      const timer = setInterval(function () {
+        sec.value = parseInt(settime.value / 100)
+
+        document.getElementById('timerBox').innerHTML = '남은시간: ' + sec.value + '초'
+        settime.value -= 10
+        if (settime.value <= 0){
+          clearInterval(timer)
+          document.getElementById('timerBox').innerHTML = ''}
+        }, 100)
+
+    })
+    return {
+      setTimeout
+    }
+  } }
+
 </script>
 
 <style>
