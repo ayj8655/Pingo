@@ -16,6 +16,7 @@ urlpatterns = [
     path("game_end/", views.game_end),
     path("ayj/", views.ayj),
     path("<str:room_name>/", views.room, name="room"),
-    path("delete_room/",views.delete_room)
+    path("delete_room/",views.delete_room),
+    path("result_score/<int:room_id>",views.result_score),
 ]
 
