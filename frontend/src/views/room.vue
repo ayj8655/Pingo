@@ -10,9 +10,7 @@
       <div class="room-center" v-if="isStarted">
         <playRoom/>
       </div>
-      <!-- <div id="timerBox">
-        <p>{{settime.value}}</p>
-      </div> -->
+
       <div class="room-right">
         <p>채팅</p>
       </div>
@@ -22,9 +20,13 @@
         <template v-slot:header>
           </template>
           <template v-slot:body>
-            <div>
+            <div v-if="!isLocked">
               <input type="text" name="" id="" v-model="invitedUser">
               <button @click="login">login</button>
+            </div>
+            <div v-if="isLocked">
+              <input type="text" v-model="invitedPassword">
+              <button @click="inputPassword">비번입력</button>
             </div>
 
           </template>
@@ -32,17 +34,7 @@
           </template>
       </Modal>
     </section>
-    <!-- <div :class="['chat-only', isStarted && 'chat-and-draw']" >
-      그림판
-      <div class="draw" v-if="isStarted">
-        <draw/>
-      </div>
-      <div :class="['big-chat', isStarted && 'chat']" >
-        <chating />
-      </div>
-    </div>-->
   </div>
-  <!-- 시작버튼(누르면 없어지고 제시어 등장) -->
 </template>
 
 <script>
@@ -56,17 +48,24 @@ import { useStore } from 'vuex'
 import Modal from '../components/Modal.vue'
 export default {
   components: { chating, playRoom, Modal },
-  setup () {
+  props: {
+    password: {
+      type: String
+    }
+  },
+  setup (props) {
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
     localStorage.setItem('room_id', route.params.room_id)
     const isStarted = ref(false)
+    const isLocked = ref(false)
     const isShow = ref(false)
     const invitedUser = ref('')
+    const invitedPassword = ref('')
     var max_head = 0
     var now_head = 0
-    const urlLink = 'http://localhost:8000/paint_game/enter_room/' + localStorage.getItem('room_id')
+    const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
 
     const inviteLink =() => {
       var obj = document.getElementById("link");
@@ -78,9 +77,11 @@ export default {
 
     }
     const enterRoom = () => {
+      console.log(route.params)
       axios.post('http://localhost:8000/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
-        room_id: route.params.room_id
+        room_id: route.params.room_id,
+        room_password: props.password
       })
         .then((res) => {
           if (store.state.lobbySocket.readyState === 1) {
@@ -91,8 +92,30 @@ export default {
               }
             )
           }
+          // isShow.value = !isShow.value
         })
     }
+
+    const enterRoom2 = () => {
+      console.log(route.params)
+      axios.post('http://localhost:8000/paint_game/enter_room/', {
+        user_id: localStorage.getItem('user_id'),
+        room_id: route.params.room_id,
+        room_password: p
+      })
+        .then((res) => {
+          if (store.state.lobbySocket.readyState === 1) {
+            store.dispatch('lobbySend',
+              {
+                space: 'lobby',
+                req: 'getUserList'
+              }
+            )
+          }
+          isShow.value = !isShow.value
+        })
+    }
+
 
     const leaveRoom = () => {
       axios.delete('/paint_game/leave_room/', {
@@ -124,6 +147,15 @@ export default {
 
     }
 
+    const inputPassword = () => {
+      console.log(invitedPassword.value, p, 'invite & props')
+      console.dir(props)
+
+      if(invitedPassword.value === p){
+        enterRoom2()
+      }else{alert('비밀번호가 틀립니다.')}
+    }
+
 
     const start = () => {
       isStarted.value = !isStarted.value
@@ -133,50 +165,16 @@ export default {
       })
     }
 
-    // const settime = ref(1500)
-    // const sec = ref('')
 
-    // const timer = setInterval(function () {
-    //   sec.value = parseInt(settime.value / 100)
-
-    //   document.getElementById('timerBox').innerHTML = sec.value + '초'
-    //   settime.value -= 10
-
-    //   if (settime.value <= 0) {
-    //     clearInterval(timer)
-    //     document.getElementById('timerBox').innerHTML = '종료'
-    //   }
-    // }, 100)
     store.commit('roomSocketConnect', route.params.room_id)
     store.state.roomSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
       console.log('room 43line', data)
     }
     const room_id = localStorage.getItem('room_id')
-    const roomLimit = () => {
-      axios({
-        method: 'GET',
-        url: '/paint_game/room_info/' + room_id
-      }).then((res) => {
-        console.log('roominfo', res.data.max_head_counts)
-        const m = res.data.max_head_counts
-        store.commit('FULL_LIMIT' , m)
-      })
-        return
-    }
-    const fullRoom = () => {
-      axios({
-        method: 'GET',
-        url: '/paint_game/room_member/' + room_id + '/'
-      }).then((res) => {
-        console.log('res3', res)
-        console.log('length', res.data.length)
-        const n = res.data.length
-        store.commit('NOW_LIMIT', n)
-      })
-        return
-    }
-
+    let m = null
+    let l = null
+    let p = null
 
     const login = () => {
       const username = invitedUser._value
@@ -213,34 +211,47 @@ export default {
           console.log('login (67line)', res.data)
           localStorage.setItem('user_name', res.data.user_name)
           localStorage.setItem('user_id', res.data.user_id)
-          var number1 = roomLimit()
-          var number2 = fullRoom()
+          return axios({
+            method: 'GET',
+            url: '/paint_game/room_info/' + room_id
+          })
+        })
+        .then((res) => {
+          l = res.data.is_locked
+          p = res.data.room_password
+          console.log(res.data)
+          m = res.data.max_head_counts
+          return axios({
+            method: 'GET',
+            url: '/paint_game/room_member/' + room_id + '/'
+          })
+        })
+        .then((res) => {
+          const n = res.data.length
 
+          if(l){
+            isLocked.value = !isLocked.value
+            console.log(isLocked.value)
+          }
+          else if (m > n) {
+            enterRoom()
+            isShow.value = !isShow.value
+          } else {
 
-        }).then((res) => {
-        // console.log('num1, num2' , number1, number2)
-        console.log('limit and full',store.state.maxhead, store.state.nowhead)
-        if(store.state.maxhead > store.state.nowhead){enterRoom()}
-        else{
-          // router.push('/lobby')
-          alert()
+            alert('정원이 가득 찼습니다')
+            router.push('/lobby')
           }
 
-          isShow.value = !isShow.value
         })
         .catch((err) => {
           console.dir(err)
         })
     }
 
-
-
     onMounted(() => {
       invited()
-
-
-
     })
+
     onBeforeUnmount(() => {
       leaveRoom()
     })
@@ -248,9 +259,6 @@ export default {
     window.onbeforeunload = () => {
       leaveRoom()
     }
-
-
-
 
     return {
       start,
@@ -262,12 +270,13 @@ export default {
       isShow,
       login,
       invitedUser,
-      fullRoom,
-      roomLimit,
       urlLink,
       inviteLink,
       max_head,
       now_head,
+      isLocked,
+      invitedPassword,
+      inputPassword
 
     }
   }
@@ -349,7 +358,6 @@ border-radius: 5px;
 margin: 3rem;
 
 }
-
 
 .word{
   height: 3rem;
