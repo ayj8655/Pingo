@@ -9,6 +9,7 @@ import { onMounted, ref } from '@vue/runtime-core'
 import axios from 'axios'
 import store from '@/store/index.js'
 import { useRouter } from 'vue-router'
+import { domain } from '@/src/domain.js'
 
 export default {
   name: 'score',
@@ -26,7 +27,7 @@ export default {
       axios({
         method: 'POST',
 
-        url: "http://localhost:8000/paint_game/ayj/",
+        url: domain + "/paint_game/ayj/",
         data: {
           'user_name':localStorage.getItem('user_name'),
           'room_id':localStorage.getItem('room_id'),

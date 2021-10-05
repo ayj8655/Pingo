@@ -13,6 +13,7 @@ export default createStore({
     keywords: [],
     playState: 'playReady',
     roundCnt: 0,
+    isStarted: false,
     gameEnded: false
   },
   mutations: {
@@ -40,7 +41,6 @@ export default createStore({
       state.roundCnt++
     },
     RESET_GAME (state) {
-      state.isStarted = false
       state.roundCnt = 0
       state.playState = 'playReady'
       state.gameEnded = false
