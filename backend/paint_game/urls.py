@@ -14,5 +14,6 @@ urlpatterns = [
     path("game_end/", views.game_end),
     path("ayj/", views.ayj),
     path("<str:room_name>/", views.room, name="room"),
+    path("delete_room/",views.delete_room)
 ]
 

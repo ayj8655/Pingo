@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['localhost','j5b307.p.ssafy.io', '127.0.0.1']
 
 INSTALLED_APPS = [
     "channels",
+    'django_crontab',
     "accounts",
     "paint_game",
     "rest_framework",
@@ -87,7 +88,7 @@ DATABASES = {
         "NAME": "ssafy_painting_game",  # 2
         "USER": "root",  # 3
         "PASSWORD": "ssafy",  # 4
-        "HOST": "localhost",  # 5
+        "HOST": "j5b307.p.ssafy.io",  # 5
         "PORT": "3306",  # 6
     }
 }
@@ -145,3 +146,8 @@ CHANNEL_LAYERS = {
         "CONFIG": {"hosts": [("127.0.0.1", 6379)],},
     },
 }
+
+#Crontab
+CRONJOBS = [
+    ('* * * * *', 'paint_game.cron.update')
+]
