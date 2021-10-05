@@ -21,5 +21,6 @@ for category in categories:
         amount += os.listdir("/home/jenkins/workspace/test/backend//media/dataset/success/"+category)
 
 print(now_dir)
+print(os.listdir(now_dir))
 
 # C:\Documents\Newsletters\Summer2018
