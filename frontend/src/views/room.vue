@@ -1,12 +1,18 @@
 <template >
   <div class="ai-back">
     <button id="yellow-button" @click="start" v-if="!isStarted">start</button>
-    <div class="word-box">
-      <div v-if="isStarted">
+    <div class="play-box">
+      <div class="room-left">
+        <p>회원</p>
+      </div>
+      <div class="room-center" v-if="isStarted">
         <playRoom/>
       </div>
-      <div id="timerBox">
+      <!-- <div id="timerBox">
         <p>{{settime.value}}</p>
+      </div> -->
+      <div class="room-right">
+        <p>채팅</p>
       </div>
     </div>
 
@@ -39,7 +45,7 @@ export default {
     localStorage.setItem('room_id', route.params.room_id)
     const isStarted = ref(false)
     const enterRoom = () => {
-      axios.post('/paint_game/enter_room/', {
+      axios.post('http://localhost:8000/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
         room_id: route.params.room_id
       })
@@ -130,7 +136,8 @@ export default {
 .ai-back{
   /* background-image: url(/image1.jfif) !important ; */
   background-image: url(/ai.jpg) !important ;
-  height: 960px;
+  height: 100%;
+  width: 100%;
   background-repeat : repeat;
   background-size : cover;
   background-position: center;
@@ -167,10 +174,41 @@ export default {
   margin: 0;
   /* flex-grow: 1; */
 }
-.word-box{
+.play-box{
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 1300px;
+  height: 100%;
+  margin: auto;
 }
+
+.room-left{
+height: 670px;
+width: 300px;
+background-color: white;
+border-radius: 5px;
+margin: 3rem;
+/* padding-top: 3rem; */
+
+}
+
+.room-center{
+height: 900px;
+flex-basis: 900px;
+width: 700px;
+}
+
+.room-right{
+height: 670px;
+width: 300px;
+background-color: white;
+border-radius: 5px;
+margin: 3rem;
+
+}
+
+
 .word{
   height: 3rem;
   width: 18rem;
