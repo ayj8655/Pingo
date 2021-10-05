@@ -66,8 +66,27 @@ export default {
   min-height: 70%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to right, #3883BC 0%, 50%, #FFF9BA 100%);
+  background: linear-gradient(-45deg, #3883BC 0%, 50%, #FFF9BA 100%);
+  background-repeat: no-repeat;
+  background-size: 400% 400%;
+  position: relative;
+  animation: backgroundChange 10s ease-in-out infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 
+@keyframes backgroundChange {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }
 
 /* 공통사용 버튼 */
@@ -87,7 +106,7 @@ export default {
   /* height: 3.3rem;
   width: 18.5rem; */
   transition: 0.1s;
-  background-color: #FFF9BA;
+  background-color: white;
   /* box-shadow: 0 0 0 1px #1a3d58 inset; */
   cursor: pointer;
   color: #3883BC;

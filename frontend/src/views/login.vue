@@ -2,9 +2,9 @@
   <div id='back'>
       <div class="login-box">
         <p>AI와 그림 퀴즈 맞춰요</p>
-          <input class="login-input" type="text" placeholder="Temporary Nickname" v-model="credentials.user_name" @keydown.enter="goToLobby">
-          <br>
-          <button id="blue-button" @click="goToLobby">Enter</button>
+        <input class="login-input" type="text" placeholder="Temporary Nickname" v-model="credentials.user_name" @keydown.enter="goToLobby">
+        <br>
+        <button id="blue-button" @click="goToLobby">Enter</button>
       </div>
   </div>
 
@@ -73,7 +73,7 @@ export default {
 
 .login-box{
   position: relative;
-  top: 50%
+  top: 20%
 
 }
 
