@@ -1,7 +1,7 @@
 from django.db.models import fields
 from accounts import models
 from rest_framework import serializers
-from .models import Room, UserInRoom, Paint, Categories
+from .models import Room, UserInRoom, Paint, Categories, Score
 
 class RoomMemberSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,3 +28,8 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Categories
         fields = ('word',)
+
+class ScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Score
+        fields = '__all__'

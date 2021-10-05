@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-i5l&2lxs-l&gp(m2sj4-ywu@py(i8wq%2jx@@xx17nykgq=opq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','j5b307.p.ssafy.io', '127.0.0.1']
+ALLOWED_HOSTS = ["localhost", "j5b307.p.ssafy.io", "127.0.0.1"]
 
 
 # Application definition
@@ -149,5 +149,14 @@ CHANNEL_LAYERS = {
 
 #Crontab
 CRONJOBS = [
-    ('* * * * *', 'paint_game.cron.update')
+    ('00 * * * *', 'paint_game.cron.update')
 ]
+
+#Email setting
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = 'beenprojectauth@gmail.com'
+EMAIL_HOST_PASSWORD = 'pingossafy5!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

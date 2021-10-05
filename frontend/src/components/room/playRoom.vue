@@ -54,7 +54,7 @@ export default {
 
   setup() {
     const playState = ref('playReady')
-    const keywords = ['banana', 'bulb', 'calculator', 'carrot', 'clock']
+    // const keywords = ['banana', 'bulb', 'calculator', 'carrot', 'clock']
     // const rounds = keywords.length
 
     // onMounted{
@@ -62,7 +62,6 @@ export default {
     // }
     // forEach(keywords)
     return {
-      keywords,
       playState
     }
   },
