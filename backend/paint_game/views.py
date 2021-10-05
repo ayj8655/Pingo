@@ -117,6 +117,14 @@ def room_list(request):  # 수정요망
     serializer = RoomListSerializer(rooms, many=True)
     return Response(serializer.data)
 
+@api_view(["GET"])
+def room_info(request, room_id):
+    print("방 받아오기")
+    room = Room.objects.get(room_id = room_id)
+    serializer = RoomListSerializer(room)
+    print(serializer.data)
+    return Response(serializer.data)
+
 
 @swagger_auto_schema(
     method="post",
