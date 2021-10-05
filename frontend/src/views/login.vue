@@ -14,7 +14,7 @@
 import axios from 'axios'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import domain from '@/domain.js'
+import { domain } from '@/domain.js'
 export default {
   name: 'login',
   setup () {
