@@ -130,7 +130,6 @@ export default {
         const roundCnt = store.state.roundCnt
         const category = store.state.keywords[roundCnt]
 
-        console.log(userId, roomId)
         formData.append('user', userId)
         formData.append('room', roomId)
         formData.append('category', category)

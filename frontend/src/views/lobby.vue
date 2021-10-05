@@ -58,15 +58,13 @@
 
 <script>
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue'
 import makeRoom from '../components/lobby/makeRoom.vue'
 import lockRoom from '../components/lobby/lockRoom.vue'
 import roomItem from '../components/lobby/roomItem.vue'
 import Modal from '@/components/Modal.vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import store from '@/store/index.js'
-
 export default {
   name: 'Lobby',
   components: {
@@ -79,7 +77,7 @@ export default {
   setup () {
     const router = useRouter()
     const store = useStore()
-    var roomList = ref([])
+    const roomList = ref([])
     const userList = ref([])
     const isShow = ref(false)
     const roomMaking = ref(false)
@@ -87,16 +85,18 @@ export default {
     const password = ref(false)
     const lobbySocket = store.state.lobbySocket
     const isTutorial = ref(false)
-    const videoUrl = ref("https://www.youtube.com/")
+    const videoUrl = ref('https://www.youtube.com/')
     // x-frame origin 해결하기
 
-    const getUserList = () => {
-      store.dispatch('lobbySend',
-        {
-          space: 'lobby',
-          req: 'getUserList'
-        }
-      )
+    const getLobbyUsers = () => {
+      if (lobbySocket.readyState === 1) {
+        store.dispatch('lobbySend',
+          {
+            space: 'lobby',
+            req: 'getLobbyUsers'
+          }
+        )
+      }
     }
 
     const switchModal = () => {
@@ -129,21 +129,18 @@ export default {
 
     lobbySocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
-      console.log('lobby 68line', data)
-      if (data.res === 'getUserList') {
+      // console.log('lobby 131line', data)
+      if (data.res === 'getLobbyUsers') {
         userList.value = data.value
       } else if (data.res === 'getRoomList') {
         roomList.value = data.value
       }
     }
     lobbySocket.onopen = () => {
-      getUserList()
+      getLobbyUsers()
     }
-
     onMounted(() => {
-      if (lobbySocket.readyState === 1) {
-        getUserList()
-      }
+      getLobbyUsers()
       axios({
         method: 'GET',
         url: '/paint_game/room_list/'

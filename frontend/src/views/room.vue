@@ -6,6 +6,9 @@
     <div class="play-box">
       <div class="room-left">
         <p>회원</p>
+        <div v-for="roomUser in roomUserList" :key='roomUser.user_id'>
+          {{roomUser.user_name}}
+        </div>
       </div>
       <div class="room-center" v-if="isStarted">
         <playRoom/>
@@ -60,6 +63,7 @@ export default {
     const router = useRouter()
     const store = useStore()
     localStorage.setItem('room_id', route.params.room_id)
+    const roomUserList = ref([])
     const isStarted = ref(false)
     const isLocked = ref(false)
     const isShow = ref(false)
@@ -68,16 +72,38 @@ export default {
     var max_head = 0
     var now_head = 0
     const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
+    const room_id = localStorage.getItem('room_id')
+    let m = null
+    let l = null
+    let p = null
 
     const inviteLink =() => {
       var obj = document.getElementById("link");
       obj.select(); //인풋 컨트롤의 내용 전체 선택
       document.execCommand("copy"); //복사
       obj.setSelectionRange(0, 0);
-
-
-
     }
+    const getRoomAndLobbyUsers = () => {
+      if (store.state.roomSocket.readyState === 1) {
+        store.dispatch('roomSend',
+          {
+            space: 'room',
+            req: 'getRoomUsers'
+          }
+        )
+      } else {
+        console.log('룸 웹소켓 연결이 안됐음')
+      }
+      if (store.state.lobbySocket.readyState === 1) {
+        store.dispatch('lobbySend',
+          {
+            space: 'lobby',
+            req: 'getLobbyUsers'
+          }
+        )
+      }
+    }
+
     const enterRoom = () => {
       console.log(route.params)
       axios.post('http://localhost:8000/paint_game/enter_room/', {
@@ -86,15 +112,7 @@ export default {
         room_password: props.password
       })
         .then((res) => {
-          if (store.state.lobbySocket.readyState === 1) {
-            store.dispatch('lobbySend',
-              {
-                space: 'lobby',
-                req: 'getUserList'
-              }
-            )
-          }
-          // isShow.value = !isShow.value
+          getRoomAndLobbyUsers()
         })
     }
 
@@ -118,7 +136,6 @@ export default {
         })
     }
 
-
     const leaveRoom = () => {
       axios.delete('/paint_game/leave_room/', {
         data: {
@@ -127,57 +144,40 @@ export default {
         }
       })
         .then((res) => {
-          console.log(res)
+          getRoomAndLobbyUsers()
           localStorage.removeItem('room_id')
-          store.dispatch('lobbySend',
-            {
-              space: 'lobby',
-              req: 'getUserList'
-            }
-          )
         })
         .catch((err) => {
           console.dir(err)
         })
     }
+
     const invited = () => {
       const user_id = localStorage.getItem('user_id')
-      if(user_id===null){
+      if (user_id === null) {
         alert(isShow.value)
         isShow.value = !isShow.value
-      }else{enterRoom()}
-
+      } else {
+        enterRoom()
+      }
     }
 
     const inputPassword = () => {
       console.log(invitedPassword.value, p, 'invite & props')
-      console.dir(props)
-
-      if(invitedPassword.value === p){
+      console.log(props)
+      if (invitedPassword.value === p) {
         enterRoom2()
-      }else{alert('비밀번호가 틀립니다.')}
+      } else {
+        alert('비밀번호가 틀립니다.')
+      }
     }
 
-
     const start = () => {
-      // isStarted.value = !isStarted.value
-      store.dispatch('startGame')
       store.dispatch('roomSend', {
         space: 'room',
         req: 'gameStart'
       })
     }
-
-
-    store.commit('roomSocketConnect', route.params.room_id)
-    store.state.roomSocket.onmessage = (e) => {
-      const data = JSON.parse(e.data)
-      console.log('room 43line', data)
-    }
-    const room_id = localStorage.getItem('room_id')
-    let m = null
-    let l = null
-    let p = null
 
     const login = () => {
       const username = invitedUser._value
@@ -251,6 +251,21 @@ export default {
         })
     }
 
+    store.commit('roomSocketConnect', route.params.room_id)
+    store.state.roomSocket.onopen = () => {
+      getRoomAndLobbyUsers()
+    }
+    store.state.roomSocket.onmessage = (e) => {
+      const data = JSON.parse(e.data)
+      // console.log('room 125line', data)
+      if (data.res === 'gameStart') {
+        store.commit('setKeywords', data.value)
+        isStarted.value = !isStarted.value
+      } else if (data.res === 'getRoomUsers') {
+        roomUserList.value = data.value.map(e => e.user)
+      }
+    }
+
     onMounted(() => {
       invited()
     })
@@ -266,9 +281,6 @@ export default {
     return {
       start,
       isStarted,
-      // timer,
-      // setInterval,
-      // settime,
       invited,
       isShow,
       login,
@@ -279,10 +291,11 @@ export default {
       now_head,
       isLocked,
       invitedPassword,
-      inputPassword
-
+      inputPassword,
+      roomUserList
     }
   },
+
   computed: {
     change: function () {
       return store.getters['getIsStarted']
