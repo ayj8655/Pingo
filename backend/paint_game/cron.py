@@ -24,7 +24,7 @@ def update():
         if os.path.isdir("/home/jenkins/workspace/test/backend/media/dataset/success/"+category) :
             amount += os.listdir("/home/jenkins/workspace/test/backend//media/dataset/success/"+category)
 
-    if amount > 1000:
+    if True:
         email = EmailMessage(
             '[PINGO] 분류 성공 이미지 누적 안내',  # 제목
             '이것은 테스트 이메일 입니다. 현재' + now_dir + '에 있습니다',
@@ -32,8 +32,3 @@ def update():
         )
         email.send()
         # os.makedirs("/home/jenkins/workspace/test/backend/media/dataset/success/", exist_ok=True)
-    print("업데이트 알림 끗")
-    print(now_dir)
-
-if __name__ == "__main__":
-    update()
