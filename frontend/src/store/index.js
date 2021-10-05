@@ -7,16 +7,17 @@ export default createStore({
     //   username: '',
     //   user_id: -1
     // }
-    lobbySocket: new WebSocket('ws://J5B307.p.ssafy.io:8000/ws/game/lobby/'),
-    // lobbySocket: new WebSocket('ws://localhost:8000/ws/game/lobby/'),
+    // lobbySocket: new WebSocket('ws://J5B307.p.ssafy.io:8000/ws/game/lobby/'),
+    lobbySocket: new WebSocket('ws://localhost:8000/ws/game/lobby/'),
     roomSocket: {},
-    keywords: ['banana', 'blub', 'calculator', 'carrot', 'clock'],
+    keywords: [],
     playState: 'playReady',
     roundCnt: 0
   },
   mutations: {
     roomSocketConnect (state, roomId) {
-      state.roomSocket = new WebSocket('ws://J5B307.p.ssafy.io:8000/ws/game/' + roomId + '/')
+      // state.roomSocket = new WebSocket('ws://J5B307.p.ssafy.io:8000/ws/game/' + roomId + '/')
+      state.roomSocket = new WebSocket('ws://localhost:8000/ws/game/' + roomId + '/')
     },
     SET_PLAYSTATE (state) {
       if (state.roundCnt >= state.keywords.length) {
@@ -42,6 +43,9 @@ export default createStore({
     RESET_GAME (state) {
       state.roundCnt = 0
       state.playState = 'playReady'
+    },
+    setKeywords (state, payload) {
+      state.keywords = payload.map((e) => e.category)
     }
   },
   actions: {

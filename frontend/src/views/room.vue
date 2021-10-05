@@ -4,6 +4,9 @@
     <div class="play-box">
       <div class="room-left">
         <p>회원</p>
+        <div v-for="roomUser in roomUserList" :key='roomUser.user_id'>
+          {{roomUser.user_name}}
+        </div>
       </div>
       <div class="room-center" v-if="isStarted">
         <playRoom/>
@@ -44,20 +47,35 @@ export default {
     const store = useStore()
     localStorage.setItem('room_id', route.params.room_id)
     const isStarted = ref(false)
+    const roomUserList = ref([])
+    const getRoomAndLobbyUsers = () => {
+      if (store.state.roomSocket.readyState === 1) {
+        store.dispatch('roomSend',
+          {
+            space: 'room',
+            req: 'getRoomUsers'
+          }
+        )
+      } else {
+        console.log('룸 웹소켓 연결이 안됐음')
+      }
+      if (store.state.lobbySocket.readyState === 1) {
+        store.dispatch('lobbySend',
+          {
+            space: 'lobby',
+            req: 'getLobbyUsers'
+          }
+        )
+      }
+    }
+
     const enterRoom = () => {
       axios.post('http://localhost:8000/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
         room_id: route.params.room_id
       })
         .then((res) => {
-          if (store.state.lobbySocket.readyState === 1) {
-            store.dispatch('lobbySend',
-              {
-                space: 'lobby',
-                req: 'getUserList'
-              }
-            )
-          }
+          getRoomAndLobbyUsers()
         })
     }
 
@@ -69,21 +87,14 @@ export default {
         }
       })
         .then((res) => {
-          console.log(res)
+          getRoomAndLobbyUsers()
           localStorage.removeItem('room_id')
-          store.dispatch('lobbySend',
-            {
-              space: 'lobby',
-              req: 'getUserList'
-            }
-          )
         })
         .catch((err) => {
           console.dir(err)
         })
     }
     const start = () => {
-      isStarted.value = !isStarted.value
       store.dispatch('roomSend', {
         space: 'room',
         req: 'gameStart'
@@ -104,10 +115,21 @@ export default {
         document.getElementById('timerBox').innerHTML = '종료'
       }
     }, 100)
+
     store.commit('roomSocketConnect', route.params.room_id)
+    store.state.roomSocket.onopen = () => {
+      getRoomAndLobbyUsers()
+    }
     store.state.roomSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
-      console.log('room 43line', data)
+      // console.log('room 125line', data)
+
+      if (data.res === 'gameStart') {
+        store.commit('setKeywords', data.value)
+        isStarted.value = !isStarted.value
+      } else if (data.res === 'getRoomUsers') {
+        roomUserList.value = data.value.map(e => e.user)
+      }
     }
 
     onMounted(() => {
@@ -126,7 +148,8 @@ export default {
       isStarted,
       timer,
       setInterval,
-      settime
+      settime,
+      roomUserList
     }
   }
 }
@@ -207,7 +230,6 @@ border-radius: 5px;
 margin: 3rem;
 
 }
-
 
 .word{
   height: 3rem;
