@@ -10,19 +10,22 @@ export default createStore({
     lobbySocket: new WebSocket('ws://J5B307.p.ssafy.io:8000/ws/game/lobby/'),
     // lobbySocket: new WebSocket('ws://localhost:8000/ws/game/lobby/'),
     roomSocket: {},
-    keywords: ['banana', 'blub', 'calculator', 'carrot', 'clock'],
+    isStarted: false,
+    // keywords: ['banana', 'bulb', 'calculator', 'carrot', 'clock'],
+    keywords: ['banana', 'bulb'],
+    // keywords: ['banana'],
     playState: 'playReady',
-    roundCnt: 0
+    roundCnt: 0,
+    gameEnded: false
   },
   mutations: {
     roomSocketConnect (state, roomId) {
       state.roomSocket = new WebSocket('ws://J5B307.p.ssafy.io:8000/ws/game/' + roomId + '/')
     },
     SET_PLAYSTATE (state) {
-      if (state.roundCnt >= state.keywords.length) {
+      if (state.gameEnded === true) {
         state.playState = 'gameRanking'
-      }
-      if (state.playState === 'playReady') {
+      } else if (state.playState === 'playReady') {
         state.playState = 'play'
       } else if (state.playState === 'play') {
         state.playState = 'roundEnd'
@@ -32,16 +35,26 @@ export default createStore({
         state.playState = 'score'
       } else if (state.playState === 'score') {
         state.playState = 'playReady'
-      } else {
-
       }
+      console.log(state.playState)
     },
     SET_ROUNDCNT (state) {
       state.roundCnt++
     },
     RESET_GAME (state) {
+      state.isStarted = false
       state.roundCnt = 0
       state.playState = 'playReady'
+      state.gameEnded = false
+    },
+    END_GAME (state) {
+      state.gameEnded = true
+    },
+    START_GAME (state) {
+      state.isStarted = true
+    },
+    TO_ROOM (state) {
+      state.isStarted = false
     }
   },
   actions: {
@@ -59,6 +72,15 @@ export default createStore({
     },
     resetGame ({ commit }) {
       commit('RESET_GAME')
+    },
+    endGame ({ commit }) {
+      commit('END_GAME')
+    },
+    startGame ({ commit }) {
+      commit('START_GAME')
+    },
+    toRoom ({ commit }) {
+      commit('TO_ROOM')
     }
   },
   modules: {
@@ -66,6 +88,9 @@ export default createStore({
   getters: {
     getPlayState: state => {
       return state.playState
+    },
+    getIsStarted: state => {
+      return state.isStarted
     }
   }
 })
