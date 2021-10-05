@@ -149,7 +149,7 @@ CHANNEL_LAYERS = {
 
 #Crontab
 CRONJOBS = [
-    ('*/3 * * * *', 'paint_game.cron.update')
+    ('00 12 * * *', 'paint_game.cron.update')
 ]
 
 #Email setting
