@@ -46,15 +46,13 @@ export default {
     const toNextLevel = () => {
       store.dispatch('increaseRoundcnt')
       console.log('roundcount', store.state.roundCnt)
+      console.log('len keyword', store.state.keywords.length)
 
-      if (store.state.roundCnt >= store.state.keywords.length()) {
-        const room = localStorage.getItem('room_id')
-        console.log(room)
+      if (store.state.roundCnt >= store.state.keywords.length) {
+        store.dispatch('endGame')
       }
-      else {
-        store.dispatch('setPlayState')
-        console.log('to nxt level', store.state.playState)
-      }
+      store.dispatch('setPlayState')
+      console.log('to nxt level', store.state.playState)
     }
     return {
       onMounted,

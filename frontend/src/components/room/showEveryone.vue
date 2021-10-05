@@ -5,7 +5,8 @@
       <!-- 이거 왜 안되냐 ㅠㅠㅠ -->
       <ul>
         <li v-for="(img, idx) in allImage" :key='idx'>
-            <img :src='img.image' :alt='img.image'>
+          <!-- <p>http://localhost:8000/{{img.image}}</p> -->
+            <img :src='"http://localhost:8000"+img.image' alt='???'>
         </li>
       </ul>
   </div>
@@ -14,6 +15,8 @@
 <script>
 import store from '@/store/index.js'
 import axios from 'axios'
+import { ref } from '@vue/reactivity'
+
 
 export default {
   name: 'showEveryone',
@@ -22,10 +25,12 @@ export default {
     console.log('showEveryone mounted')
 
     // 나중에 카테고리 수정
-    axios.get('http://localhost:8000/paint_game/paints_of_round/' + this.room_id + '/banana')
+    const roundCnt = store.state.roundCnt
+    const category = store.state.keywords[roundCnt]
+    axios.get('/paint_game/paints_of_round/' + this.room_id + '/' + category)
       .then((res) => {
         // console.log(res)
-        this.allImage.push(res.data[0])
+        this.allImage = res.data
         console.log('allimage', this.allImage)
       })
       .then(() => {
@@ -42,7 +47,7 @@ export default {
 
   setup () {
     const room_id = localStorage.getItem('room_id')
-    const allImage = []
+    const allImage = ref([])
 
     const toNextLevel = () => {
       store.dispatch('setPlayState')

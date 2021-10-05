@@ -53,6 +53,8 @@ import chating from '../components/room/chating.vue'
 import playRoom from '@/components/room/playRoom.vue'
 import axios from 'axios'
 import { useStore } from 'vuex'
+import store from '@/store/index.js'
+
 import Modal from '../components/Modal.vue'
 export default {
   components: { chating, playRoom, Modal },
@@ -123,7 +125,8 @@ export default {
 
 
     const start = () => {
-      isStarted.value = !isStarted.value
+      // isStarted.value = !isStarted.value
+      store.dispatch('startGame')
       store.dispatch('roomSend', {
         space: 'room',
         req: 'gameStart'
@@ -247,6 +250,16 @@ export default {
       roomLimit,
       urlLink,
       inviteLink
+    }
+  },
+  computed: {
+    change: function () {
+      return store.getters['getIsStarted']
+    }
+  },
+  watch: {
+    change (value) {
+      this.isStarted = value
     }
   }
 }
