@@ -8,8 +8,8 @@ def update():
     # numbers = '1'
     if len(numbers) > 0 :
         name = ''
-        for i in len(numbers) :
-            name += numbers[i] + ', '
+        for i in numbers :
+            name += i + ', '
     else :
         name = '없어'
     email = EmailMessage(
