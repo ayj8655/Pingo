@@ -12,6 +12,7 @@ from .serializers import (
     MakeRoomSerializer,
     PaintSerializer,
     CategorySerializer,
+    ScoreSerializer
 )
 from .models import Categories, Score, Room, UserInRoom, Paint
 from accounts.models import Accounts
@@ -357,3 +358,10 @@ def game_end(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+@swagger_auto_schema(method="get")
+@api_view(["GET"])
+def result_score(request, room_id):
+    # 방번호를 받아서 유저들의 최종 스코어를 순서대로 나열
+    score = Score.objects.filter(room_id = room_id).order_by('-score')
+    serializer = ScoreSerializer(score, many=True)
+    return Response(serializer.data)
