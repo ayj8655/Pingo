@@ -59,7 +59,8 @@ export default {
       toNextLevel,
       room_id,
       allImage,
-      time_now
+      time_now,
+      domain
     }
   }
 }
