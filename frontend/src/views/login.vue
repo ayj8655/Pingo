@@ -30,7 +30,7 @@ export default {
       }
       axios({
         method: 'POST',
-        url: '/accounts/check_duplication/',
+        url: 'http://J5B307.p.ssafy.io:8000/accounts/check_duplication/',
         // url: '/accounts/check_duplication/',
         data: {
           user_name: username
@@ -43,8 +43,8 @@ export default {
           }
           return axios({
             method: 'POST',
-            url: 'http://J5B307.p.ssafy.io:8000/accounts/signup/',
-            // url: '/accounts/signup/',
+            // url: 'http://J5B307.p.ssafy.io:8000/accounts/signup/',
+            url: '/accounts/signup/',
             data: {
               user_name: username
             }
