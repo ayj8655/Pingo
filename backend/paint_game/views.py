@@ -91,6 +91,22 @@ def make_room(request):  # 만들어준 방의 정보 return
     print("방 만들기 완료")
     return Response(serializer.data)
 
+@swagger_auto_schema(
+    method="delete",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "room_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+        },
+    ),
+)
+@api_view(["DELETE"])
+def delete_room(request):
+    print("방 폭☆파")
+    room_id=request.data.get("room_id")
+    print("방id",room_id)
+    Room.objects.filter(room=room_id).delete()
+    return Response({'detail': '삭제 성공'})
 
 @api_view(["GET"])
 def room_list(request):  # 수정요망
@@ -147,7 +163,14 @@ def room_member(request, room_id):
     # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)
 
-
+@api_view(["GET"])
+def room_headcount(request, room_id):
+    print("방 인원 출력")
+    users_in_room = get_list_or_404(UserInRoom, room=room_id)
+    print(users_in_room)
+    headcount = len(users_in_room)
+    return Response({'headcount' : headcount})
+    
 @swagger_auto_schema(
     method="get",
     manual_parameters=[
@@ -240,7 +263,7 @@ def ayj(request):
     room_id = request.data.get("room_id")
     user_name = request.data.get("user_name")
     category = request.data.get("category")
-    test_path = f"./media/room_{room_id}/{category}/{user_name}.png"
+    test_path = f"./media/room_{room_id}/{category}/{user_name}.jpg"
     img = tf.keras.preprocessing.image.load_img(
         # test_path, target_size=IMG_SIZE, color_mode="grayscale"
         test_path,
@@ -295,10 +318,11 @@ def ayj(request):
 def game_end(request):
     room_id = request.data.get("room_id")
     user_id = request.data.get("user_id")
-    directory = f"./media/room_{room_id}"
+    directory = f"./media/room_{room_id}" 
+    print(room_id, user_id)
 
     try:
-        # my_score = Score.objects.get(room_id=room_id,user_id=user_id)
+        my_score = Score.objects.get(room_id=room_id,user_id=user_id)
         # room_n 디렉토리 제거
         shutil.rmtree(directory)
 
@@ -312,7 +336,7 @@ def game_end(request):
         if paint_set.exists():
             paint_set.delete()
 
-        return Response({"detail": "end process is done."})
+        return Response({"detail":"end process is done.", "total_score":my_score.score})
 
     except OSError as e:
         return Response(

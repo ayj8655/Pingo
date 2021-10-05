@@ -15,10 +15,11 @@ export default {
   name: 'ready',
 
   mounted () {
-    console.log(store.state.roundCnt)
+    console.log('라운드', store.state.roundCnt)
+    console.log('상태', store.state.playState)
     clearTimeout()
     console.log('playReady mounted')
-    store.dispatch('resetGame')
+    // store.dispatch('resetGame')
     setTimeout(this.toNextLevel, 3000)
   },
   unmounted () {

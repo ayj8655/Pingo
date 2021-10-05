@@ -5,7 +5,7 @@
     </head>
     <div class="room-box">
       <div class="room-box-left">
-        <p>{{room.room_id}} 번방</p>
+        <!-- <p>{{room.room_id}} 번방</p> -->
         <p>방이름: {{room.room_name}} </p>
         <p>방장:{{room.room_owner}}</p>
         <p>문제수: {{room.problems}}</p>

@@ -6,7 +6,7 @@ from django.core.files.storage import FileSystemStorage
 import os
 
 def get_name(instance, filename):
-    return f'room_{instance.room.room_id}/{instance.category.category}/{instance.user.user_name}.png'
+    return f'room_{instance.room.room_id}/{instance.category.category}/{instance.user.user_name}.jpg'
     
 class OverwriteStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
