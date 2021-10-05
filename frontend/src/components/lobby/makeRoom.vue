@@ -28,6 +28,7 @@ import { reactive, ref } from '@vue/reactivity'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { domain } from '@/domain.js'
 export default {
   name: 'makeRoom',
 
@@ -53,7 +54,7 @@ export default {
     const roomMaking = () => {
       axios({
         method: 'POST',
-        url: '/paint_game/make_room/',
+        url: domain + '/paint_game/make_room/',
         data: {
           room_name: data.room_name,
           room_owner: localStorage.user_name,

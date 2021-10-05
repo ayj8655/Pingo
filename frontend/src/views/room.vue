@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 // import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import chating from '../components/room/chating.vue'
@@ -49,6 +49,7 @@ import playRoom from '@/components/room/playRoom.vue'
 import axios from 'axios'
 import { useStore } from 'vuex'
 import store from '@/store/index.js'
+import { domain } from '@/domain.js'
 
 import Modal from '../components/Modal.vue'
 export default {
@@ -71,7 +72,8 @@ export default {
     const invitedPassword = ref('')
     var max_head = 0
     var now_head = 0
-    const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
+    // const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
+    const urlLink =  domain + '/room/' + localStorage.getItem('room_id')
     const room_id = localStorage.getItem('room_id')
     let m = null
     let l = null
@@ -190,7 +192,7 @@ export default {
       axios({
         method: 'POST',
         // url: 'http://J5B307.p.ssafy.io:8000/accounts/check_duplication/',
-        url: '/accounts/check_duplication/',
+        url: domain + '/accounts/check_duplication/',
         data: {
           user_name: username
         }
@@ -204,7 +206,7 @@ export default {
           return axios({
             method: 'POST',
             // url: 'http://J5B307.p.ssafy.io:8000/accounts/signup/',
-            url: '/accounts/signup/',
+            url: domain + '/accounts/signup/',
             data: {
               user_name: username
             }
@@ -216,7 +218,7 @@ export default {
           localStorage.setItem('user_id', res.data.user_id)
           return axios({
             method: 'GET',
-            url: '/paint_game/room_info/' + room_id
+            url: domain + '/paint_game/room_info/' + room_id
           })
         })
         .then((res) => {
@@ -226,7 +228,7 @@ export default {
           m = res.data.max_head_counts
           return axios({
             method: 'GET',
-            url: '/paint_game/room_member/' + room_id + '/'
+            url: domain + '/paint_game/room_member/' + room_id + '/'
           })
         })
         .then((res) => {

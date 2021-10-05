@@ -55,16 +55,16 @@
     </div>
 </template>
 
-
 <script>
 import axios from 'axios'
-import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import makeRoom from '../components/lobby/makeRoom.vue'
 import lockRoom from '../components/lobby/lockRoom.vue'
 import roomItem from '../components/lobby/roomItem.vue'
 import Modal from '@/components/Modal.vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { domain } from '@/domain.js'
 export default {
   name: 'Lobby',
   components: {
@@ -143,7 +143,8 @@ export default {
       getLobbyUsers()
       axios({
         method: 'GET',
-        url: '/paint_game/room_list/'
+        // url: '/paint_game/room_list/'
+        url: domain + '/paint_game/room_list/'
       }).then((res) => {
         roomList.value = res.data
       }).catch((err) => {
