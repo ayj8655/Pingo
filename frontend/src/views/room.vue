@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 // import axios from 'axios'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import chating from '../components/room/chating.vue'
 import playRoom from '@/components/room/playRoom.vue'
 import axios from 'axios'
@@ -58,11 +58,14 @@ export default {
   components: { chating, playRoom, Modal },
   setup () {
     const route = useRoute()
+    const router = useRouter()
     const store = useStore()
     localStorage.setItem('room_id', route.params.room_id)
     const isStarted = ref(false)
     const isShow = ref(false)
     const invitedUser = ref('')
+    var max_head = 0
+    var now_head = 0
     const urlLink = 'http://localhost:8000/paint_game/enter_room/' + localStorage.getItem('room_id')
 
     const inviteLink =() => {
@@ -153,19 +156,25 @@ export default {
     const roomLimit = () => {
       axios({
         method: 'GET',
-        url: '/paint_game/room_info/' + room_id + '/'
+        url: '/paint_game/room_info/' + room_id
       }).then((res) => {
-        console.log('roomlist', res)
-        // for(room in res.data){if(room)}
+        console.log('roominfo', res.data.max_head_counts)
+        const m = res.data.max_head_counts
+        store.commit('FULL_LIMIT' , m)
       })
+        return
     }
     const fullRoom = () => {
       axios({
         method: 'GET',
         url: '/paint_game/room_member/' + room_id + '/'
       }).then((res) => {
-        console.log(res.data.length)
+        console.log('res3', res)
+        console.log('length', res.data.length)
+        const n = res.data.length
+        store.commit('NOW_LIMIT', n)
       })
+        return
     }
 
 
@@ -186,6 +195,7 @@ export default {
         }
       })
         .then((res) => {
+          console.log('res2', res)
           if (res.data.duplicate === 'fail') {
             alert('중복된 아이디입니다')
             return
@@ -203,9 +213,18 @@ export default {
           console.log('login (67line)', res.data)
           localStorage.setItem('user_name', res.data.user_name)
           localStorage.setItem('user_id', res.data.user_id)
-          roomLimit()
-          fullRoom()
-          // if(){}else{enterRoom()}
+          var number1 = roomLimit()
+          var number2 = fullRoom()
+
+
+        }).then((res) => {
+        // console.log('num1, num2' , number1, number2)
+        console.log('limit and full',store.state.maxhead, store.state.nowhead)
+        if(store.state.maxhead > store.state.nowhead){enterRoom()}
+        else{
+          // router.push('/lobby')
+          alert()
+          }
 
           isShow.value = !isShow.value
         })
@@ -246,7 +265,10 @@ export default {
       fullRoom,
       roomLimit,
       urlLink,
-      inviteLink
+      inviteLink,
+      max_head,
+      now_head,
+
     }
   }
 }

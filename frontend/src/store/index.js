@@ -12,7 +12,9 @@ export default createStore({
     roomSocket: {},
     keywords: ['banana', 'blub', 'calculator', 'carrot', 'clock'],
     playState: 'playReady',
-    roundCnt: 0
+    roundCnt: 0,
+    maxhead:0,
+    nowhead:0,
   },
   mutations: {
     roomSocketConnect (state, roomId) {
@@ -42,6 +44,16 @@ export default createStore({
     RESET_GAME (state) {
       state.roundCnt = 0
       state.playState = 'playReady'
+    },
+    FULL_LIMIT (state, m) {
+      state.maxhead = m
+      console.log('store_M',state.maxhead)
+
+    },
+    NOW_LIMIT (state, n){
+      state.nowhead = n
+      console.log('store_N',state.nowhead)
+
     }
   },
   actions: {
