@@ -1,6 +1,8 @@
 <template >
   <div class="ai-back">
     <button id="yellow-button" @click="start" v-if="!isStarted">start</button>
+    <input type="text" id="link" v-model="urlLink">
+    <button @click="inviteLink">초대링크</button>
     <div class="play-box">
       <div class="room-left">
         <p>회원</p>
@@ -15,7 +17,21 @@
         <p>채팅</p>
       </div>
     </div>
+    <section >
+      <Modal :isShow='isShow' @switchModal='switchModal'>
+        <template v-slot:header>
+          </template>
+          <template v-slot:body>
+            <div>
+              <input type="text" name="" id="" v-model="invitedUser">
+              <button @click="login">login</button>
+            </div>
 
+          </template>
+          <template v-slot:footer>
+          </template>
+      </Modal>
+    </section>
     <!-- <div :class="['chat-only', isStarted && 'chat-and-draw']" >
       그림판
       <div class="draw" v-if="isStarted">
@@ -37,13 +53,27 @@ import chating from '../components/room/chating.vue'
 import playRoom from '@/components/room/playRoom.vue'
 import axios from 'axios'
 import { useStore } from 'vuex'
+import Modal from '../components/Modal.vue'
 export default {
-  components: { chating, playRoom },
+  components: { chating, playRoom, Modal },
   setup () {
     const route = useRoute()
     const store = useStore()
     localStorage.setItem('room_id', route.params.room_id)
     const isStarted = ref(false)
+    const isShow = ref(false)
+    const invitedUser = ref('')
+    const urlLink = 'http://localhost:8000/paint_game/enter_room/' + localStorage.getItem('room_id')
+
+    const inviteLink =() => {
+      var obj = document.getElementById("link");
+      obj.select(); //인풋 컨트롤의 내용 전체 선택
+      document.execCommand("copy"); //복사
+      obj.setSelectionRange(0, 0);
+
+
+
+    }
     const enterRoom = () => {
       axios.post('http://localhost:8000/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
@@ -82,6 +112,16 @@ export default {
           console.dir(err)
         })
     }
+    const invited = () => {
+      const user_id = localStorage.getItem('user_id')
+      if(user_id===null){
+        alert(isShow.value)
+        isShow.value = !isShow.value
+      }else{enterRoom()}
+
+    }
+
+
     const start = () => {
       isStarted.value = !isStarted.value
       store.dispatch('roomSend', {
@@ -90,28 +130,97 @@ export default {
       })
     }
 
-    const settime = ref(1500)
-    const sec = ref('')
+    // const settime = ref(1500)
+    // const sec = ref('')
 
-    const timer = setInterval(function () {
-      sec.value = parseInt(settime.value / 100)
+    // const timer = setInterval(function () {
+    //   sec.value = parseInt(settime.value / 100)
 
-      document.getElementById('timerBox').innerHTML = sec.value + '초'
-      settime.value -= 10
+    //   document.getElementById('timerBox').innerHTML = sec.value + '초'
+    //   settime.value -= 10
 
-      if (settime.value <= 0) {
-        clearInterval(timer)
-        document.getElementById('timerBox').innerHTML = '종료'
-      }
-    }, 100)
+    //   if (settime.value <= 0) {
+    //     clearInterval(timer)
+    //     document.getElementById('timerBox').innerHTML = '종료'
+    //   }
+    // }, 100)
     store.commit('roomSocketConnect', route.params.room_id)
     store.state.roomSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
       console.log('room 43line', data)
     }
+    const room_id = localStorage.getItem('room_id')
+    const roomLimit = () => {
+      axios({
+        method: 'GET',
+        url: '/paint_game/room_info/' + room_id + '/'
+      }).then((res) => {
+        console.log('roomlist', res)
+        // for(room in res.data){if(room)}
+      })
+    }
+    const fullRoom = () => {
+      axios({
+        method: 'GET',
+        url: '/paint_game/room_member/' + room_id + '/'
+      }).then((res) => {
+        console.log(res.data.length)
+      })
+    }
+
+
+    const login = () => {
+      const username = invitedUser._value
+      console.log('invitedUser', invitedUser)
+      console.log(username)
+      if (username === '') {
+        alert('아이디를 입력해주세요')
+        return
+      }
+      axios({
+        method: 'POST',
+        // url: 'http://J5B307.p.ssafy.io:8000/accounts/check_duplication/',
+        url: '/accounts/check_duplication/',
+        data: {
+          user_name: username
+        }
+      })
+        .then((res) => {
+          if (res.data.duplicate === 'fail') {
+            alert('중복된 아이디입니다')
+            return
+          }
+          return axios({
+            method: 'POST',
+            // url: 'http://J5B307.p.ssafy.io:8000/accounts/signup/',
+            url: '/accounts/signup/',
+            data: {
+              user_name: username
+            }
+          })
+        })
+        .then((res) => {
+          console.log('login (67line)', res.data)
+          localStorage.setItem('user_name', res.data.user_name)
+          localStorage.setItem('user_id', res.data.user_id)
+          roomLimit()
+          fullRoom()
+          // if(){}else{enterRoom()}
+
+          isShow.value = !isShow.value
+        })
+        .catch((err) => {
+          console.dir(err)
+        })
+    }
+
+
 
     onMounted(() => {
-      enterRoom()
+      invited()
+
+
+
     })
     onBeforeUnmount(() => {
       leaveRoom()
@@ -121,12 +230,23 @@ export default {
       leaveRoom()
     }
 
+
+
+
     return {
       start,
       isStarted,
-      timer,
-      setInterval,
-      settime
+      // timer,
+      // setInterval,
+      // settime,
+      invited,
+      isShow,
+      login,
+      invitedUser,
+      fullRoom,
+      roomLimit,
+      urlLink,
+      inviteLink
     }
   }
 }
