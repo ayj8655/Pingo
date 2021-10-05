@@ -61,12 +61,6 @@ export default {
 
     onMounted(() => {
       prepare()
-<<<<<<< HEAD
-      // console.log('prepare')
-=======
-      console.log('prepare')
-
->>>>>>> feature/frontend/css
     })
 
     const prepare = () => {
