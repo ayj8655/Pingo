@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div>
         <canvas id="jsCanvas" class="canvas" ref="canvas" @mousemove="onMouseMove" @mousedown="onMouseDown" @mouseup="onMouseUp" @mouseleave="stopPainting"
         width="600" height="600"></canvas>
@@ -60,7 +61,12 @@ export default {
 
     onMounted(() => {
       prepare()
+<<<<<<< HEAD
       // console.log('prepare')
+=======
+      console.log('prepare')
+
+>>>>>>> feature/frontend/css
     })
 
     const prepare = () => {
@@ -178,13 +184,14 @@ export default {
       toNextLevel,
       data,
       canvas,
-      router
+      router,
+
     }
   },
   mounted () {
     clearTimeout()
     console.log('play mounted')
-    setTimeout(this.toNextLevel, 10000)
+    setTimeout(this.toNextLevel, 16000)
   },
   unmounted () {
     clearTimeout()
@@ -259,5 +266,11 @@ body {
     border-radius: 25px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+#timer-box{
+  width: 100px;
+  height: 300px;
+  font-size: 2rem;
 }
 </style>

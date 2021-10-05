@@ -48,7 +48,7 @@ export default {
     const secret = ref(false)
     // const isShow = props.isShow
     const togglePassword = () => {
-      data.is_locked.value = !data.is_locked.value
+      data.is_locked = !data.is_locked
     }
     const roomMaking = () => {
       axios({
@@ -73,9 +73,9 @@ export default {
               req: 'getRoomList'
             }
           )
-          console.log('res.data', res.data.room_id)
+          console.log('res.data', res.data)
           const room_id = res.data.room_id
-          router.push({ name: 'room', params: { room_id: room_id } })
+          router.push({ name: 'room', params: { room_id: room_id, password: data.room_password }, })
         })
         .catch((err) => {
           console.log('방만들기 실패')
