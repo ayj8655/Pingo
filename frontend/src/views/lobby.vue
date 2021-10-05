@@ -23,7 +23,8 @@
       </section>
       <section class="lobby-right">
         <div v-show="isTutorial">
-          <iframe :src="videoUrl" type="text/html" width="40rem" height="20rem" frameborder="0"></iframe>
+          <!-- youtube 링크에서 'watch?v=' 부분을 'embed/'로 바꾸면 x-frame option 없이 불러올 수 있다 -->
+          <iframe src="https://www.youtube.com/embed/X8v1GWzZYJ4" type="text/html" width="400px" height="200px" frameborder="0"></iframe>
         </div>
         <div v-show="!isTutorial">
           <ul>
