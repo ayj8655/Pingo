@@ -3,7 +3,7 @@ import os
 
 def update():
     print("업데이트 알림 시작")
-    dirpath = "./"
+    dirpath = f"./"
     numbers = os.listdir(dirpath)
     # numbers = '1'
     if len(numbers) > 0 :
