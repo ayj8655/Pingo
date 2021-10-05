@@ -108,7 +108,8 @@ export default {
 
     const enterRoom = () => {
       console.log(route.params)
-      axios.post('http://localhost:8000/paint_game/enter_room/', {
+      // axios.post('http://localhost:8000/paint_game/enter_room/', {
+      axios.post(domain + '/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
         room_id: route.params.room_id,
         room_password: props.password
@@ -120,7 +121,8 @@ export default {
 
     const enterRoom2 = () => {
       console.log(route.params)
-      axios.post('http://localhost:8000/paint_game/enter_room/', {
+      // axios.post('http://localhost:8000/paint_game/enter_room/', {
+      axios.post(domain + '/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
         room_id: route.params.room_id,
         room_password: p
@@ -139,7 +141,7 @@ export default {
     }
 
     const leaveRoom = () => {
-      axios.delete('/paint_game/leave_room/', {
+      axios.delete(domain + '/paint_game/leave_room/', {
         data: {
           user_id: localStorage.getItem('user_id'),
           room_id: localStorage.getItem('room_id')
