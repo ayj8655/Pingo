@@ -12,7 +12,7 @@ export default createStore({
     roomSocket: {},
     isStarted: false,
     // keywords: ['banana', 'bulb', 'calculator', 'carrot', 'clock'],
-    keywords: ['banana', 'bulb'],
+    keywords: ['bulb', 'calculator', 'banana'],
     // keywords: ['banana'],
     playState: 'playReady',
     roundCnt: 0,
@@ -42,7 +42,6 @@ export default createStore({
       state.roundCnt++
     },
     RESET_GAME (state) {
-      state.isStarted = false
       state.roundCnt = 0
       state.playState = 'playReady'
       state.gameEnded = false

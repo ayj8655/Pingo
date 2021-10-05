@@ -2,11 +2,12 @@
   <div>
       <h1>showEveryOne</h1>
       <br>
-      <!-- 이거 왜 안되냐 ㅠㅠㅠ -->
       <ul>
-        <li v-for="(img, idx) in allImage" :key='idx'>
+        <li v-for="(img, idx) in allImage" :key='time_now + idx'>
           <!-- <p>http://localhost:8000/{{img.image}}</p> -->
-            <img :src='"http://localhost:8000"+img.image' alt='???'>
+            <p>{{key}}</p>
+            <img :src='domain+img.image' alt='???'>
+            <!-- <p>{{img.image}}</p> -->
         </li>
       </ul>
   </div>
@@ -16,6 +17,7 @@
 import store from '@/store/index.js'
 import axios from 'axios'
 import { ref } from '@vue/reactivity'
+import { domain } from '@/src/domain.js'
 
 
 export default {
@@ -23,15 +25,14 @@ export default {
   mounted () {
     clearTimeout()
     console.log('showEveryone mounted')
-
     // 나중에 카테고리 수정
     const roundCnt = store.state.roundCnt
     const category = store.state.keywords[roundCnt]
-    axios.get('/paint_game/paints_of_round/' + this.room_id + '/' + category)
+    axios.get(domain + '/paint_game/paints_of_round/' + this.room_id + '/' + category)
       .then((res) => {
-        // console.log(res)
         this.allImage = res.data
-        console.log('allimage', this.allImage)
+        console.log('이거확인', this.allImage)
+        // console.log('allimage', this.allImage)
       })
       .then(() => {
         setTimeout(this.toNextLevel, 3000)
@@ -48,7 +49,7 @@ export default {
   setup () {
     const room_id = localStorage.getItem('room_id')
     const allImage = ref([])
-
+    const time_now = Date.now()
     const toNextLevel = () => {
       store.dispatch('setPlayState')
       console.log('to nxt level', store.state.playState)
@@ -57,7 +58,8 @@ export default {
     return {
       toNextLevel,
       room_id,
-      allImage
+      allImage,
+      time_now
     }
   }
 }

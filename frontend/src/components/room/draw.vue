@@ -34,6 +34,7 @@ import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import store from '@/store/index.js'
+import { domain } from '@/src/domain.js'
 
 export default {
   setup () {
@@ -130,7 +131,7 @@ export default {
         formData.append('category', category)
         formData.append('image', blob, 'filename.jpg')
         axios.post(
-          '/paint_game/saving/',
+          domain + '/paint_game/saving/',
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         )
