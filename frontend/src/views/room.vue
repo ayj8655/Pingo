@@ -53,12 +53,9 @@ import chating from '../components/room/chating.vue'
 import playRoom from '@/components/room/playRoom.vue'
 import axios from 'axios'
 import { useStore } from 'vuex'
-<<<<<<< HEAD
 import store from '@/store/index.js'
 
-=======
 import Modal from '../components/Modal.vue'
->>>>>>> b2403920c545e4525940beb45cbe022342c1acd1
 export default {
   components: { chating, playRoom, Modal },
   setup () {
