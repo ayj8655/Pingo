@@ -35,7 +35,7 @@ import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import store from '@/store/index.js'
-import { domain } from '@/src/domain.js'
+import { domain } from '@/domain.js'
 
 export default {
   setup () {

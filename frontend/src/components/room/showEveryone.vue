@@ -17,7 +17,7 @@
 import store from '@/store/index.js'
 import axios from 'axios'
 import { ref } from '@vue/reactivity'
-import { domain } from '@/src/domain.js'
+import { domain } from '@/domain.js'
 
 
 export default {

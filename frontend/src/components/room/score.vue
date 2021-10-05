@@ -9,7 +9,7 @@ import { onMounted, ref } from '@vue/runtime-core'
 import axios from 'axios'
 import store from '@/store/index.js'
 import { useRouter } from 'vue-router'
-import { domain } from '@/src/domain.js'
+import { domain } from '@/domain.js'
 
 export default {
   name: 'score',

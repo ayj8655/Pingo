@@ -53,7 +53,7 @@ import { ref } from 'vue'
 export default {
   components: { playReady, play, roundEnd, showEveryone, score, gameRanking },
 
-  setup() {
+  setup () {
     const playState = ref('playReady')
     // const keywords = ['banana', 'bulb', 'calculator', 'carrot', 'clock']
     // const rounds = keywords.length
