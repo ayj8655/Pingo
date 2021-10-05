@@ -28,6 +28,7 @@ Cython==0.29.24
 daphne==3.0.2
 Django==3.2.7
 django-cors-headers==3.8.0
+django-crontab==0.7.1
 djangorestframework==3.12.4
 drf-yasg==1.20.0
 fonttools==4.25.0

@@ -153,6 +153,14 @@ def room_member(request, room_id):
     serializer = RoomMemberSerializer(users_in_room, many=True)
     # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)
+
+@api_view(["GET"])
+def room_headcount(request, room_id):
+    print("방 인원 출력")
+    users_in_room = get_list_or_404(UserInRoom, room=room_id)
+    print(users_in_room)
+    headcount = len(users_in_room)
+    return Response({'headcount' : headcount})
     
 @swagger_auto_schema(
     method='get',
