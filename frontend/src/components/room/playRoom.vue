@@ -43,8 +43,8 @@ import showEveryone from '@/components/room/showEveryone.vue'
 import score from '@/components/room/score.vue'
 import gameRanking from '@/components/room/gameRanking.vue'
 
-// Inside of vue router, you do not have a vue instance. 
-// Therefore there is no way to access this.$store.state. 
+// Inside of vue router, you do not have a vue instance.
+// Therefore there is no way to access this.$store.state.
 // In order to access your store you need to include vuex into the router.
 import store from '@/store/index.js'
 import { ref,onMounted } from 'vue'

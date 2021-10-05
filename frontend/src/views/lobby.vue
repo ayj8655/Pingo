@@ -5,27 +5,35 @@
         <section>
           <button id="yellow-button" @click="createRoom">방만들기</button>
         </section>
+        <section>
+          <button id="blue-button" @click="tutorial" v-if="!isTutorial">튜토리얼</button>
+          <button id="blue-button" @click="tutorial" v-if="isTutorial">방목록으로</button>
+        </section>
         <section class="lobby-left">
           <div v-for="user in userList" :key="user.user_id">
             <p>{{user.user_name}}</p>
           </div>
         </section>
         <div id="audio-box">
-          <audio controls autoplay loop src="/victory.m4a" type="audio.m4a">
+          <!-- <audio controls autoplay loop src="/victory.m4a" type="audio.m4a">
             <source >
-          </audio>
+          </audio> -->
         </div>
 
       </section>
       <section class="lobby-right">
-        <!-- <h1>오른쪽</h1> -->
-        <!-- <h1>{{roomList}}</h1> -->
-        <ul>
-          <roomItem v-for="room in roomList"
-          :key='room.room_id'
-          :room='room'
-          @click="moveRoom(room)"/>
-        </ul>
+        <div v-show="isTutorial">
+          <!-- youtube 링크에서 'watch?v=' 부분을 'embed/'로 바꾸면 x-frame option 없이 불러올 수 있다 -->
+          <iframe src="https://www.youtube.com/embed/X8v1GWzZYJ4" type="text/html" width="400px" height="200px" frameborder="0"></iframe>
+        </div>
+        <div v-show="!isTutorial">
+          <ul>
+            <roomItem v-for="room in roomList"
+            :key='room.room_id'
+            :room='room'
+            @click="moveRoom(room)"/>
+          </ul>
+        </div>
       </section>
       <section>
         <Modal :isShow='isShow' @switchModal='switchModal'>
@@ -36,7 +44,7 @@
               <makeRoom/>
             </div>
             <div v-if="password && isLocked">
-              <h1>비번입력</h1>
+
               <lockRoom />
             </div>
           </template>
@@ -46,6 +54,7 @@
       </section>
     </div>
 </template>
+
 
 <script>
 import axios from 'axios'
@@ -77,6 +86,9 @@ export default {
     const isLocked = ref(false)
     const password = ref(false)
     const lobbySocket = store.state.lobbySocket
+    const isTutorial = ref(false)
+    const videoUrl = ref("https://www.youtube.com/")
+    // x-frame origin 해결하기
 
     const getUserList = () => {
       store.dispatch('lobbySend',
@@ -98,6 +110,9 @@ export default {
     const createRoom = () => {
       isShow.value = !isShow.value
       roomMaking.value = !roomMaking.value
+    }
+    const tutorial = () => {
+      isTutorial.value = !isTutorial.value
     }
 
     const moveRoom = (room) => {
@@ -149,7 +164,10 @@ export default {
       userList,
       roomItem,
       moveRoom,
-      roomMaking
+      roomMaking,
+      videoUrl,
+      isTutorial,
+      tutorial
     }
   }
 }
@@ -185,12 +203,13 @@ export default {
 
 .lobby-right{
   background-color: white;
-  flex-basis: 100px;
+  flex-basis: 20rem;
   flex: 1 1 100%;
   box-sizing: border-box;
   border-radius: 5px;
   margin: 10px;
   display: flex;
   justify-content: space-between;
+  height: 100%;
 }
 </style>

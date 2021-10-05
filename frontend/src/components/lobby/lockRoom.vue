@@ -1,7 +1,10 @@
 <template>
-  <div id="lock-room-box">
-    <input type="text" v-model="password">
-    <button @click="enterRoom">입장</button>
+  <div class="lock-room-box">
+    <div id="lock-room-box">
+      <img style="height:250px; width: 300px; margin-top:30px" src="/lock2.png" alt="lock">
+      <input class="lock-input" type="password" placeholder="password" v-model="password">
+      <button id="blue-button" @click="enterRoom">입장</button>
+    </div>
   </div>
 </template>
 
@@ -19,13 +22,18 @@ export default {
         url: "http://localhost:8000/paint_game/enter_room/",
         data: {
           user_id: localStorage.getItem('user_id'),
-          room_id: room_id
+          room_id: room_id,
+          room_password: password
         }
       }).then((res) => {
         console.log(res)
       }).then(
         router.push({name:'room',
                     params: {room_id: room_id }})
+      ).catch((err) => {
+        alert('비밀번호가 틀립니다')
+      }
+
       )
     }
 
@@ -38,7 +46,35 @@ export default {
 </script>
 
 <style>
+.lock-room-box{
+  height: 400px;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+
+}
+
 #lock-room-box{
-  height: 200px;
+
+  background-color:#FFF9BA;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+
+}
+
+
+.lock-input{
+  height: 3rem;
+  width: 17.8rem;
+  border: grey 1px solid;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
 }
 </style>

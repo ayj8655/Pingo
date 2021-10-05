@@ -19,6 +19,38 @@ class_names = [
     "t-shirt",
 ]
 
+test_path = "./datasets/pingo/안영진.png"
+img = tf.keras.preprocessing.image.load_img(
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
+)
+
+img_array = tf.keras.preprocessing.image.img_to_array(img)
+img_array = tf.expand_dims(img_array, 0)
+
+predictions = model.predict(img_array)
+
+print(
+    "원본은 banana 추측은 {} with a {:.2f} percent confidence.".format(
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
+    )
+)
+test_path = "./datasets/pingo/안영진0.png"
+img = tf.keras.preprocessing.image.load_img(
+    test_path, target_size=IMG_SIZE, color_mode="rgb"
+)
+
+img_array = tf.keras.preprocessing.image.img_to_array(img)
+img_array = tf.expand_dims(img_array, 0)
+
+predictions = model.predict(img_array)
+
+print(
+    "원본은 banana 추측은 {} with a {:.2f} percent confidence.".format(
+        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
+    )
+)
+
+
 test_path = "./datasets/pingo/banana_test.png"
 img = tf.keras.preprocessing.image.load_img(
     test_path, target_size=IMG_SIZE, color_mode="rgb"

@@ -12,6 +12,7 @@ from .serializers import (
     MakeRoomSerializer,
     PaintSerializer,
     CategorySerializer,
+    ScoreSerializer
 )
 from .models import Categories, Score, Room, UserInRoom, Paint
 from accounts.models import Accounts
@@ -19,9 +20,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.apps import apps
 from django.db.models import F
+
 # ayj
 import tensorflow as tf
 import numpy as np
+
 # ayj
 
 # Create your views here.
@@ -48,6 +51,8 @@ def index(request):
 
 def room(request, room_name):
     return render(request, "paint_game/room.html", {"room_name": room_name})
+
+
 #######
 
 
@@ -87,6 +92,22 @@ def make_room(request):  # 만들어준 방의 정보 return
     print("방 만들기 완료")
     return Response(serializer.data)
 
+@swagger_auto_schema(
+    method="delete",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "room_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+        },
+    ),
+)
+@api_view(["DELETE"])
+def delete_room(request):
+    print("방 폭☆파")
+    room_id=request.data.get("room_id")
+    print("방id",room_id)
+    Room.objects.filter(room=room_id).delete()
+    return Response({'detail': '삭제 성공'})
 
 @api_view(["GET"])
 def room_list(request):  # 수정요망
@@ -97,6 +118,14 @@ def room_list(request):  # 수정요망
     serializer = RoomListSerializer(rooms, many=True)
     return Response(serializer.data)
 
+@api_view(["GET"])
+def room_info(request, room_id):
+    print("방 받아오기")
+    room = Room.objects.get(room_id = room_id)
+    serializer = RoomListSerializer(room)
+    print(serializer.data)
+    return Response(serializer.data)
+
 
 @swagger_auto_schema(
     method="post",
@@ -105,30 +134,35 @@ def room_list(request):  # 수정요망
         properties={
             "user_id": openapi.Schema(type=openapi.TYPE_INTEGER),
             "room_id": openapi.Schema(type=openapi.TYPE_INTEGER),
-            "room_password":openapi.Schema(type=openapi.TYPE_STRING),
+            "room_password": openapi.Schema(type=openapi.TYPE_STRING),
         },
     ),
 )
 @api_view(["POST"])
 def enter_room(request):
     print("방 입장")
-    user_id=request.data.get("user_id")
+    user_id = request.data.get("user_id")
     room = get_object_or_404(Room, room_id=request.data.get("room_id"))
-    if room.is_locked == True and room.room_password != request.data.get("room_password"):
+    if room.is_locked == True and room.room_password != request.data.get(
+        "room_password"
+    ):
         print("비밀번호가 틀립니다")
-        return Response({'detail' : '비밀번호가 틀립니다.'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"detail": "비밀번호가 틀립니다."}, status=status.HTTP_401_UNAUTHORIZED)
     if not UserInRoom.objects.filter(room=room, user_id=user_id).exists():
         UserInRoom.objects.create(room=room, user_id=user_id)
     return Response(status=status.HTTP_200_OK)
 
+
 @api_view(["DELETE"])
 def leave_room(request):
     print("방 퇴장")
-    user_id=request.data.get("user_id")
-    room_id=request.data.get("room_id")
+    user_id = request.data.get("user_id")
+    room_id = request.data.get("room_id")
     print(user_id, room_id)
     UserInRoom.objects.filter(room=room_id, user_id=user_id).delete()
-    return Response({'detail': '삭제 성공'})
+    return Response({"detail": "삭제 성공"})
+
+
 @api_view(["GET"])
 def room_member(request, room_id):
     print("방 인원 출력")
@@ -137,21 +171,35 @@ def room_member(request, room_id):
     serializer = RoomMemberSerializer(users_in_room, many=True)
     # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)
+
+@api_view(["GET"])
+def room_headcount(request, room_id):
+    print("방 인원 출력")
+    users_in_room = get_list_or_404(UserInRoom, room=room_id)
+    print(users_in_room)
+    headcount = len(users_in_room)
+    return Response({'headcount' : headcount})
     
 @swagger_auto_schema(
-    method='get',
+    method="get",
     manual_parameters=[
-        openapi.Parameter('category_number', openapi.IN_QUERY,
-                    'request쿼리에 요청할 카테고리 갯수를 적는다',
-                    type=openapi.TYPE_NUMBER),
+        openapi.Parameter(
+            "category_number",
+            openapi.IN_QUERY,
+            "request쿼리에 요청할 카테고리 갯수를 적는다",
+            type=openapi.TYPE_NUMBER,
+        ),
     ],
 )
 @api_view(["GET"])
 def get_categories(request):
     try:
-        number = int(request.GET.get('category_number', 5))
+        number = int(request.GET.get("category_number", 5))
     except ValueError:
-        return Response({"detail": "category_number must be number"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "category_number must be number"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     categories = Categories.objects.order_by("?")
     if 0 <= number <= len(categories):
@@ -167,8 +215,12 @@ def get_categories(request):
 def saving(request):
     # request.data['category']가 str이기 때문에 PK로 바꿔주는 작업
     request.data["category"] = category_dict[request.data["category"]]
-    paint = Paint.objects.filter(user=request.data["user"], room=request.data["room"], category=request.data["category"])
-    if paint.exists(): # 이미 존재하면 레코드 삭제
+    paint = Paint.objects.filter(
+        user=request.data["user"],
+        room=request.data["room"],
+        category=request.data["category"],
+    )
+    if paint.exists():  # 이미 존재하면 레코드 삭제
         paint.delete()
     serializer = PaintSerializer(data=request.data)
     if serializer.is_valid():
@@ -188,6 +240,7 @@ def paints_of_round(request, room_id, category):
     serializer = PaintSerializer(paints, many=True)
     return Response(serializer.data)
 
+
 @swagger_auto_schema(
     method="post",
     request_body=openapi.Schema(
@@ -195,14 +248,15 @@ def paints_of_round(request, room_id, category):
         properties={
             "user_id": openapi.Schema(type=openapi.TYPE_INTEGER),
             "room_id": openapi.Schema(type=openapi.TYPE_INTEGER),
-            "category":openapi.Schema(type=openapi.TYPE_STRING),
+            "category": openapi.Schema(type=openapi.TYPE_STRING),
         },
     ),
 )
 @api_view(["POST"])
 def ayj(request):
-    model = tf.keras.models.load_model("./models/pingo_96_28.h5")
-    IMG_SIZE = (100, 100)
+    # model = tf.keras.models.load_model("./models/pingo_96_28.h5")
+    model = tf.keras.models.load_model("./models/pingo_256_500_0.981_0.099.h5")
+    IMG_SIZE = (300, 300)
     class_names = [
         "banana",
         "bulb",
@@ -220,7 +274,10 @@ def ayj(request):
     category = request.data.get("category")
     test_path = f"./media/room_{room_id}/{category}/{user_name}.jpg"
     img = tf.keras.preprocessing.image.load_img(
-        test_path, target_size=IMG_SIZE, color_mode="grayscale"
+        # test_path, target_size=IMG_SIZE, color_mode="grayscale"
+        test_path,
+        target_size=IMG_SIZE,
+        color_mode="rgb",
     )
 
     img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -235,7 +292,7 @@ def ayj(request):
     room = get_object_or_404(Room, room_id=room_id)
     score_obj = Score.objects.filter(room=room_id, user=user)
     if score_obj.exists():
-        score_obj.update(score=F('score')+score)
+        score_obj.update(score=F("score") + score)
     else:
         Score.objects.create(room=room, user=user, score=score)
 
@@ -246,19 +303,14 @@ def ayj(request):
     )
     # 파일 복사
     if score >= 80.0:
-        dir_path = f'./media/dataset/success/{category}/'
+        dir_path = f"./media/dataset/success/{category}/"
     else:
-        dir_path = f'./media/dataset/unsuccessful/{category}/'
-    os.makedirs(dir_path,exist_ok=True)
+        dir_path = f"./media/dataset/unsuccessful/{category}/"
+    os.makedirs(dir_path, exist_ok=True)
     numbers = len(os.listdir(dir_path))
-    shutil.copy(test_path, dir_path+f"new_{category}_{numbers}.png")
+    shutil.copy(test_path, dir_path + f"new_{category}_{numbers}.png")
 
-    return Response(
-        {
-            "class_name": class_name,
-            "score": score,
-        }
-    )
+    return Response({"class_name": class_name, "score": score,})
 
 
 @swagger_auto_schema(
@@ -271,7 +323,7 @@ def ayj(request):
         },
     ),
 )
-@api_view(['POST'])
+@api_view(["POST"])
 def game_end(request):
     room_id = request.data.get("room_id")
     user_id = request.data.get("user_id")
@@ -296,9 +348,20 @@ def game_end(request):
         return Response({"detail":"end process is done.", "total_score":my_score.score})
 
     except OSError as e:
-        return Response({"detail": f"Error: {e.filename} - {e.strerror}."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(
+            {"detail": f"Error: {e.filename} - {e.strerror}."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
     except Score.DoesNotExist as e:
-        return Response({"detail": "Score matching query does not exist"},  status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "Score matching query does not exist"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
-
-
+@swagger_auto_schema(method="get")
+@api_view(["GET"])
+def result_score(request, room_id):
+    # 방번호를 받아서 유저들의 최종 스코어를 순서대로 나열
+    score = Score.objects.filter(room_id = room_id).order_by('-score')
+    serializer = ScoreSerializer(score, many=True)
+    return Response(serializer.data)
