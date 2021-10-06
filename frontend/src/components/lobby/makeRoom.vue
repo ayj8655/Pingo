@@ -17,7 +17,7 @@
         <label for="">비밀방?</label>
         <input class="check-input" type="checkbox" @click="togglePassword" v-model="data.is_locked" />
       </div>
-      <input type="password" placeholder="비밀번호" v-model="data.room_password" />
+      <input type="password" placeholder="비밀번호" v-model="data.room_password" :disabled="!data.is_locked" />
       <button id="blue-button" style="width: 15.5rem" @click="roomMaking">방 만들기</button>
     </div>
   </div>
@@ -35,6 +35,7 @@ export default {
   setup (props, { emit }) {
     const username = localStorage.getItem('user_name')
     const store = useStore()
+    const router = useRouter()
     const data = reactive({
       room_id: '',
       room_owner: username,
@@ -45,7 +46,6 @@ export default {
       is_locked: false,
       is_started: false
     })
-    const router = useRouter()
     const secret = ref(false)
     // const isShow = props.isShow
     const togglePassword = () => {
@@ -97,6 +97,11 @@ export default {
 </script>
 
 <style>
+input[type="password"]:disabled {
+  background: rgb(82, 78, 78);
+  cursor: not-allowed !important;
+}
+
 #create-room-box{
   display: flex;
   justify-content: center;
@@ -123,6 +128,7 @@ export default {
   cursor: pointer;
   border: 0.5px gray solid;
 }
+
 #room-making-box p {
   margin: 0.1rem;
   font-size: 0.8rem;

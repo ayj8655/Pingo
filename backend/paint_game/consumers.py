@@ -48,7 +48,7 @@ class Consumer(AsyncWebsocketConsumer):
 
         elif space == 'room':
             if req == 'gameStart':
-                value = await database_sync_to_async(game_start)(self.room_name)
+                value = await database_sync_to_async(game_start)(self.room_name, text_data_json['parameter'])
                 payload['value'] = value
             elif req == 'getRoomUsers':
                 value = await database_sync_to_async(get_room_users)(self.room_name)
@@ -102,15 +102,18 @@ def get_rooms():
     serializer = RoomListSerializer(rooms, many=True)
     return serializer.data
 
-def game_start(room_num):
+def game_start(room_num, user_name):
     room = Room.objects.get(room_id = room_num)
+    if room.room_owner.user_name != user_name:
     # 방에 들어있던 점수들 모두 삭제
-    room.score_set.all().delete()
-    room.is_started = True
-    room.save()
-    categories = Categories.objects.order_by("?")[:room.problems]
-    serializer = CategorySerializer(categories, many=True)
-    return serializer.data
+        room.score_set.all().delete()
+        room.is_started = True
+        room.save()
+        categories = Categories.objects.order_by("?")[:room.problems]
+        serializer = CategorySerializer(categories, many=True)
+        return serializer.data
+    else:
+        return {'error': 'no authority'}
 
 def remove_room(room_num):
     room = Room.objects.filter(room_id=room_num)

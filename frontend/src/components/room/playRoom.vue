@@ -41,8 +41,8 @@ import roundEnd from '@/components/room/roundEnd.vue'
 import showEveryone from '@/components/room/showEveryone.vue'
 import score from '@/components/room/score.vue'
 import gameRanking from '@/components/room/gameRanking.vue'
-import { domain } from '@/domain.js'
-import axios from 'axios'
+// import { domain } from '@/domain.js'
+// import axios from 'axios'
 
 // Inside of vue router, you do not have a vue instance.
 // Therefore there is no way to access this.$store.state.
@@ -120,9 +120,7 @@ export default {
       showEveryoneEnded,
       scoreEnded,
       gameRankingEnded,
-      playState,
-      roomOwner,
-      router
+      playState
     }
   },
   // computed: {

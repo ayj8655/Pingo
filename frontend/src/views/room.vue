@@ -1,7 +1,7 @@
 <template >
   <div class="ai-back">
     <div class="top-box">
-      <button id="yellow-button" @click="start" v-if="!isStarted">start</button>
+      <button id="yellow-button" @click="start" v-if="is_owner && !isStarted">start</button>
       <div class="link-box" v-if="!isStarted">
         <button id="small-yellow-button" v-if="!isInviting" @click="inviteButtonActivate">초대하기</button>
         <input  type="text" id="link" v-model="urlLink" v-if="isInviting">
@@ -213,7 +213,8 @@ export default {
     const start = () => {
       store.dispatch('roomSend', {
         space: 'room',
-        req: 'gameStart'
+        req: 'gameStart',
+        parameter: localStorage.getItem('user_name')
       })
     }
 
@@ -305,8 +306,12 @@ export default {
       const data = JSON.parse(e.data)
       // console.log('room 125line', data)
       if (data.res === 'gameStart') {
-        store.commit('setKeywords', data.value)
-        isStarted.value = !isStarted.value
+        if (data.value.error === undefined) {
+          store.commit('setKeywords', data.value)
+          isStarted.value = !isStarted.value
+        } else {
+          alert(data.value.error)
+        }
       } else if (data.res === 'getRoomUsers') {
         roomUserList.value = data.value.map(e => e.user)
       }
@@ -342,8 +347,6 @@ export default {
       invitedUser,
       urlLink,
       inviteLink,
-      max_head,
-      now_head,
       isLocked,
       invitedPassword,
       inputPassword,
@@ -351,7 +354,9 @@ export default {
       toRoom,
       leaveRoom,
       isInviting,
-      inviteButtonActivate
+      inviteButtonActivate,
+      is_owner
+
     }
   }
 
