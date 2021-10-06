@@ -42,19 +42,21 @@ import roundEnd from '@/components/room/roundEnd.vue'
 import showEveryone from '@/components/room/showEveryone.vue'
 import score from '@/components/room/score.vue'
 import gameRanking from '@/components/room/gameRanking.vue'
-
+import { domain } from '@/domain.js'
+import axios from 'axios'
 
 // Inside of vue router, you do not have a vue instance.
 // Therefore there is no way to access this.$store.state.
 // In order to access your store you need to include vuex into the router.
 import store from '@/store/index.js'
-import { ref, isReactive } from 'vue'
+import { ref, isReactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 export default {
   components: { playReady, play, roundEnd, showEveryone, score, gameRanking },
 
   setup (props, { emit }) {
     const playState = ref('playReady')
+    const roomOwner = computed(() => store.state.roomOwner)
     console.log(isReactive(playState.value))
     // const keywords = ['banana', 'bulb', 'calculator', 'carrot', 'clock']
     // const rounds = keywords.length
@@ -92,7 +94,15 @@ export default {
       console.log(val.choice)
       store.dispatch('resetGame')
       if (val.choice === 'toLobby') {
-        router.push('/lobby')
+        if (store.state.roomOwner) {
+          // 방장이 로비로 갈 경우 방폭
+          console.log('방장', store.state.roomOwner, '나간다!')
+          router.push('/lobby')
+        }
+        else {
+          // 방장 아닌 사람이 로비로 나감
+          router.push('/lobby')
+        }
       }
       else{
         emit('to-Room')
@@ -110,6 +120,7 @@ export default {
       scoreEnded,
       gameRankingEnded,
       playState,
+      roomOwner,
       router
     }
   },
