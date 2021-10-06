@@ -140,7 +140,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_CREDENTIALS = True
 
-ASGI_APPLICATION = "backend.asgi.application"
+ASGI_APPLICATION = "backend.routing.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",

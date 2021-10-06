@@ -1,6 +1,6 @@
 <template>
-  <div class="play-box">
-      <!-- <nav>
+  <div class="show-box">
+      <nav>
           <button @click='playState = "playReady"'>to playReady</button>
           <button @click='playState = "play"'>to play</button>
           <button @click='playState = "roundEnd"'>to roundEnd</button>
@@ -8,7 +8,7 @@
           <button @click='playState = "score"'>to score</button>
           <button @click='show = 2'>to play</button>
           <button @click='show = 3'>to score</button>
-      </nav> -->
+      </nav>
 
       <transition name='fade' mode='out-in'>
         <div v-if='playState === "playReady"'>
@@ -149,7 +149,7 @@ export default {
   opacity: 0;
 }
 
-.play-box{
+.show-box{
   height: 900px;
   width: 700px;
 }
