@@ -1,14 +1,14 @@
 <template>
   <div>
-      <nav>
+      <!-- <nav>
           <button @click='playState = "playReady"'>to playReady</button>
           <button @click='playState = "play"'>to play</button>
           <button @click='playState = "roundEnd"'>to roundEnd</button>
           <button @click='playState = "showEveryone"'>to showEveryone</button>
           <button @click='playState = "score"'>to score</button>
-          <!-- <button @click='show = 2'>to play</button>
-          <button @click='show = 3'>to score</button> -->
-      </nav>
+          <button @click='show = 2'>to play</button>
+          <button @click='show = 3'>to score</button>
+      </nav> -->
 
       <transition name='fade' mode='out-in'>
         <div v-if='playState === "playReady"'>
@@ -121,7 +121,7 @@ export default {
       scoreEnded,
       gameRankingEnded,
       playState,
-      roomOwner,
+      // roomOwner,
       router
     }
   },
