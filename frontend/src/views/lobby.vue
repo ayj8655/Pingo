@@ -9,16 +9,19 @@
           <button id="blue-button" @click="tutorial" v-if="!isTutorial">튜토리얼</button>
           <button id="blue-button" @click="tutorial" v-if="isTutorial">방목록으로</button>
         </section>
+        <div id="audio-box">
+          <audio controls autoplay loop src="/victory.m4a" type="audio.m4a" style="width: 18rem">
+            <source >
+          </audio>
+        </div>
         <section class="lobby-left">
           <div v-for="user in userList" :key="user.user_id">
-            <p>{{user.user_name}}</p>
+            <div class="nickname">
+              <i class="far fa-smile-wink"></i>
+              <p>{{user.user_name}}</p>
+            </div>
           </div>
         </section>
-        <div id="audio-box">
-          <!-- <audio controls autoplay loop src="/victory.m4a" type="audio.m4a">
-            <source >
-          </audio> -->
-        </div>
 
       </section>
       <section class="lobby-right">
@@ -139,6 +142,9 @@ export default {
     lobbySocket.onopen = () => {
       getLobbyUsers()
     }
+    lobbySocket.onclose = () => {
+      console.log('로비소켓 끊김')
+    }
     onMounted(() => {
       getLobbyUsers()
       axios({
@@ -150,10 +156,7 @@ export default {
       }).catch((err) => {
         console.dir(err)
       })
-      store.dispatch('deleteRoomOwner')
-      console.log('방장', store.state.roomOwner)
     })
-
     return {
       roomList,
       createRoom,
@@ -187,11 +190,17 @@ export default {
 }
 
 .lobby-left-box{
+
   display: flex;
   flex-direction: column;
 }
 
+#audio-box{
+  width: ;
+}
+
 .lobby-left{
+  overflow: scroll;
   background-color: white;
   max-width: 400px;
   flex-basis: 400px;
@@ -199,9 +208,11 @@ export default {
   box-sizing: border-box;
   border-radius: 5px;
   margin: 10px;
+  min-height: 650px;
 }
 
 .lobby-right{
+  overflow: scroll;
   background-color: white;
   flex-basis: 20rem;
   flex: 1 1 100%;
@@ -211,5 +222,17 @@ export default {
   display: flex;
   justify-content: space-between;
   height: 100%;
+}
+
+.nickname{
+  display: flex;
+  font-display: row;
+  align-items: center;
+  height: 2rem;
+
+}
+.nickname i{
+  margin-left: 2rem;
+  margin-right: 0.5rem;
 }
 </style>

@@ -14,7 +14,10 @@ export default createStore({
     playState: 'playReady',
     roundCnt: 0,
     gameEnded: false,
-    roomOwner: false
+    roomOwner: {
+      is_owner: false,
+      name: ''
+    }
   },
   mutations: {
     roomSocketConnect (state, roomId) {
@@ -59,11 +62,8 @@ export default createStore({
       state.keywords = payload.map((e) => e.category)
     },
     SET_ROOMOWNER (state, payload) {
-      console.log(payload.roomOwner)
-      state.roomOwner = payload
-    },
-    DELETE_ROOMOWNER (state) {
-      state.roomOwner = false
+      state.roomOwner.is_owner = payload.is_owner
+      state.roomOwner.name = payload.name
     }
   },
   actions: {
@@ -91,12 +91,8 @@ export default createStore({
     toRoom ({ commit }) {
       commit('TO_ROOM')
     },
-    setRoomOwner (context, roomOwner) {
-      console.log('디스패치', roomOwner)
-      context.commit('SET_ROOMOWNER', roomOwner)
-    },
-    deleteRoomOwner ({ commit }) {
-      commit('DELETE_ROOMOWNER')
+    setRoomOwner (context, payload) {
+      context.commit('SET_ROOMOWNER', payload)
     }
   },
   modules: {
