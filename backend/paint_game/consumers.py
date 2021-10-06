@@ -42,7 +42,6 @@ class Consumer(AsyncWebsocketConsumer):
             if req == 'getLobbyUsers':
                 value = await database_sync_to_async(get_lobby_users)()
                 payload['value'] = value
-                # Send message to room group
             elif req == 'getRoomList':
                 value = await database_sync_to_async(get_rooms)()
                 payload['value'] = value
@@ -54,7 +53,11 @@ class Consumer(AsyncWebsocketConsumer):
             elif req == 'getRoomUsers':
                 value = await database_sync_to_async(get_room_users)(self.room_name)
                 payload['value'] = value
-
+            elif req == 'roomOwnerQuit':
+                await database_sync_to_async(remove_room)(self.room_name)
+                await self.group_send('room_owner_quit', payload)
+                return
+        # Send message to room group
         await self.group_send('send_message', payload)
 
     # Receive message from room group
@@ -64,6 +67,8 @@ class Consumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(
             event['payload']
         ))
+    async def room_owner_quit(self, event):
+        await self.close()
 
     def group_send(self, type_, payload):
         return self.channel_layer.group_send(
@@ -106,3 +111,7 @@ def game_start(room_num):
     categories = Categories.objects.order_by("?")[:room.problems]
     serializer = CategorySerializer(categories, many=True)
     return serializer.data
+
+def remove_room(room_num):
+    room = Room.objects.filter(room_id=room_num)
+    room.delete()

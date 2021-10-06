@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="room-center" v-if="isStarted">
-        <playRoom @to-room="toRoom"/>
+        <playRoom @to-room="toRoom" @leaveRoom="leaveRoom"/>
       </div>
 
       <div class="room-right">
@@ -53,14 +53,13 @@
 </template>
 
 <script>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 // import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import chating from '../components/room/chating.vue'
 import playRoom from '@/components/room/playRoom.vue'
 import axios from 'axios'
 import { useStore } from 'vuex'
-import store from '@/store/index.js'
 import { domain } from '@/domain.js'
 
 import Modal from '../components/Modal.vue'
@@ -72,9 +71,10 @@ export default {
     }
   },
   setup (props) {
+    const store = useStore()
     const route = useRoute()
     const router = useRouter()
-    const store = useStore()
+    const roomSocket = computed(() => store.state.roomSocket)
     localStorage.setItem('room_id', route.params.room_id)
     const roomUserList = ref([])
     const isStarted = ref(false)
@@ -83,10 +83,14 @@ export default {
     const isInviting = ref(false)
     const invitedUser = ref('')
     const invitedPassword = ref('')
+    const is_owner = computed(() => store.state.roomOwner.is_owner)
+    const tmp = () => {
+      console.log(is_owner.value)
+    }
     var max_head = 0
     var now_head = 0
     // const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
-    const urlLink =  domain + '/room/' + localStorage.getItem('room_id')
+    const urlLink = domain + '/room/' + localStorage.getItem('room_id')
     const room_id = localStorage.getItem('room_id')
     let m = null
     let l = null
@@ -108,7 +112,7 @@ export default {
 
 
     const getRoomAndLobbyUsers = () => {
-      if (store.state.roomSocket.readyState === 1) {
+      if (roomSocket.value.readyState === 1) {
         store.dispatch('roomSend',
           {
             space: 'room',
@@ -116,8 +120,8 @@ export default {
           }
         )
       } else {
-        console.log('룸 웹소켓 연결이 안됐음')
       }
+
       if (store.state.lobbySocket.readyState === 1) {
         store.dispatch('lobbySend',
           {
@@ -127,9 +131,7 @@ export default {
         )
       }
     }
-
     const enterRoom = () => {
-      console.log(route.params)
       // axios.post('http://localhost:8000/paint_game/enter_room/', {
       axios.post(domain + '/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
@@ -171,7 +173,17 @@ export default {
       })
         .then((res) => {
           getRoomAndLobbyUsers()
+          roomSocket.value.close()
           localStorage.removeItem('room_id')
+          if (is_owner.value) {
+            store.dispatch('setRoomOwner', { is_owner: false, name: '' })
+            store.dispatch('lobbySend',
+              {
+                space: 'lobby',
+                req: 'getRoomList'
+              }
+            )
+          }
         })
         .catch((err) => {
           console.dir(err)
@@ -258,19 +270,16 @@ export default {
         .then((res) => {
           const n = res.data.length
 
-          if(l){
+          if (l) {
             isLocked.value = !isLocked.value
             console.log(isLocked.value)
-          }
-          else if (m > n) {
+          } else if (m > n) {
             enterRoom()
             isShow.value = !isShow.value
           } else {
-
             alert('정원이 가득 찼습니다')
             router.push('/lobby')
           }
-
         })
         .catch((err) => {
           console.dir(err)
@@ -281,11 +290,18 @@ export default {
       isStarted.value = false
     }
 
-    store.commit('roomSocketConnect', route.params.room_id)
-    store.state.roomSocket.onopen = () => {
+    if (roomSocket.value.url === undefined || roomSocket.value.readyState === 3) {
+      store.commit('roomSocketConnect', route.params.room_id)
+    }
+    roomSocket.value.onopen = () => {
       getRoomAndLobbyUsers()
     }
-    store.state.roomSocket.onmessage = (e) => {
+    roomSocket.value.onclose = (e) => {
+      // leaveRoom()
+      router.push({ name: 'lobby' })
+      localStorage.removeItem('room_id')
+    }
+    roomSocket.value.onmessage = (e) => {
       const data = JSON.parse(e.data)
       // console.log('room 125line', data)
       if (data.res === 'gameStart') {
@@ -301,6 +317,15 @@ export default {
     })
 
     onBeforeUnmount(() => {
+      if (is_owner.value) {
+        // 방장이 로비로 갈 경우 방폭
+        store.dispatch('roomSend',
+          {
+            space: 'room',
+            req: 'roomOwnerQuit'
+          }
+        )
+      }
       leaveRoom()
     })
 
@@ -323,11 +348,12 @@ export default {
       invitedPassword,
       inputPassword,
       roomUserList,
+      toRoom,
+      leaveRoom,
       isInviting,
-      inviteButtonActivate,
-      toRoom
+      inviteButtonActivate
     }
-  },
+  }
 
   // computed: {
   //   change: function () {
@@ -373,7 +399,6 @@ export default {
   border: none;
 }
 
-
 .draw{
   height: 800px;
   width: 800px;
@@ -381,7 +406,6 @@ export default {
   /* flex-grow: 2; */
   /* 캔버스 크기가 고정되어 안커짐 */
 }
-
 
 .chat{
   height: 600px;

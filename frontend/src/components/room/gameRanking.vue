@@ -91,7 +91,7 @@ export default {
   },
   unmounted () {
     clearTimeout()
-  },
+  }
 }
 </script>
 

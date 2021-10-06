@@ -316,13 +316,17 @@ def ayj(request):
 def game_end(request):
     room_id = request.data.get("room_id")
     user_id = request.data.get("user_id")
-    directory = f"./media/room_{room_id}" 
+    directory = f"./media/room_{room_id}"
+    try: 
+        # room_n 디렉토리 제거
+        shutil.rmtree(directory)
+    except OSError as e:
+        pass
+        # return Response({"detail": f"Error: {e.filename} - {e.strerror}."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     try:
         scores = Score.objects.filter(room_id=room_id).order_by('-score')
         serializer = ScoreSerializer(scores, many=True)
-        # room_n 디렉토리 제거
-        shutil.rmtree(directory)
-
         room = Room.objects.get(room_id=room_id)
         # room의 시작상태가 true면 false로 전환
         if room.is_started == True:
@@ -334,9 +338,6 @@ def game_end(request):
             paint_set.delete()
         return Response(serializer.data)
 
-
-    except OSError as e:
-        return Response({"detail": f"Error: {e.filename} - {e.strerror}."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     except Room.DoesNotExist as e:
         return Response({"detail": "Room matching query does not exist"},  status=status.HTTP_400_BAD_REQUEST)
 

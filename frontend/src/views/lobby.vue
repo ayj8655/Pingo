@@ -139,6 +139,9 @@ export default {
     lobbySocket.onopen = () => {
       getLobbyUsers()
     }
+    lobbySocket.onclose = () => {
+      console.log('로비소켓 끊김')
+    }
     onMounted(() => {
       getLobbyUsers()
       axios({
@@ -150,10 +153,7 @@ export default {
       }).catch((err) => {
         console.dir(err)
       })
-      store.dispatch('deleteRoomOwner')
-      console.log('방장', store.state.roomOwner)
     })
-
     return {
       roomList,
       createRoom,
