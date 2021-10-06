@@ -46,13 +46,18 @@ export default {
     clearTimeout()
   },
 
-  setup () {
+  setup (props, { emit }) {
     const room_id = localStorage.getItem('room_id')
     const allImage = ref([])
     const time_now = Date.now()
     const toNextLevel = () => {
-      store.dispatch('setPlayState')
+      // store.dispatch('setPlayState')
+      showEveryoneEnded()
       console.log('to nxt level', store.state.playState)
+    }
+
+    const showEveryoneEnded = () => {
+      emit('showeveryone-ended')
     }
 
     return {
@@ -60,7 +65,8 @@ export default {
       room_id,
       allImage,
       time_now,
-      domain
+      domain,
+      showEveryoneEnded
     }
   }
 }

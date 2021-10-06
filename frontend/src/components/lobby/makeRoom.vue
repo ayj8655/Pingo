@@ -33,7 +33,7 @@ export default {
   name: 'makeRoom',
 
   setup (props, { emit }) {
-    const username = localStorage.getItem('username')
+    const username = localStorage.getItem('user_name')
     const store = useStore()
     const data = reactive({
       room_id: '',
@@ -57,7 +57,7 @@ export default {
         url: domain + '/paint_game/make_room/',
         data: {
           room_name: data.room_name,
-          room_owner: localStorage.user_name,
+          room_owner: data.room_owner,
           room_password: data.room_password,
           problems: data.problems,
           max_head_counts: data.max_head_counts,
@@ -76,6 +76,11 @@ export default {
           )
           console.log('res.data', res.data)
           const room_id = res.data.room_id
+          console.log('방장', data.room_owner)
+          const roomOwner = data.room_owner
+          store.dispatch('setRoomOwner', {
+            roomOwner: roomOwner
+          })
           router.push({ name: 'room', params: { room_id: room_id, password: data.room_password }, })
         })
         .catch((err) => {

@@ -17,13 +17,20 @@ export default {
   unmounted () {
     clearTimeout()
   },
-  setup () {
+  setup (props, { emit }) {
     const toNextLevel = () => {
-      store.dispatch('setPlayState')
+      // store.dispatch('setPlayState')
+      roundEndEnded()
       console.log('to nxt level', store.state.playState)
     }
+
+    const roundEndEnded = () => {
+      emit('roundend-ended')
+    }
+
     return {
-      toNextLevel
+      toNextLevel,
+      roundEndEnded
     }
   }
 }

@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="room-center" v-if="isStarted">
-        <playRoom/>
+        <playRoom @to-room="toRoom"/>
       </div>
 
       <div class="room-right">
@@ -277,6 +277,10 @@ export default {
         })
     }
 
+    const toRoom = () => {
+      isStarted.value = false
+    }
+
     store.commit('roomSocketConnect', route.params.room_id)
     store.state.roomSocket.onopen = () => {
       getRoomAndLobbyUsers()
@@ -321,19 +325,20 @@ export default {
       roomUserList,
       isInviting,
       inviteButtonActivate
+      toRoom
     }
   },
 
-  computed: {
-    change: function () {
-      return store.getters['getIsStarted']
-    }
-  },
-  watch: {
-    change (value) {
-      this.isStarted = value
-    }
-  }
+  // computed: {
+  //   change: function () {
+  //     return store.getters['getIsStarted']
+  //   }
+  // },
+  // watch: {
+  //   change (value) {
+  //     this.isStarted = value
+  //   }
+  // }
 }
 </script>
 

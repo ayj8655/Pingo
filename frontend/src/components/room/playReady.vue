@@ -1,12 +1,12 @@
 <template>
-    <slot name="playReady" :childData='childData' :close='close'>
+    <!-- <slot name="playReady" :childData='childData' :close='close'> -->
   <div>
 
       <h1>Are you Ready?</h1>
       <h3>라운드 {{this.roundCnt+1}}</h3>
       <h3>{{keyword}}</h3>
   </div>
-    </slot>
+    <!-- </slot> -->
 </template>
 
 <script>
@@ -14,10 +14,10 @@
 import store from '@/store/index.js'
 export default {
   name: 'ready',
-
   mounted () {
-    console.log('라운드', store.state.roundCnt)
-    console.log('상태', store.state.playState)
+    // console.log('isStarted', store.state.isStarted)
+    // console.log('라운드', store.state.roundCnt)
+    // console.log('상태', store.state.playState)
     clearTimeout()
     console.log('playReady mounted')
     // store.dispatch('resetGame')
@@ -26,12 +26,13 @@ export default {
   unmounted () {
     clearTimeout()
   },
-  setup () {
+  setup (props, { emit }) {
     var roundCnt = store.state.roundCnt
     const keyword = store.state.keywords[roundCnt]
     const toNextLevel = () => {
-      store.dispatch('setPlayState')
-      console.log('to nxt level', store.state.playState)
+      // store.dispatch('setPlayState')
+      // console.log('to nxt level', store.state.playState)
+      emit('playready-ended')
     }
     return {
       toNextLevel,
