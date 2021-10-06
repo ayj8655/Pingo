@@ -56,13 +56,13 @@ export default {
   setup (props, { emit }) {
     const playState = ref('playReady')
     const is_owner = computed(() => store.state.roomOwner.is_owner)
-    console.log(isReactive(playState.value))
+    // console.log(isReactive(playState.value))
     // const keywords = ['banana', 'bulb', 'calculator', 'carrot', 'clock']
     // const rounds = keywords.length
     const router = useRouter()
 
     const playReadyEnded = () => {
-      console.log('playReadyEnded')
+      // console.log('playReadyEnded')
       playState.value = 'play'
     }
 
@@ -79,8 +79,8 @@ export default {
     }
 
     const scoreEnded = () => {
-      console.log('roundcnt', store.state.roundCnt)
-      console.log('keyword length', store.state.keywords.length)
+      // console.log('roundcnt', store.state.roundCnt)
+      // console.log('keyword length', store.state.keywords.length)
       if (store.state.roundCnt >= store.state.keywords.length) {
         playState.value = 'gameRanking'
       } else {
@@ -89,7 +89,7 @@ export default {
     }
 
     const gameRankingEnded = (val) => {
-      console.log(val.choice)
+      // console.log(val.choice)
       store.dispatch('resetGame')
       if (val.choice === 'toLobby') {
         if (is_owner.value) {

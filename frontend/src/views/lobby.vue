@@ -10,9 +10,9 @@
           <button id="blue-button" @click="tutorial" v-if="isTutorial">방목록으로</button>
         </section>
         <div id="audio-box">
-          <audio controls autoplay loop src="/victory.m4a" type="audio.m4a" style="width: 18rem">
+          <!-- <audio controls autoplay loop src="/victory.m4a" type="audio.m4a" style="width: 18rem">
             <source >
-          </audio>
+          </audio> -->
         </div>
         <section class="lobby-left">
           <div v-for="user in userList" :key="user.user_id">
@@ -121,13 +121,40 @@ export default {
     const moveRoom = (room) => {
       store.dispatch('resetGame')
       localStorage.setItem('room_id', room.room_id)
-      if (room.is_started === true) {
-        alert('게임이 진행중일 때는 입장할 수 없습니다.')
-      } else if (room.is_locked === true) {
-        (isLocked.value = true) && (isShow.value = !isShow.value) && (password.value = !password.value)
-      } else {
-        router.push({ name: 'room', params: { room_id: room.room_id } })
-      }
+      axios({
+        method: 'GET',
+        url: domain + '/paint_game/room_info/' + room.room_id
+      })
+      .then((res) => {
+        console.log('move data',res.data)
+        localStorage.setItem('is_locked', res.data.is_locked)
+        localStorage.setItem('is_started', res.data.is_started)
+        localStorage.setItem('max_head_counts', res.data.max_head_counts)
+        return axios({
+          method: 'GET',
+          url: domain + '/paint_game/room_headcount/' + room.room_id
+        })
+        .then((res) => {
+          console.log('현재원', res.data.headcount)
+          const max = localStorage.getItem('max_head_counts')
+          console.log('정원', max)
+          if(res.data.headcount >= max){
+            alert('정원이 가득 찼습니다.')
+          }
+          else if (room.is_started === true) {
+            alert('게임이 진행중일 때는 입장할 수 없습니다.')
+          }
+          else if (room.is_locked === true) {
+            (isLocked.value = true) && (isShow.value = !isShow.value) && (password.value = !password.value)
+          }
+          else {
+            router.push({ name: 'room', params: { room_id: room.room_id } })
+          }
+
+
+        })
+      })
+
     }
 
     lobbySocket.onmessage = (e) => {

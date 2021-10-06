@@ -27,12 +27,14 @@ export default {
           room_id: room_id,
           room_password: password
         }
-      }).then((res) => {
+      })
+      .then((res) => {
         console.log(res)
-      }).then(
         router.push({ name: 'room', params: { room_id: room_id } })
-      ).catch((err) => {
+      })
+      .catch((err) => {
         alert('비밀번호가 틀립니다')
+        router.push('/lobby')
       }
 
       )

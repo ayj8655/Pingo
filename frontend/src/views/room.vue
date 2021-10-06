@@ -95,6 +95,7 @@ export default {
     let m = null
     let l = null
     let p = null
+    let s = null
 
     const inviteLink =() => {
       var obj = document.getElementById("link");
@@ -201,8 +202,8 @@ export default {
     }
 
     const inputPassword = () => {
-      console.log(invitedPassword.value, p, 'invite & props')
-      console.log(props)
+      // console.log(invitedPassword.value, p, 'invite & props')
+      // console.log(props)
       if (invitedPassword.value === p) {
         enterRoom2()
       } else {
@@ -219,8 +220,8 @@ export default {
 
     const login = () => {
       const username = invitedUser._value
-      console.log('invitedUser', invitedUser)
-      console.log(username)
+      // console.log('invitedUser', invitedUser)
+      // console.log(username)
       if (username === '') {
         alert('아이디를 입력해주세요')
         return
@@ -234,7 +235,7 @@ export default {
         }
       })
         .then((res) => {
-          console.log('res2', res)
+          // console.log('res2', res)
           if (res.data.duplicate === 'fail') {
             alert('중복된 아이디입니다')
             return
@@ -249,7 +250,7 @@ export default {
           })
         })
         .then((res) => {
-          console.log('login (67line)', res.data)
+          // console.log('login (67line)', res.data)
           localStorage.setItem('user_name', res.data.user_name)
           localStorage.setItem('user_id', res.data.user_id)
           return axios({
@@ -258,9 +259,10 @@ export default {
           })
         })
         .then((res) => {
+          s= res.data.is_started
           l = res.data.is_locked
           p = res.data.room_password
-          console.log(res.data)
+          // console.log(res.data)
           m = res.data.max_head_counts
           return axios({
             method: 'GET',
@@ -270,13 +272,19 @@ export default {
         .then((res) => {
           const n = res.data.length
 
-          if (l) {
+          if(s) {
+            alert('게임이 진행중입니다')
+            router.push('/lobby')
+          }
+          else if (l) {
             isLocked.value = !isLocked.value
-            console.log(isLocked.value)
-          } else if (m > n) {
+            // console.log(isLocked.value)
+          }
+          else if (m > n) {
             enterRoom()
             isShow.value = !isShow.value
-          } else {
+          }
+          else {
             alert('정원이 가득 찼습니다')
             router.push('/lobby')
           }

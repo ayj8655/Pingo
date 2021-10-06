@@ -20,7 +20,7 @@ export default {
 
     onMounted(() => {
       clearTimeout()
-      console.log('score mounted')
+      // console.log('score mounted')
       const roundCnt = store.state.roundCnt
       const category = store.state.keywords[roundCnt]
 

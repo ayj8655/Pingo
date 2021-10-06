@@ -65,7 +65,7 @@ export default {
     })
 
     const prepare = () => {
-      console.log(canvas.value)
+      // console.log(canvas.value)
       data.ctx = canvas.value.getContext('2d')
       //   console.log(data.ctx)
       data.ctx.fillStyle = 'white'
@@ -73,7 +73,7 @@ export default {
       data.ctx.strokeStyle = '#2c2c2c'
       data.ctx.lineWidth = data.jsRange
 
-      console.log(data.ctx)
+      // console.log(data.ctx)
     }
 
     const startPainting = () => {
@@ -113,7 +113,7 @@ export default {
     }
 
     const handleRangeChange = (event) => {
-      console.log(event)
+      // console.log(event)
     }
 
     const sendImage = () => {

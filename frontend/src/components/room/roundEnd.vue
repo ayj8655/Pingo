@@ -11,7 +11,7 @@ export default {
   name: 'roundEnd',
   mounted () {
     clearTimeout()
-    console.log('roundEnd mounted')
+    // console.log('roundEnd mounted')
     setTimeout(this.toNextLevel, 3000)
   },
   unmounted () {
@@ -21,7 +21,7 @@ export default {
     const toNextLevel = () => {
       // store.dispatch('setPlayState')
       roundEndEnded()
-      console.log('to nxt level', store.state.playState)
+      // console.log('to nxt level', store.state.playState)
     }
 
     const roundEndEnded = () => {
