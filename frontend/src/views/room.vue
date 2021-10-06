@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 // import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import chating from '../components/room/chating.vue'
@@ -60,9 +60,10 @@ export default {
     }
   },
   setup (props) {
+    const store = useStore()
     const route = useRoute()
     const router = useRouter()
-    const store = useStore()
+    const roomSocket = computed(() => store.state.roomSocket)
     localStorage.setItem('room_id', route.params.room_id)
     const roomUserList = ref([])
     const isStarted = ref(false)
@@ -73,20 +74,20 @@ export default {
     var max_head = 0
     var now_head = 0
     // const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
-    const urlLink =  domain + '/room/' + localStorage.getItem('room_id')
+    const urlLink = domain + '/room/' + localStorage.getItem('room_id')
     const room_id = localStorage.getItem('room_id')
     let m = null
     let l = null
     let p = null
 
-    const inviteLink =() => {
-      var obj = document.getElementById("link");
-      obj.select(); //인풋 컨트롤의 내용 전체 선택
-      document.execCommand("copy"); //복사
-      obj.setSelectionRange(0, 0);
+    const inviteLink = () => {
+      var obj = document.getElementById('link')
+      obj.select() // 인풋 컨트롤의 내용 전체 선택
+      document.execCommand('copy') // 복사
+      obj.setSelectionRange(0, 0)
     }
     const getRoomAndLobbyUsers = () => {
-      if (store.state.roomSocket.readyState === 1) {
+      if (roomSocket.value.readyState === 1) {
         store.dispatch('roomSend',
           {
             space: 'room',
@@ -94,8 +95,8 @@ export default {
           }
         )
       } else {
-        console.log('룸 웹소켓 연결이 안됐음')
       }
+
       if (store.state.lobbySocket.readyState === 1) {
         store.dispatch('lobbySend',
           {
@@ -107,7 +108,6 @@ export default {
     }
 
     const enterRoom = () => {
-      console.log(route.params)
       // axios.post('http://localhost:8000/paint_game/enter_room/', {
       axios.post(domain + '/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
@@ -149,6 +149,7 @@ export default {
       })
         .then((res) => {
           getRoomAndLobbyUsers()
+          roomSocket.value.close()
           localStorage.removeItem('room_id')
         })
         .catch((err) => {
@@ -236,30 +237,33 @@ export default {
         .then((res) => {
           const n = res.data.length
 
-          if(l){
+          if (l) {
             isLocked.value = !isLocked.value
             console.log(isLocked.value)
-          }
-          else if (m > n) {
+          } else if (m > n) {
             enterRoom()
             isShow.value = !isShow.value
           } else {
-
             alert('정원이 가득 찼습니다')
             router.push('/lobby')
           }
-
         })
         .catch((err) => {
           console.dir(err)
         })
     }
 
-    store.commit('roomSocketConnect', route.params.room_id)
-    store.state.roomSocket.onopen = () => {
+    if (roomSocket.value.url === undefined || roomSocket.value.readyState === 3) {
+      store.commit('roomSocketConnect', route.params.room_id)
+    }
+    roomSocket.value.onopen = () => {
       getRoomAndLobbyUsers()
     }
-    store.state.roomSocket.onmessage = (e) => {
+    roomSocket.value.onclose = (e) => {
+      leaveRoom()
+      router.push({ name: 'lobby' })
+    }
+    roomSocket.value.onmessage = (e) => {
       const data = JSON.parse(e.data)
       // console.log('room 125line', data)
       if (data.res === 'gameStart') {
@@ -270,6 +274,14 @@ export default {
       }
     }
 
+    const tmp = () => {
+      store.dispatch('roomSend',
+        {
+          space: 'room',
+          req: 'roomOwnerQuit'
+        }
+      )
+    }
     onMounted(() => {
       invited()
     })
@@ -283,6 +295,7 @@ export default {
     }
 
     return {
+      tmp,
       start,
       isStarted,
       invited,
