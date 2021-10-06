@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h1>showEveryOne</h1>
+      <h1>모두의 그림</h1>
       <br>
       <ul>
         <li v-for="(img, idx) in allImage" :key='time_now + idx'>

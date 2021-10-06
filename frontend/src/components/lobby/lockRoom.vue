@@ -71,11 +71,12 @@ export default {
 
 .lock-input{
   height: 3rem;
-  width: 17.8rem;
-  border: grey 1px solid;
+  width: 16.8rem;
+  border: none;
   border-radius: 5px;
   font-size: 1.5rem;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
+  padding-left: 1rem;
 }
 </style>

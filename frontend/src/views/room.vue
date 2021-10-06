@@ -1,8 +1,13 @@
 <template >
   <div class="ai-back">
-    <button id="yellow-button" @click="start" v-if="!isStarted">start</button>
-    <input type="text" id="link" v-model="urlLink">
-    <button @click="inviteLink">초대링크</button>
+    <div class="top-box">
+      <button id="yellow-button" @click="start" v-if="!isStarted">start</button>
+      <div class="link-box" v-if="!isStarted">
+        <button id="small-yellow-button" v-if="!isInviting" @click="inviteButtonActivate">초대하기</button>
+        <input  type="text" id="link" v-model="urlLink" v-if="isInviting">
+        <button id="small-yellow-button" @click="inviteLink" v-if="isInviting">링크복사</button>
+      </div>
+    </div>
     <div class="play-box">
       <div class="room-left">
         <p>회원</p>
@@ -23,13 +28,20 @@
         <template v-slot:header>
           </template>
           <template v-slot:body>
-            <div v-if="!isLocked">
-              <input type="text" name="" id="" v-model="invitedUser">
-              <button @click="login">login</button>
+            <div v-if="!isLocked" class="lock-room-box">
+              <div id="lock-room-box" >
+                <h1 style="font-size:3rem; color:#3883BC; " >Pingo!</h1>
+                <input class="lock-input" type="text" name="" id="" placeholder="ID" v-model="invitedUser">
+                <button id="blue-button" @click="login">login</button>
+              </div>
             </div>
-            <div v-if="isLocked">
-              <input type="text" v-model="invitedPassword">
-              <button @click="inputPassword">비번입력</button>
+
+            <div v-if="isLocked" class="lock-room-box">
+              <div id="lock-room-box">
+                <img style="height:250px; width: 300px; margin-top:30px" src="/lock2.png" alt="lock">
+                <input class="lock-input" type="text" v-model="invitedPassword">
+                <button id="blue-button" @click="inputPassword">비번입력</button>
+              </div>
             </div>
 
           </template>
@@ -68,6 +80,7 @@ export default {
     const isStarted = ref(false)
     const isLocked = ref(false)
     const isShow = ref(false)
+    const isInviting = ref(false)
     const invitedUser = ref('')
     const invitedPassword = ref('')
     var max_head = 0
@@ -84,7 +97,16 @@ export default {
       obj.select(); //인풋 컨트롤의 내용 전체 선택
       document.execCommand("copy"); //복사
       obj.setSelectionRange(0, 0);
+      alert('클립보드에 링크가 복사되었습니다.')
+      isInviting.value = !isInviting.value
+
     }
+    const inviteButtonActivate = () => {
+      isInviting.value = !isInviting.value
+    }
+
+
+
     const getRoomAndLobbyUsers = () => {
       if (store.state.roomSocket.readyState === 1) {
         store.dispatch('roomSend',
@@ -125,7 +147,7 @@ export default {
       axios.post(domain + '/paint_game/enter_room/', {
         user_id: localStorage.getItem('user_id'),
         room_id: route.params.room_id,
-        room_password: p
+        room_password: invitedPassword.value
       })
         .then((res) => {
           if (store.state.lobbySocket.readyState === 1) {
@@ -159,7 +181,7 @@ export default {
     const invited = () => {
       const user_id = localStorage.getItem('user_id')
       if (user_id === null) {
-        alert(isShow.value)
+        alert('로그인이 필요합니다.')
         isShow.value = !isShow.value
       } else {
         enterRoom()
@@ -301,6 +323,8 @@ export default {
       invitedPassword,
       inputPassword,
       roomUserList,
+      isInviting,
+      inviteButtonActivate
       toRoom
     }
   },
@@ -328,16 +352,28 @@ export default {
   background-size : cover;
   background-position: center;
 }
-
-.chat-only{
-  display: block;
-
-}
-.chat-and-draw{
+.top-box{
   display: flex;
-  justify-content: center;
-  flex-direction: row;
+  flex-direction: column;
+  /* justify-content: center; */
+  margin: auto;
+  align-items: center;
 }
+
+.link-box{
+  display: flex;
+  align-items: center;
+}
+
+#link{
+  height: 2rem;
+  width: 11rem;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  border: none;
+}
+
+
 .draw{
   height: 800px;
   width: 800px;
@@ -345,13 +381,8 @@ export default {
   /* flex-grow: 2; */
   /* 캔버스 크기가 고정되어 안커짐 */
 }
-.big-chat{
-  height: 800px;
-  width: 500px;
-  background-color: #fff;
-  border-radius: 15px;
-  margin: auto;
-}
+
+
 .chat{
   height: 600px;
   width: 300px;
@@ -375,6 +406,7 @@ width: 300px;
 background-color: white;
 border-radius: 5px;
 margin: 3rem;
+margin-top: 0;
 /* padding-top: 3rem; */
 
 }
@@ -391,6 +423,7 @@ width: 300px;
 background-color: white;
 border-radius: 5px;
 margin: 3rem;
+margin-top: 0;
 
 }
 

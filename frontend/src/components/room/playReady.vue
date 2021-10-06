@@ -2,9 +2,9 @@
     <!-- <slot name="playReady" :childData='childData' :close='close'> -->
   <div>
 
-      <h1>playReady</h1>
+      <h1>Are you Ready?</h1>
       <h3>라운드 {{this.roundCnt+1}}</h3>
-      <p>{{keyword}}</p>
+      <h3>{{keyword}}</h3>
   </div>
     <!-- </slot> -->
 </template>
