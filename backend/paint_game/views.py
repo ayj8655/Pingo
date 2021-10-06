@@ -74,7 +74,7 @@ def room(request, room_name):
 )
 @api_view(["POST"])
 def make_room(request):  # 만들어준 방의 정보 return
-    print("방 만들기")
+    # print("방 만들기")
     accounts_model = apps.get_model("accounts", "Accounts")
     room_owner = get_object_or_404(
         accounts_model, user_name=request.data.get("room_owner")
@@ -102,24 +102,24 @@ def make_room(request):  # 만들어준 방의 정보 return
 )
 @api_view(["DELETE"])
 def delete_room(request):
-    print("방 폭☆파")
+    # print("방 폭☆파")
     room_id=request.data.get("room_id")
     Room.objects.filter(room=room_id).delete()
     return Response({'detail': '삭제 성공'})
 
 @api_view(["GET"])
 def room_list(request):  # 수정요망
-    print("방 리스트 받아오기")
+    # print("방 리스트 받아오기")
     rooms = Room.objects.all()
     serializer = RoomListSerializer(rooms, many=True)
     return Response(serializer.data)
 
 @api_view(["GET"])
 def room_info(request, room_id):
-    print("방 받아오기")
+    # print("방 받아오기")
     room = Room.objects.get(room_id = room_id)
     serializer = RoomListSerializer(room)
-    print(serializer.data)
+    # print(serializer.data)
     return Response(serializer.data)
 
 
@@ -136,13 +136,13 @@ def room_info(request, room_id):
 )
 @api_view(["POST"])
 def enter_room(request):
-    print("방 입장")
+    # print("방 입장")
     user_id = request.data.get("user_id")
     room = get_object_or_404(Room, room_id=request.data.get("room_id"))
     if room.is_locked == True and room.room_password != request.data.get(
         "room_password"
     ):
-        print("비밀번호가 틀립니다")
+        # print("비밀번호가 틀립니다")
         return Response({"detail": "비밀번호가 틀립니다."}, status=status.HTTP_401_UNAUTHORIZED)
     if not UserInRoom.objects.filter(room=room, user_id=user_id).exists():
         UserInRoom.objects.create(room=room, user_id=user_id)
@@ -151,7 +151,7 @@ def enter_room(request):
 
 @api_view(["DELETE"])
 def leave_room(request):
-    print("방 퇴장")
+    # print("방 퇴장")
     user_id=request.data.get("user_id")
     room_id=request.data.get("room_id")
     UserInRoom.objects.filter(room=room_id, user_id=user_id).delete()
@@ -159,7 +159,7 @@ def leave_room(request):
 
 @api_view(["GET"])
 def room_member(request, room_id):
-    print("방 인원 출력")
+    # print("방 인원 출력")
     users_in_room = get_list_or_404(UserInRoom, room=room_id)
     serializer = RoomMemberSerializer(users_in_room, many=True)
     # return Response(status=status.HTTP_200_OK)
@@ -167,7 +167,7 @@ def room_member(request, room_id):
 
 @api_view(["GET"])
 def room_headcount(request, room_id):
-    print("방 인원 출력")
+    # print("방 인원 출력")
     users_in_room = get_list_or_404(UserInRoom, room=room_id)
     headcount = len(users_in_room)
     return Response({'headcount' : headcount})
@@ -215,7 +215,7 @@ def saving(request):
         serializer.save()
         return Response(serializer.data)
     else:
-        print("저장 실패")
+        # print("저장 실패")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -271,7 +271,8 @@ def ayj(request):
     img_array = tf.keras.preprocessing.image.img_to_array(img)
     img_array = tf.expand_dims(img_array, 0)
 
-    predictions = model.predict(img_array)
+    # predictions = model.predict(img_array)
+    predictions = model(img_array)
     # score = tf.nn.softmax(predictions[0])
     class_name = class_names[np.argmax(predictions[0])]
     score = np.max(predictions[0]) * 100
@@ -284,11 +285,11 @@ def ayj(request):
     else:
         Score.objects.create(room=room, user=user, score=score)
 
-    print(
-        "원본은 {} 추측은 {} with a {:.2f} percent confidence.".format(
-            category, class_name, score
-        )
-    )
+    # print(
+    #     "원본은 {} 추측은 {} with a {:.2f} percent confidence.".format(
+    #         category, class_name, score
+    #     )
+    # )
     # 파일 복사
     if score >= 80.0:
         dir_path = f"./media/dataset/success/{category}/"
@@ -297,7 +298,7 @@ def ayj(request):
     os.makedirs(dir_path, exist_ok=True)
     numbers = len(os.listdir(dir_path))
     shutil.copy(test_path, dir_path+f"new_{category}_{numbers}.jpg")
-
+    # print(score)
     return Response({"class_name": class_name, "score": score,})
 
 

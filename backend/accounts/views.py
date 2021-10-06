@@ -21,9 +21,9 @@ r_body_user = openapi.Schema(
 @swagger_auto_schema(method='post', request_body=r_body_user)
 @api_view(['POST'])
 def signup(request): #회원가입하고 유저 정보 바로 리턴
-    print("유저 임시 로그인(생성)")
+    # print("유저 임시 로그인(생성)")
     now = datetime.datetime.now() + datetime.timedelta(hours=1)
-    print('request', request.data)
+    # print('request', request.data)
     new_user = Accounts.objects.create(user_name=request.data.get('user_name'), time_to_expire=now)
 #    subprocess.run('sudo mkdir crontest', shell=True)
     return Response({"user_name": new_user.user_name, "user_id":new_user.user_id})
@@ -36,14 +36,14 @@ def signup(request): #회원가입하고 유저 정보 바로 리턴
 ))
 @api_view(["DELETE"])
 def delete(request): #회원삭제
-    print("유저 로그아웃(삭제)")
+    # print("유저 로그아웃(삭제)")
     Accounts.objects.filter(user_id=request.data.get('user_id')).delete()
     return Response({"detail": '유저 삭제 완료'})
 
 @swagger_auto_schema(method='post', request_body=r_body_user)
 @api_view(['POST'])
 def check_duplication(request):
-    print("아이디 중복 확인")
+    # print("아이디 중복 확인")
     user_name = request.data.get('user_name')
     # print("아이디는"+user_name)
     try:
@@ -57,7 +57,7 @@ def check_duplication(request):
     else:
         duplicate = "fail"
     context = {'duplicate': duplicate}
-    print("중복 검사 완료")
+    # print("중복 검사 완료")
     return JsonResponse(context)
 
 
