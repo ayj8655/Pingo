@@ -274,8 +274,13 @@ def ayj(request):
     # predictions = model.predict(img_array)
     predictions = model2(img_array)
     # score = tf.nn.softmax(predictions[0])
-    class_name = class_names[np.argmax(predictions[0])]
-    score = np.max(predictions[0]) * 100
+
+    # 내가 그린게 가장 높게 예측된 클래스
+    # class_name = class_names[np.argmax(predictions[0])]
+
+    idx = category_dict[category]-1
+    # 해당 카테고리의 점수(예측률)
+    score = predictions[0][idx] * 100
     # 점수 누적
     user = get_object_or_404(Accounts, user_name=user_name)
     room = get_object_or_404(Room, room_id=room_id)
@@ -299,7 +304,7 @@ def ayj(request):
     numbers = len(os.listdir(dir_path))
     shutil.copy(test_path, dir_path+f"new_{category}_{numbers}.jpg")
     # print(score)
-    return Response({"class_name": class_name, "score": score,})
+    return Response({"class_name": category, "score": score,})
 
 
 @swagger_auto_schema(
