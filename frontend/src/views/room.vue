@@ -84,9 +84,6 @@ export default {
     const invitedUser = ref('')
     const invitedPassword = ref('')
     const is_owner = computed(() => store.state.roomOwner.is_owner)
-    const tmp = () => {
-      console.log(is_owner.value)
-    }
     var max_head = 0
     var now_head = 0
     // const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
@@ -97,20 +94,17 @@ export default {
     let p = null
     let s = null
 
-    const inviteLink =() => {
-      var obj = document.getElementById("link");
-      obj.select(); //인풋 컨트롤의 내용 전체 선택
-      document.execCommand("copy"); //복사
-      obj.setSelectionRange(0, 0);
+    const inviteLink = () => {
+      var obj = document.getElementById('link')
+      obj.select() // 인풋 컨트롤의 내용 전체 선택
+      document.execCommand('copy') // 복사
+      obj.setSelectionRange(0, 0)
       alert('클립보드에 링크가 복사되었습니다.')
       isInviting.value = !isInviting.value
-
     }
     const inviteButtonActivate = () => {
       isInviting.value = !isInviting.value
     }
-
-
 
     const getRoomAndLobbyUsers = () => {
       if (roomSocket.value.readyState === 1) {
@@ -260,7 +254,7 @@ export default {
           })
         })
         .then((res) => {
-          s= res.data.is_started
+          s = res.data.is_started
           l = res.data.is_locked
           p = res.data.room_password
           // console.log(res.data)
@@ -273,19 +267,16 @@ export default {
         .then((res) => {
           const n = res.data.length
 
-          if(s) {
+          if (s) {
             alert('게임이 진행중입니다')
             router.push('/lobby')
-          }
-          else if (l) {
+          } else if (l) {
             isLocked.value = !isLocked.value
             // console.log(isLocked.value)
-          }
-          else if (m > n) {
+          } else if (m > n) {
             enterRoom()
             isShow.value = !isShow.value
-          }
-          else {
+          } else {
             alert('정원이 가득 찼습니다')
             router.push('/lobby')
           }
@@ -318,7 +309,7 @@ export default {
           store.commit('setKeywords', data.value)
           isStarted.value = !isStarted.value
         } else {
-          alert(data.value.error)
+          console.log(data.value.error)
         }
       } else if (data.res === 'getRoomUsers') {
         roomUserList.value = data.value.map(e => e.user)
