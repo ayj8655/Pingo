@@ -1,6 +1,5 @@
 <template>
   <div>
-      <h1>playRoom</h1>
       <nav>
           <button @click='playState = "playReady"'>to playReady</button>
           <button @click='playState = "play"'>to play</button>

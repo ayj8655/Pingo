@@ -101,6 +101,7 @@ export default {
   color: white;
   font-weight: bold;
   margin: 10px;
+  cursor: pointer;
 }
 
 #blue-button:hover {
@@ -123,18 +124,47 @@ export default {
   color: #3883BC;
   font-weight: bold;
   margin: 10px;
+  cursor: pointer;
 }
 
 #yellow-button:hover {
-  /* height: 3.3rem;
-  width: 18.5rem; */
-  transition: 0.1s;
+  height: 3rem;
+  width: 18rem;
   background-color: white;
-  /* box-shadow: 0 0 0 1px #1a3d58 inset; */
   cursor: pointer;
   color: #3883BC;
-  font-size: 1.5rem;
+
 }
+
+#small-yellow-button{
+  height: 2rem;
+  width: 6rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1rem;
+  background: #FFF9BA;
+  color: #3883BC;
+  font-weight: bold;
+  margin: 10px;
+  cursor: pointer;
+}
+
+#small-yellow-button:hover {
+  height: 2rem;
+  width: 6rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1rem;
+  background: #FFF9BA;
+  color: #3883BC;
+  font-weight: bold;
+  margin: 10px;
+  transition: 0.1s;
+  background-color: white;
+  cursor: pointer;
+  color: #3883BC;
+}
+
 /* Gradient in Hex */
 /* linear-gradient(to right, #3883BC 0%, 50%, #FFF9BA 100%); */
 

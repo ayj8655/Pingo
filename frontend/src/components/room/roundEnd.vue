@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h1>끗!</h1>
+      <h1>끝!</h1>
   </div>
 </template>
 
