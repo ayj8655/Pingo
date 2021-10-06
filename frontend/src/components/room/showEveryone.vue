@@ -1,16 +1,20 @@
 <template>
-  <div class="image-box">
-      <h1>모두의 그림</h1>
-      <br>
-      <ul>
-        <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
-          <!-- <p>http://localhost:8000/{{img.image}}</p> -->
-            <p>{{key}}</p>
-            <img :src='domain+img.image' alt='???'>
-            <!-- <p>{{img.image}}</p> -->
-        </li>
-      </ul>
-  </div>
+<div>
+  <h1>모두의 그림</h1>
+</div>
+<div class="image-box">
+    <br>
+    <ul>
+      <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
+
+        <!-- <p>http://localhost:8000/{{img.image}}</p> -->
+          <p>{{key}}</p>
+          <img  :src='domain + img.image' alt='???'>
+          <!-- style="height: 125px; width:125px;" -->
+          <!-- <p>{{img.image}}</p> -->
+      </li>
+    </ul>
+</div>
 </template>
 
 <script>
@@ -22,6 +26,7 @@ import { domain } from '@/domain.js'
 
 export default {
   name: 'showEveryone',
+
   mounted () {
     clearTimeout()
     console.log('showEveryone mounted')
@@ -31,6 +36,9 @@ export default {
     axios.get(domain + '/paint_game/paints_of_round/' + this.room_id + '/' + category)
       .then((res) => {
         this.allImage = res.data
+          if(this.allImage.length > 6){
+            isSmall.value = !isSmall.value
+          }
         console.log('이거확인', this.allImage)
         // console.log('allimage', this.allImage)
       })
@@ -49,6 +57,12 @@ export default {
   setup (props, { emit }) {
     const room_id = localStorage.getItem('room_id')
     const allImage = ref([])
+    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    const isSmall = ref([true])
     const time_now = Date.now()
     const toNextLevel = () => {
       // store.dispatch('setPlayState')
@@ -66,7 +80,8 @@ export default {
       allImage,
       time_now,
       domain,
-      showEveryoneEnded
+      showEveryoneEnded,
+      isSmall
     }
   }
 }
@@ -78,14 +93,28 @@ ul{
 }
 
 .list-item {
-  display: inline-box;
+  display: flex;
+  height: 200px;
+  width: 200px;
+  /* flex-basis: 200px; */
+  float: left;
+  margin: 20px;
+}
+.list-item2 {
+  display: flex;
   height: 100px;
   width: 100px;
+
 }
+
 
 .image-box {
   overflow: scroll;
-  height: 800px;
-  width: 700px;
+  display: flex;
+  flex-direction: column;
+  max-height: 800px;
+  max-width: 800px;
+  flex-shrink: 1;
+  /* margin-top: 30px; */
 }
 </style>
