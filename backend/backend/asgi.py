@@ -11,7 +11,7 @@ import os
 
 #from channels.auth import AuthMiddlewareStack #추가
 #from channels.routing import ProtocolTypeRouter, URLRouter #URLRouter 추가
-from django.core.asgi import get_asgi_application
+from channels.routing import get_default_application
 #from paint_game import routing
 import django
 
@@ -26,4 +26,4 @@ django.setup()
 #         )
 #     ),
 # })
-application = get_asgi_application()
+application = get_default_application()
