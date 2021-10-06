@@ -78,10 +78,8 @@ export default {
           const room_id = res.data.room_id
           console.log('방장', data.room_owner)
           const roomOwner = data.room_owner
-          store.dispatch('setRoomOwner', {
-            roomOwner: roomOwner
-          })
-          router.push({ name: 'room', params: { room_id: room_id, password: data.room_password }, })
+          store.dispatch('setRoomOwner', { is_owner: true, name: roomOwner })
+          router.push({ name: 'room', params: { room_id: room_id, password: data.room_password } })
         })
         .catch((err) => {
           console.log('방만들기 실패')

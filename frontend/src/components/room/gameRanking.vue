@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import store from '@/store/index.js'
 // import { useRouter } from 'vue-router'
 
 export default {
@@ -49,7 +48,7 @@ export default {
   },
   unmounted () {
     clearTimeout()
-  },
+  }
 }
 </script>
 

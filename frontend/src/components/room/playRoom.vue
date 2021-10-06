@@ -56,7 +56,7 @@ export default {
 
   setup (props, { emit }) {
     const playState = ref('playReady')
-    const roomOwner = computed(() => store.state.roomOwner)
+    const is_owner = computed(() => store.state.roomOwner.is_owner)
     console.log(isReactive(playState.value))
     // const keywords = ['banana', 'bulb', 'calculator', 'carrot', 'clock']
     // const rounds = keywords.length
@@ -84,8 +84,7 @@ export default {
       console.log('keyword length', store.state.keywords.length)
       if (store.state.roundCnt >= store.state.keywords.length) {
         playState.value = 'gameRanking'
-      }
-      else {
+      } else {
         playState.value = 'playReady'
       }
     }
@@ -94,17 +93,20 @@ export default {
       console.log(val.choice)
       store.dispatch('resetGame')
       if (val.choice === 'toLobby') {
-        if (store.state.roomOwner) {
+        if (is_owner.value) {
+          store.dispatch('setRoomOwner', { is_owner: false, name: '' })
           // 방장이 로비로 갈 경우 방폭
-          console.log('방장', store.state.roomOwner, '나간다!')
-          router.push('/lobby')
-        }
-        else {
+          store.dispatch('roomSend',
+            {
+              space: 'room',
+              req: 'roomOwnerQuit'
+            }
+          )
+        } else {
           // 방장 아닌 사람이 로비로 나감
-          router.push('/lobby')
+          emit('leaveRoom')
         }
-      }
-      else{
+      } else {
         emit('to-Room')
       }
     }
