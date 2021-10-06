@@ -3,10 +3,10 @@
       <h1>모두의 그림</h1>
       <br>
       <ul>
-        <li v-for="(img, idx) in allImage" :key='time_now + idx'>
+        <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
           <!-- <p>http://localhost:8000/{{img.image}}</p> -->
             <p>{{key}}</p>
-            <img class="list-item" :src='domain+img.image' alt='???'>
+            <img :src='domain+img.image' alt='???'>
             <!-- <p>{{img.image}}</p> -->
         </li>
       </ul>

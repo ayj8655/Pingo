@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="play-box">
       <!-- <nav>
           <button @click='playState = "playReady"'>to playReady</button>
           <button @click='playState = "play"'>to play</button>
@@ -152,5 +152,10 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.play-box{
+  height: 900px;
+  width: 700px;
 }
 </style>
