@@ -6,13 +6,9 @@
       <div>
         <ol>
           <li v-for="(data, idx) in rankingData" :key="idx">
-            {{data.score}}
+            {{data[0].user.user_name}}님 점수: {{data[0].score}}
           </li>
         </ol>
-      </div>
-      <div>
-        <!-- podium image -->
-        <img src="" alt="">
       </div>
       <div>
           <button @click='playAgain'>초기화면으로</button>

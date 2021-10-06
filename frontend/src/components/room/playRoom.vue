@@ -121,7 +121,7 @@ export default {
       scoreEnded,
       gameRankingEnded,
       playState,
-      roomOwner,
+      // roomOwner,
       router
     }
   },
