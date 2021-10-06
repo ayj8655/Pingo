@@ -2,28 +2,36 @@ import matplotlib.pylab as plt
 import tensorflow as tf
 import os
 import numpy as np
-import PIL.Image as Image
+import glob
+
 
 # 시간측정
 import time
 import datetime
 
 # 시간측정끝
-from tensorflow.python.client import device_lib
-from tensorflow.python.ops.gen_array_ops import reshape
 
+# gpu 확인을 위해 추가
+# from tensorflow.python.client import device_lib
 # print(device_lib.list_local_devices())
+# gpu 확인을 위해 추가 끝
 
-
+# gpu 사용하려고 입력
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-# print(tf.__version__)
+# 텐서플로우 버전 확인
+print(tf.__version__)
 
 start = time.time()  # 시작 시간 저장
 
+
+# 이미지 저장 위치
 data_dir = "./datasets/pingo"
+# 이미지 사이즈
 IMG_SIZE = (300, 300)
+# 배치 사이즈
 BATCH_SIZE = 256
-initial_epochs = 10000
+# 에포크 횟수
+initial_epochs = 5
 
 
 # image_dataset_from_directory를 이용해서 해당 폴더에서 이미지 가져오기
@@ -66,23 +74,15 @@ train_dataset = train_dataset.cache().shuffle(1000).prefetch(buffer_size=AUTOTUN
 validation_dataset = validation_dataset.cache().prefetch(buffer_size=AUTOTUNE)
 
 
-# plt.figure(figsize=(10, 10))
-# for images, labels in train_dataset.take(1):
-#     for i in range(9):
-#         ax = plt.subplot(3, 3, i + 1)
-#         plt.imshow(images[i].numpy().astype("uint8"))
-#         plt.title(class_names[labels[i]])
-#         plt.axis("off")
-
-# plt.figure(figsize=(10, 10))
-# for images, labels in train_dataset.take(3):
-#     for i in range(9):
-#         ax = plt.subplot(3, 3, i + 1)
-#         plt.imshow(images[i].numpy().astype("uint8"))
-#         plt.title(class_names[labels[i]])
-#         plt.axis("off")
-
-# plt.show()
+# 데이터셋에서 이미지 미리보기
+plt.figure(figsize=(10, 10))
+for images, labels in train_dataset.take(1):
+    for i in range(9):
+        ax = plt.subplot(3, 3, i + 1)
+        plt.imshow(images[i].numpy().astype("uint8"))
+        plt.title(class_names[labels[i]])
+        plt.axis("off")
+plt.show()
 
 # 전처리 -> 픽셀값 조정
 rescale = tf.keras.Sequential(
@@ -96,7 +96,7 @@ data_augmentation = tf.keras.Sequential(
     ]
 )
 
-
+# 데이터 증강된 이미지 미리보기
 for image, _ in train_dataset.take(1):
     plt.figure(figsize=(10, 10))
     first_image = image[0]
@@ -105,7 +105,7 @@ for image, _ in train_dataset.take(1):
         augmented_image = data_augmentation(tf.expand_dims(first_image, 0))
         plt.imshow(augmented_image[0] / 255)
         plt.axis("off")
-# plt.show()
+plt.show()
 
 
 # 모델 정의
@@ -142,9 +142,9 @@ model.compile(
     metrics=["accuracy"]
     # optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
 )
-
+print("-----------아래는 카테고리별 이름--------------------")
 print(class_names)
-print("-----------------------------------------")
+print("---------------아래는 데이터셋 쉐이프 확인------------------")
 print(train_dataset)
 print("-----------------------------------------")
 
@@ -154,6 +154,7 @@ history = model.fit(
     train_dataset, validation_data=validation_dataset, epochs=initial_epochs
 )
 
+# 모델 정확도 측정
 score = model.evaluate(validation_dataset)
 
 # 모델 요약 출력
@@ -163,13 +164,12 @@ model.summary()
 print("loss=", score[0])  # loss
 print("accuracy=", score[1])  # acc
 
+# 파일에 저장용 변수들
 save_accuracy = str(round(score[1], 3))
 save_loss = str(round(score[0], 3))
 save_BATCH_SIZE = str(BATCH_SIZE)
 save_initial_epochs = str(initial_epochs)
-
-# print(accuracy) #정확도
-# print(loss)     #로스
+# 파일에 저장용 변수들 끝
 
 model.save(
     "./models/pingo_"
@@ -184,191 +184,50 @@ model.save(
 )
 # model.save("./models/pingo.h5")
 
+
 predictions = model.predict(validation_dataset)
 
-
-score = tf.nn.softmax(predictions[0])
 print(
     "This image most likely belongs to {} with a {:.2f} percent confidence.".format(
         class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
     )
 )
 
+path = "./datasets/pingo_test"
 
-test_path = "./datasets/pingo/banana_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
+all_image_files = glob.glob(path + "/*.png")
+print("---------------------모든이미지파일--------------------------")
+print(all_image_files)
 
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 banana 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
+for file_path in all_image_files:  # 모든 png파일 경로에 대하여
+    img = tf.keras.preprocessing.image.load_img(
+        file_path, target_size=IMG_SIZE, color_mode="rgb"
     )
-)
-test_path = "./datasets/pingo/bulb_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
+    img_array = tf.keras.preprocessing.image.img_to_array(img)
+    img_array = tf.expand_dims(img_array, 0)
 
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
+    predictions = model(img_array)
+    directories = file_path.split("\\")
 
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 bulb 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
+    print(
+        "{:.10}를 예상한 결과 => {} 신뢰도 {:.2f}%".format(
+            directories[1],
+            class_names[np.argmax(predictions[0])],
+            100 * np.max(predictions[0]),
+        )
     )
-)
-test_path = "./datasets/pingo/calculator_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
-
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 calculator 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
-    )
-)
-test_path = "./datasets/pingo/carrot_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
-
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 carrot 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
-    )
-)
-test_path = "./datasets/pingo/clock_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
-
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 clock 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
-    )
-)
-test_path = "./datasets/pingo/crescent_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
-
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 crescent 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
-    )
-)
-test_path = "./datasets/pingo/diamond_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
-
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 diamond 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
-    )
-)
-test_path = "./datasets/pingo/icecream_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
-
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 icecream 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
-    )
-)
-test_path = "./datasets/pingo/strawberry_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
-
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(
-    "원본은 strawberry 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
-    )
-)
 
 
-# np.set_printoptions(precision=3)
-
-test_path = "./datasets/pingo/t-shirt_test.png"
-img = tf.keras.preprocessing.image.load_img(
-    test_path, target_size=IMG_SIZE, color_mode="rgb"
-)
-
-img_array = tf.keras.preprocessing.image.img_to_array(img)
-img_array = tf.expand_dims(img_array, 0)
-
-predictions = model.predict(img_array)
-score = tf.nn.softmax(predictions[0])
-
-print(predictions)
-
-
-print(
-    "원본은 t-shirt 추측은 {} with a {:.2f} percent confidence.".format(
-        class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])
-    )
-)
-
+# 시간측정
 end = time.time()
 sec = end - start
+# 시간측정 끝
+
+# 시간 출력 2가지 방법
 result = datetime.timedelta(seconds=sec)
 print(result)
-result_list = str(datetime.timedelta(seconds=sec)).split(".")
-print(result_list[0])
+# result_list = str(datetime.timedelta(seconds=sec)).split(".")
+# print(result_list[0])
 
 acc = history.history["accuracy"]
 val_acc = history.history["val_accuracy"]
