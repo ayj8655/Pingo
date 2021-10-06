@@ -7,8 +7,8 @@
       <div class="room-box-left">
         <!-- <p>{{room.room_id}} 번방</p> -->
         <p>방이름: {{room.room_name}} </p>
-        <p>방장:{{room.room_owner}}</p>
-        <p>문제수: {{room.problems}}</p>
+        <p>정 원: {{room.max_head_counts}} 명</p>
+        <p>문제수: {{room.problems}} 라운드</p>
       </div>
 
       <div class="room-box-right">
@@ -64,7 +64,8 @@ export default {
     justify-content: left;
     margin-left: 1rem;
     flex-direction: column;
-    justify-items: start;
+    align-items: baseline;
+    font-weight: 550;
   }
   .room-box-left p {
     margin: 0;
@@ -75,6 +76,7 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     margin-right: 1rem;
+
   }
   .state{
     color: #cecece;
