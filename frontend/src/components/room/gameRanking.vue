@@ -12,24 +12,30 @@
 
 <script>
 import store from '@/store/index.js'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 
 export default {
   name: 'gameRanking',
-  setup () {
-    const router = useRouter()
+  setup (props, { emit }) {
+    // const router = useRouter()
     const playAgain = () => {
-      store.dispatch('resetGame')
-      store.dispatch('toRoom')
+      // store.dispatch('toRoom')
+
+      // store.dispatch('resetGame')
+      emit('gameranking-ended', {
+        choice: 'playAgain'
+      })
     }
     const toLobby = () => {
-      store.dispatch('resetGame')
-      router.push('/lobby')
+      // router.push('/lobby')
+      // store.dispatch('resetGame')
+      emit('gameranking-ended', {
+        choice: 'toLobby'
+      })
     }
     return {
       playAgain,
-      toLobby,
-      router
+      toLobby
     }
   },
   mounted () {

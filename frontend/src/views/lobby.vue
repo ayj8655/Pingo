@@ -150,6 +150,8 @@ export default {
       }).catch((err) => {
         console.dir(err)
       })
+      store.dispatch('deleteRoomOwner')
+      console.log('방장', store.state.roomOwner)
     })
 
     return {
