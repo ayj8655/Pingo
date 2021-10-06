@@ -324,7 +324,7 @@ export default {
       inputPassword,
       roomUserList,
       isInviting,
-      inviteButtonActivate
+      inviteButtonActivate,
       toRoom
     }
   },
