@@ -104,7 +104,7 @@ def get_rooms():
 
 def game_start(room_num, user_name):
     room = Room.objects.get(room_id = room_num)
-    if room.room_owner.user_name != user_name:
+    if room.room_owner.user_name == user_name:
     # 방에 들어있던 점수들 모두 삭제
         room.score_set.all().delete()
         room.is_started = True
