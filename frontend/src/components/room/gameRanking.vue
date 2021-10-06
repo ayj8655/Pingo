@@ -1,24 +1,48 @@
 <template>
   <div>
+    <div>
+      <audio src=""></audio>
+    </div>
       <div>
         <h1>Game Ranking</h1>
       </div>
-      <div>
+      <!-- <div>
         <ul>
           <li v-for="(data, idx) in rankingData" :key="idx">
-            {{idx+1}}. {{data.user.user_name}}님의 점수: {{data.score}}
+            {{idx+1}}등 {{data.user.user_name}}님의 점수: {{data.score}}
           </li>
         </ul>
+      </div> -->
+      <div style="width:100% height:200px overflow:auto">
+        <table>
+          <!-- table header -->
+          <thead>
+            <tr>
+              <th>등수</th>
+              <th>닉네임</th>
+              <th>총 점수</th>
+              <th>평균 점수</th>
+            </tr>
+          </thead>
+          <!-- 출력 시작 -->
+          <tbody>
+            <tr v-for="(data, idx) in rankingData" :key="idx">
+              <td>{{idx+1}}등</td>
+              <td>{{data.user.user_name}}</td>
+              <td>{{data.score.toFixed(3)}}</td>
+              <td>{{(data.score/this.$store.state.keywords.length).toFixed(3)}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div>
-          <button @click='playAgain'>초기화면으로</button>
-          <button @click='toLobby'>로비로</button>
+          <button id="yellow-button" @click='playAgain'>초기화면으로</button>
+          <button id="blue-button" @click='toLobby'>로비로</button>
       </div>
   </div>
 </template>
 
 <script>
-import store from '@/store/index.js'
 import { onMounted, ref } from '@vue/runtime-core'
 import axios from 'axios'
 import { domain } from '@/domain.js'
@@ -94,5 +118,27 @@ export default {
 </script>
 
 <style>
-
+table {
+    width: 100%;
+    border-top: 1px solid #444444;
+    border-collapse: collapse;
+  }
+  th, td {
+    border-bottom: 1px solid #444444;
+    padding: 10px;
+    text-align: center;
+  }
+  thead tr {
+    background-color: #595959;
+    color: #ffffff;
+  }
+  tbody tr:nth-child(2n) {
+    background-color: #f2f2f2;
+  }
+  tbody tr:nth-child(2n+1) {
+    background-color: #ffdd65;
+  }
+  * {
+    font-family: 'Times New Roman', Times, serif;
+  }
 </style>
