@@ -3,10 +3,10 @@
       <h1>모두의 그림</h1>
       <br>
       <ul>
-        <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
+        <li v-for="(img, idx) in allImage" :key='time_now + idx'>
           <!-- <p>http://localhost:8000/{{img.image}}</p> -->
             <p>{{key}}</p>
-            <img :src='domain+img.image' alt='???'>
+            <img class="list-item" :src='domain+img.image' alt='???'>
             <!-- <p>{{img.image}}</p> -->
         </li>
       </ul>
@@ -85,5 +85,7 @@ ul{
 
 .image-box {
   overflow: scroll;
+  height: 800px;
+  width: 700px;
 }
 </style>
