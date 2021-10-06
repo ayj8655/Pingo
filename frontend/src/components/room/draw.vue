@@ -38,7 +38,7 @@ import store from '@/store/index.js'
 import { domain } from '@/domain.js'
 
 export default {
-  setup () {
+  setup (props, {emit}) {
     const canvas = ref()
     const router = useRouter()
     const data = reactive({
@@ -159,10 +159,14 @@ export default {
       if (data.isPlaying === true) {
         sendImage()
       }
-      store.dispatch('setPlayState')
-      console.log('to nxt level', store.state.playState)
+      // store.dispatch('setPlayState')
+      drawEnded()
+      // console.log('to nxt level', store.state.playState)
     }
 
+    const drawEnded = () => {
+      emit('draw-ended')
+    }
     // 붓 사이즈 조절하는거 아직 못함
     return {
       startPainting,
@@ -176,6 +180,7 @@ export default {
       sendImage,
       eraseAll,
       toNextLevel,
+      drawEnded,
       data,
       canvas,
       router

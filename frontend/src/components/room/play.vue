@@ -4,11 +4,11 @@
 
       </h2>
       <div>
-        <draw/>
+        <draw @draw-ended="playEnded"/>
       </div>
-      <div>
+      <!-- <div>
         <chating/>
-      </div>
+      </div> -->
   </div>
 </template>
 
@@ -20,7 +20,9 @@ import { onMounted, ref } from '@vue/runtime-core'
 export default {
   name: 'play',
   components: { draw, chating },
-  setup(){
+  emits: 'playEnded',
+
+  setup (props, {emit}) {
     onMounted(()=> {
 
       const settime = ref(1590)
@@ -31,14 +33,21 @@ export default {
 
         document.getElementById('timerBox').innerHTML = '남은시간: ' + sec.value + '초'
         settime.value -= 10
-        if (settime.value <= 0){
+        if (settime.value <= 0) {
           clearInterval(timer)
-          document.getElementById('timerBox').innerHTML = ''}
+          document.getElementById('timerBox').innerHTML = '' }
         }, 100)
 
+      
     })
+
+    const playEnded = () => {
+      emit('playEnded')
+    }
+
     return {
-      setTimeout
+      setTimeout,
+      playEnded
     }
   } }
 

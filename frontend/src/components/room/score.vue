@@ -13,7 +13,7 @@ import { domain } from '@/domain.js'
 
 export default {
   name: 'score',
-  setup () {
+  setup (prop, { emit }) {
     const router = useRouter()
     const score = ref({})
     const classes = ref({})
@@ -44,20 +44,26 @@ export default {
         })
     })
 
+    const scoreEnded = () => {
+      emit('score-ended')
+    }
+
     const toNextLevel = () => {
       store.dispatch('increaseRoundcnt')
-      console.log('roundcount', store.state.roundCnt)
-      console.log('len keyword', store.state.keywords.length)
+      scoreEnded()
+      // console.log('roundcount', store.state.roundCnt)
+      // console.log('len keyword', store.state.keywords.length)
 
-      if (store.state.roundCnt >= store.state.keywords.length) {
-        store.dispatch('endGame')
-      }
-      store.dispatch('setPlayState')
-      console.log('to nxt level', store.state.playState)
+      // if (store.state.roundCnt >= store.state.keywords.length) {
+      //   store.dispatch('endGame')
+      // }
+      // store.dispatch('setPlayState')
+      // console.log('to nxt level', store.state.playState)
     }
     return {
       onMounted,
       toNextLevel,
+      scoreEnded,
       score,
       classes
     }

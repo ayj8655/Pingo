@@ -13,7 +13,6 @@ export default createStore({
     keywords: [],
     playState: 'playReady',
     roundCnt: 0,
-    isStarted: false,
     gameEnded: false
   },
   mutations: {
@@ -42,8 +41,8 @@ export default createStore({
     },
     RESET_GAME (state) {
       state.roundCnt = 0
-      state.playState = 'playReady'
       state.gameEnded = false
+      state.playState = 'playReady'
     },
     END_GAME (state) {
       state.gameEnded = true
@@ -53,6 +52,7 @@ export default createStore({
     },
     TO_ROOM (state) {
       state.isStarted = false
+      console.log(state.isStarted)
     },
     setKeywords (state, payload) {
       state.keywords = payload.map((e) => e.category)
