@@ -41,7 +41,7 @@ category_dict = {
     "strawberry": 9,
     "t-shirt": 10,
 }
-
+model2 = tf.keras.models.load_model("./models/pingo_256_500_0.981_0.099.h5")
 ###### chat 테스트
 from django.shortcuts import render
 
@@ -243,7 +243,7 @@ def paints_of_round(request, room_id, category):
 @api_view(["POST"])
 def ayj(request):
     # model = tf.keras.models.load_model("./models/pingo_96_28.h5")
-    model = tf.keras.models.load_model("./models/pingo_256_500_0.981_0.099.h5")
+    # model = tf.keras.models.load_model("./models/pingo_256_500_0.981_0.099.h5")
     IMG_SIZE = (300, 300)
     class_names = [
         "banana",
@@ -272,7 +272,7 @@ def ayj(request):
     img_array = tf.expand_dims(img_array, 0)
 
     # predictions = model.predict(img_array)
-    predictions = model(img_array)
+    predictions = model2(img_array)
     # score = tf.nn.softmax(predictions[0])
     class_name = class_names[np.argmax(predictions[0])]
     score = np.max(predictions[0]) * 100
