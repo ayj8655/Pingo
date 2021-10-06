@@ -4,11 +4,11 @@
         <h1>Game Ranking</h1>
       </div>
       <div>
-        <ol>
+        <ul>
           <li v-for="(data, idx) in rankingData" :key="idx">
-            {{data[0].user.user_name}}님 점수: {{data[0].score}}
+            {{idx+1}}. {{data.user.user_name}}님의 점수: {{data.score}}
           </li>
-        </ol>
+        </ul>
       </div>
       <div>
           <button @click='playAgain'>초기화면으로</button>
@@ -19,7 +19,7 @@
 
 <script>
 import store from '@/store/index.js'
-import { onMounted } from '@vue/runtime-core'
+import { onMounted, ref } from '@vue/runtime-core'
 import axios from 'axios'
 import { domain } from '@/domain.js'
 // import { useRouter } from 'vue-router'
@@ -28,7 +28,7 @@ export default {
   name: 'gameRanking',
   setup (props, { emit }) {
     // const router = useRouter()
-    const rankingData = []
+    const rankingData = ref([])
 
     const playAgain = () => {
       // store.dispatch('toRoom')
@@ -49,15 +49,17 @@ export default {
       const roomId = localStorage.getItem('room_id')
       const userName = localStorage.getItem('user_name')
       axios({
-        method: 'GET',
-        url: domain + '/paint_game/result_score/' + roomId,
+        method: 'POST',
+        url: domain + '/paint_game/game_end/',
         data: {
           room_id: roomId,
           user_name: userName
         }
       })
         .then((res) => {
-          rankingData.push(res.data)
+          // rankingData.value.push(res.data)
+          rankingData.value = Array.from(res.data)
+          console.log(rankingData.value)
         })
         .catch((err) => {
           console.dir(err)
