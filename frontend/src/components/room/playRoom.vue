@@ -41,15 +41,14 @@ import roundEnd from '@/components/room/roundEnd.vue'
 import showEveryone from '@/components/room/showEveryone.vue'
 import score from '@/components/room/score.vue'
 import gameRanking from '@/components/room/gameRanking.vue'
-import { domain } from '@/domain.js'
-import axios from 'axios'
+// import { domain } from '@/domain.js'
+// import axios from 'axios'
 
 // Inside of vue router, you do not have a vue instance.
 // Therefore there is no way to access this.$store.state.
 // In order to access your store you need to include vuex into the router.
 import store from '@/store/index.js'
-import { ref, isReactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
 export default {
   components: { playReady, play, roundEnd, showEveryone, score, gameRanking },
 
@@ -59,7 +58,6 @@ export default {
     // console.log(isReactive(playState.value))
     // const keywords = ['banana', 'bulb', 'calculator', 'carrot', 'clock']
     // const rounds = keywords.length
-    const router = useRouter()
 
     const playReadyEnded = () => {
       // console.log('playReadyEnded')
@@ -120,9 +118,7 @@ export default {
       showEveryoneEnded,
       scoreEnded,
       gameRankingEnded,
-      playState,
-      // roomOwner,
-      router
+      playState
     }
   },
   // computed: {
@@ -147,7 +143,6 @@ export default {
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-
 
 .fade-enter-from,
 .fade-leave-to {
