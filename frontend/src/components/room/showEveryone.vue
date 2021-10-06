@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="image-box">
       <h1>모두의 그림</h1>
       <br>
       <ul>
-        <li v-for="(img, idx) in allImage" :key='time_now + idx'>
+        <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
           <!-- <p>http://localhost:8000/{{img.image}}</p> -->
             <p>{{key}}</p>
             <img :src='domain+img.image' alt='???'>
@@ -73,5 +73,17 @@ export default {
 </script>
 
 <style>
+ul{
+  list-style: none;
+}
 
+.list-item {
+  display: inline-box;
+  height: 100px;
+  width: 100px;
+}
+
+.image-box {
+  overflow: scroll;
+}
 </style>

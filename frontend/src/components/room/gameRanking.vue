@@ -65,7 +65,7 @@ export default {
     }
 
     onMounted(() => {
-      console.log('gameRankingMounted')
+      // console.log('gameRankingMounted')
       getRankingData()
     })
 
