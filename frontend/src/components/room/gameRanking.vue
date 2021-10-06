@@ -4,6 +4,17 @@
         <h1>Game Ranking</h1>
       </div>
       <div>
+        <ol>
+          <li v-for="(data, idx) in rankingData" :key="idx">
+            {{data.score}}
+          </li>
+        </ol>
+      </div>
+      <div>
+        <!-- podium image -->
+        <img src="" alt="">
+      </div>
+      <div>
           <button @click='playAgain'>초기화면으로</button>
           <button @click='toLobby'>로비로</button>
       </div>
@@ -12,12 +23,17 @@
 
 <script>
 import store from '@/store/index.js'
+import { onMounted } from '@vue/runtime-core'
+import axios from 'axios'
+import { domain } from '@/domain.js'
 // import { useRouter } from 'vue-router'
 
 export default {
   name: 'gameRanking',
   setup (props, { emit }) {
     // const router = useRouter()
+    const rankingData = []
+
     const playAgain = () => {
       // store.dispatch('toRoom')
 
@@ -33,9 +49,35 @@ export default {
         choice: 'toLobby'
       })
     }
+    const getRankingData = () => {
+      const roomId = localStorage.getItem('room_id')
+      const userName = localStorage.getItem('user_name')
+      axios({
+        method: 'GET',
+        url: domain + '/paint_game/result_score/' + roomId,
+        data: {
+          room_id: roomId,
+          user_name: userName
+        }
+      })
+        .then((res) => {
+          rankingData.push(res.data)
+        })
+        .catch((err) => {
+          console.dir(err)
+        })
+    }
+
+    onMounted(() => {
+      console.log('gameRankingMounted')
+      getRankingData()
+    })
+
     return {
       playAgain,
-      toLobby
+      toLobby,
+      getRankingData,
+      rankingData
     }
   },
   mounted () {
