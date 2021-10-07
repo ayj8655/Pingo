@@ -24,7 +24,7 @@
                   {{obj.message}}
                 </p>
               </div>
-              <span class="timestamp"><span class="username">{{obj.user_name}}</span>&bull;<span class="posttime">{{obj.send_time}}</span></span>
+              <span class="timestamp"><span class="username">{{obj.user_name}}님</span>&bull;<span class="posttime">{{obj.send_time}}</span></span>
             </div>
           </div>
         </article>
@@ -37,7 +37,7 @@
                   {{obj.message}}
                 </p>
               </div>
-              <span class="timestamp"><span class="username">{{obj.user_name}}</span>&bull;<span class="posttime">{{obj.send_time}}</span></span>
+              <span class="timestamp"><span class="username">{{obj.user_name}}님</span>&bull;<span class="posttime">{{obj.send_time}}</span></span>
             </div>
           </div>
         </article>
@@ -71,11 +71,29 @@ export default {
     const sendChatMessage = () => {
       scrollToBottom()
       const now0 = new Date()
+      let hour = now0.getHours()
+      let min = now0.getMinutes()
+
+      if (hour < 10) {
+        hour = '0' + hour
+      }
+
+      if (min < 10) {
+        min = '0' + min
+      }
+
+      // const mObj = {
+      //   user_name: username,
+      //   message: message.value,
+      //   send_time: now0.getHours() + ':' + now0.getMinutes()
+      // }
+
       const mObj = {
         user_name: username,
         message: message.value,
-        send_time: now0.getHours() + ':' + now0.getMinutes()
+        send_time: hour + ':' + min
       }
+
       store.dispatch('roomSend',
         {
           space: 'room',
@@ -97,7 +115,6 @@ export default {
     const scrollToBottom = () => {
       var chatHistory = document.querySelector('.chat-window')
       chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight
-      console.log(chatHistory.scrollHeight)
     }
 
     return {
