@@ -8,10 +8,10 @@
         <br>
       <ul>
         <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
-          <div class="an-item">
+          <span class="an-item">
             <img  :src='domain + img.image' alt='???' style="height:100px; width:100px;">
             <p>{{img.user.user_name}}</p>
-          </div>
+          </span>
         </li>
       </ul>
     </div>
@@ -87,11 +87,11 @@ ul{
 
 .list-item {
   display: flex;
-  height: 200px;
-  width: 200px;
+  height: 100px;
+  width: 100px;
   /* flex-basis: 200px; */
   float: left;
-  margin: 20px;
+  margin: 10px;
 }
 .list-item2 {
   display: flex;
