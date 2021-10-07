@@ -2,7 +2,7 @@
   <div class="lock-room-box">
     <div id="lock-room-box">
       <img style="height:250px; width: 300px; margin-top:30px" src="/lock2.png" alt="lock">
-      <input class="lock-input" type="password" placeholder="password" v-model="password">
+      <input class="lock-input" type="password" placeholder="password" v-model="password" @keydown.enter="enterRoom" autofocus>
       <button id="blue-button" @click="enterRoom">입장</button>
     </div>
   </div>
