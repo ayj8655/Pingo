@@ -32,7 +32,7 @@
         <chating :messageObjs="messageObjs"/>
       </div>
     </div>
-
+  </div>
     <section>
 
       <Modal :isShow='isShow' @switchModal='switchModal'>
