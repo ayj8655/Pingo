@@ -324,7 +324,6 @@ export default {
       } else if (data.res === 'getRoomUsers') {
         roomUserList.value = data.value.map(e => e.user)
       } else if (data.res === 'chat') {
-        console.log(data.value)
         messageObjs.value.push(data.value)
       }
     }
