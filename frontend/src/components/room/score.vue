@@ -1,13 +1,14 @@
 <template>
 <div class="score-board">
   <div class="score-box">
-    <h1>{{score}}</h1>
-    <h1>AI는 당신의 그림을 </h1>
-    <h1>"{{classes}}"(으)로</h1>
-    <h1> 예측했습니다.</h1>
+    <h3>Pingo가 보기에 {{classes}}로서</h3>
+    <h3>{{score2}}점 입니다</h3>
+    <div v-if="flag">
+      <h3>혹시 {{maxClass}}를 그린건가요?</h3>
+      <h3>{{maxClass}}에 대한 점수는 {{maxScore2}}입니다</h3>
+    </div>
   </div>
 </div>
-
 
 </template>
 
@@ -15,16 +16,18 @@
 import { onMounted, ref } from '@vue/runtime-core'
 import axios from 'axios'
 import store from '@/store/index.js'
-import { useRouter } from 'vue-router'
 import { domain } from '@/domain.js'
 
 export default {
   name: 'score',
   setup (prop, { emit }) {
-    const router = useRouter()
-    const score = ref({})
-    const classes = ref({})
-
+    const score = ref('채점 중')
+    const maxScore = ref('채점 중')
+    const classes = ref('?')
+    const maxClass = ref('?')
+    const score2 = ref('채점 중')
+    const maxScore2 = ref('채점 중')
+    const flag = ref(false)
     onMounted(() => {
       clearTimeout()
       // console.log('score mounted')
@@ -33,18 +36,24 @@ export default {
 
       axios({
         method: 'POST',
-
-        url: domain + "/paint_game/ayj/",
+        url: domain + '/paint_game/ayj/',
         data: {
-          'user_name':localStorage.getItem('user_name'),
-          'room_id':localStorage.getItem('room_id'),
-          'category': category
+          user_name: localStorage.getItem('user_name'),
+          room_id: localStorage.getItem('room_id'),
+          category: category
         }
       })
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           score.value = res.data.score
           classes.value = res.data.class_name
+          maxScore.value = res.data.max_score
+          maxClass.value = res.data.max_class
+          if (maxScore.value > score.value) {
+            flag.value = true
+          }
+          score2.value = score.value.toFixed(3)
+          maxScore2.value = maxScore.value.toFixed(3)
         })
         .then(() => {
           setTimeout(toNextLevel, 5000)
@@ -58,29 +67,19 @@ export default {
     const toNextLevel = () => {
       store.dispatch('increaseRoundcnt')
       scoreEnded()
-      // console.log('roundcount', store.state.roundCnt)
-      // console.log('len keyword', store.state.keywords.length)
-
-      // if (store.state.roundCnt >= store.state.keywords.length) {
-      //   store.dispatch('endGame')
-      // }
-      // store.dispatch('setPlayState')
-      // console.log('to nxt level', store.state.playState)
     }
     return {
       onMounted,
       toNextLevel,
       scoreEnded,
-      score,
-      classes
+      classes,
+      flag,
+      maxClass,
+      score2,
+      maxScore2
     }
   },
-  // mounted () {
-  //   console.log('score mounted')
-  //   store.dispatch('increaseRoundcnt')
-  //   console.log(store.state.roundCnt)
-  //   setTimeout(this.toNextLevel, 5000)
-  // },
+
   unmounted () {
     clearTimeout()
   }

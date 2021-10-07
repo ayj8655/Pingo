@@ -9,6 +9,7 @@
             <playReady @playready-ended="playReadyEnded"/>
           </div>
           <div v-else-if='playState === "play"'>
+            <!-- 그림그리는 곳 -->
             <play @play-ended="playEnded"/>
           </div>
           <div v-else-if='playState === "roundEnd"'>
