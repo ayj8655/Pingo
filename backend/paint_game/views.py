@@ -11,8 +11,8 @@ from .serializers import (
     RoomListSerializer,
     MakeRoomSerializer,
     PaintSerializer,
+    PaintSerializer2,
     CategorySerializer,
-    RoomMemberSerializer2,
     ScoreSerializer,
 )
 from .models import Categories, Score, Room, UserInRoom, Paint
@@ -225,7 +225,7 @@ def saving(request):
 def paints_of_round(request, room_id, category):
     # 방번호와 카테고리를 params로 받아서 그림들을 조회 , 카테고리가 각 라운드를 의미함
     paints = Paint.objects.filter(room=room_id, category=category_dict.get(category))
-    serializer = PaintSerializer(paints, many=True)
+    serializer = PaintSerializer2(paints, many=True)
     return Response(serializer.data)
 
 
@@ -234,7 +234,7 @@ def paints_of_round(request, room_id, category):
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
-            "user_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+            "user_name": openapi.Schema(type=openapi.TYPE_STRING),
             "room_id": openapi.Schema(type=openapi.TYPE_INTEGER),
             "category": openapi.Schema(type=openapi.TYPE_STRING),
         },
@@ -281,6 +281,7 @@ def ayj(request):
     idx = category_dict[category]-1
     # 해당 카테고리의 점수(예측률)
     score = predictions[0][idx] * 100
+    score = score.numpy()
     # 점수 누적
     user = get_object_or_404(Accounts, user_name=user_name)
     room = get_object_or_404(Room, room_id=room_id)
@@ -303,8 +304,7 @@ def ayj(request):
     os.makedirs(dir_path, exist_ok=True)
     numbers = len(os.listdir(dir_path))
     shutil.copy(test_path, dir_path+f"new_{category}_{numbers}.jpg")
-    # print(score)
-    return Response({"class_name": category, "score": score,})
+    return Response({"class_name": category, "score": score})
 
 
 @swagger_auto_schema(

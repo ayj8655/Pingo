@@ -476,9 +476,13 @@ flex-basis: 300px;
 background-color: white;
 border-radius: 10px;
 margin: 1rem;
+<<<<<<< HEAD
 margin-top: 7em;
 overflow: scroll;
 min-height: 300px;
+=======
+margin-top: 5em;
+>>>>>>> e98ccb9068a1344f00cb6706006a544d63bfdc34
 }
 
 .word{
