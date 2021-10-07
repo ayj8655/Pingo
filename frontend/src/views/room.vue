@@ -444,8 +444,8 @@ export default {
 .room-left{
 display: flex;
 flex-direction: column;
-height: 400px;
-width: 200px;
+height: 450px;
+width: 400px;
 background-color: white;
 border-radius: 10px;
 margin: 1rem;
@@ -454,7 +454,7 @@ flex-shrink: 1;
 overflow: scroll;
 /* padding-top: 3rem; */
 min-height: 300px;
-max-height: 480px;
+
 }
 
 .room-center{
@@ -468,7 +468,7 @@ margin: 0;
 display: flex;
 flex-direction: column;
 flex-shrink: 1;
-height: 400px;
+height: 450px;
 width: 400px;
 flex-basis: 300px;
 background-color: white;

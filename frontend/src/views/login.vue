@@ -54,7 +54,6 @@ export default {
           })
         })
         .then((res) => {
-          console.log('login (67line)', res.data)
           localStorage.setItem('user_name', res.data.user_name)
           localStorage.setItem('user_id', res.data.user_id)
           router.push('/lobby')

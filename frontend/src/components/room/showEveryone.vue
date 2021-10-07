@@ -133,6 +133,7 @@ ul{
   flex-direction: column;
 }
 .an-item p {
+  font-size: 10px;
   margin: 3px;
 }
 </style>
