@@ -15,11 +15,13 @@
           </audio>
         </div>
         <section class="lobby-left">
+          <div class="userBox">
           <div v-for="user in userList" :key="user.user_id">
             <div class="nickname">
               <i class="far fa-smile-wink"></i>
               <p>{{user.user_name}}</p>
             </div>
+          </div>
           </div>
         </section>
 
@@ -244,6 +246,11 @@ export default {
   flex-shrink: 1;
   height: 500px;
   margin-bottom: 0;
+}
+
+.userBox {
+  max-height: 780px;
+  overflow: scroll;
 }
 
 .lobby-right{
