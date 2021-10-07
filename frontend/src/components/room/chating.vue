@@ -246,12 +246,14 @@ body {
     color: rgba(0,0,0,.38);
     font-size: 8pt;
     margin-bottom: 10px;
+    color: #ffffff;
 }
 .username {
     margin-right: 3px;
 }
 .posttime {
     margin-left: 3px;
+    color: #ffffff;
 }
 .msg-self .msg-box {
     border-radius: 6px 0 0 6px;
