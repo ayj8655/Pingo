@@ -68,7 +68,7 @@ export default {
     font-weight: 550;
   }
   .room-box-left p {
-    margin: 0;
+    margin: 0.2rem;
     font-size: 0.8rem;
   }
   .room-box-right{
