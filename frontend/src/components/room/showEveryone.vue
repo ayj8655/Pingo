@@ -40,7 +40,7 @@ export default {
         // console.log('이거확인', this.allImage)
       })
       .then(() => {
-        setTimeout(this.toNextLevel, 3000)
+        setTimeout(this.toNextLevel, 8000)
       })
       .catch((err) => {
         console.log(err)

@@ -56,7 +56,7 @@ export default {
           maxScore2.value = maxScore.value.toFixed(3)
         })
         .then(() => {
-          setTimeout(toNextLevel, 5000)
+          setTimeout(toNextLevel, 8000)
         })
     })
 
