@@ -1,14 +1,13 @@
 <template>
   <div>
-    <div>
+    <div class="timer-keyword" >
       <h1 id="timerBox"
       style="
-      margin-top: 0;
-      margin-bottom: 0.8rem !important">
+      margin: 0 0 0.8rem 1rem;">
       </h1>
-      <h3>{{keyword}}</h3>
-      <draw @draw-ended="playEnded"/>
+      <h1 class="keyword-box">{{keyword}}</h1>
     </div>
+    <draw @draw-ended="playEnded"/>
   </div>
 </template>
 
@@ -61,5 +60,19 @@ export default {
 </script>
 
 <style>
+.timer-keyword{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 
+}
+.keyword-box{
+  margin: 0 0 0.8rem 1rem;
+  background-color: white;
+  padding: 3px;
+  border-radius: 3px;
+  color: rgb(240, 89, 89);
+  font-size: 1.5rem;
+}
 </style>

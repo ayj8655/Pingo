@@ -8,8 +8,10 @@
         <br>
       <ul>
         <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
-          <p>{{img.user.user_name}}</p>
-          <img  :src='domain + img.image' alt='???'>
+          <span class="an-item">
+            <img  :src='domain + img.image' alt='???' style="height:100px; width:100px;">
+            <p>{{img.user.user_name}}</p>
+          </span>
         </li>
       </ul>
     </div>
@@ -52,11 +54,7 @@ export default {
   setup (props, { emit }) {
     const room_id = localStorage.getItem('room_id')
     const allImage = ref([])
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+
     const isSmall = ref([true])
     const time_now = Date.now()
     const toNextLevel = () => {
@@ -89,11 +87,11 @@ ul{
 
 .list-item {
   display: flex;
-  height: 200px;
-  width: 200px;
+  height: 100px;
+  width: 100px;
   /* flex-basis: 200px; */
   float: left;
-  margin: 20px;
+  margin: 10px;
 }
 .list-item2 {
   display: flex;
@@ -115,9 +113,8 @@ ul{
 .show-everyone{
   height: 500px;
   margin-top: 3rem;
-  display: flex;
+  display: flex-start;
   flex-direction: column;
-  justify-content: start;
   background-color: rgba(255, 255, 240, 0.534);
   color: #3883BC;
   font-size: 1.2rem;
@@ -129,5 +126,13 @@ ul{
   display: flex;
   flex-direction: column;
   color: ivory;
+}
+
+.an-item{
+  display: flex;
+  flex-direction: column;
+}
+.an-item p {
+  margin: 3px;
 }
 </style>

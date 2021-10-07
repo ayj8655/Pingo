@@ -19,7 +19,7 @@
       <div class="room-left">
         <p>회원</p>
         <div v-for="roomUser in roomUserList" :key='roomUser.user_id'>
-          {{roomUser.user_name}}
+          <div class="a-member" >{{roomUser.user_name}}</div>
         </div>
 
       </div>
@@ -121,9 +121,6 @@ export default {
     }
 
     const toLobby = () => {
-      if (is_owner.value) {
-        store.dispatch('setRoomOwner', { is_owner: false, name: '' })
-      }
       router.push('/lobby')
     }
 
@@ -192,7 +189,6 @@ export default {
           roomSocket.value.close()
           localStorage.removeItem('room_id')
           if (is_owner.value) {
-            store.dispatch('setRoomOwner', { is_owner: false, name: '' })
             store.dispatch('lobbySend',
               {
                 space: 'lobby',
@@ -347,6 +343,7 @@ export default {
     onBeforeUnmount(() => {
       if (is_owner.value) {
         // 방장이 로비로 갈 경우 방폭
+        store.dispatch('setRoomOwner', { is_owner: false, name: '' })
         store.dispatch('roomSend',
           {
             space: 'room',
@@ -476,13 +473,7 @@ flex-basis: 300px;
 background-color: white;
 border-radius: 10px;
 margin: 1rem;
-<<<<<<< HEAD
 margin-top: 7em;
-overflow: scroll;
-min-height: 300px;
-=======
-margin-top: 5em;
->>>>>>> e98ccb9068a1344f00cb6706006a544d63bfdc34
 }
 
 .word{
@@ -507,5 +498,9 @@ margin-top: 5em;
   margin: auto;
   margin: 10px;
 
+}
+
+.a-member{
+  margin-top: 3px;
 }
 </style>
