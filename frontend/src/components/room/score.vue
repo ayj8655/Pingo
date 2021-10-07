@@ -49,7 +49,7 @@ export default {
           classes.value = res.data.class_name
           maxScore.value = res.data.max_score
           maxClass.value = res.data.max_class
-          if (maxScore.value > score.value) {
+          if (res.data.max_score > res.data.score) {
             flag.value = true
           }
           score2.value = score.value.toFixed(3)
