@@ -25,9 +25,9 @@
 
       </section>
       <section class="lobby-right">
-        <div v-show="isTutorial">
+        <div class="iframe-box" v-show="isTutorial">
           <!-- youtube 링크에서 'watch?v=' 부분을 'embed/'로 바꾸면 x-frame option 없이 불러올 수 있다 -->
-          <iframe src="https://www.youtube.com/embed/X8v1GWzZYJ4" type="text/html" width="400px" height="200px" frameborder="0"></iframe>
+          <iframe src="https://www.youtube.com/embed/X8v1GWzZYJ4" type="text/html" width="500px" height="300px" frameborder="0"></iframe>
         </div>
         <div v-show="!isTutorial">
           <ul>
@@ -224,6 +224,12 @@ export default {
 
 #audio-box{
   width: ;
+}
+
+.iframe-box {
+  display: flex;
+  margin: auto;
+
 }
 
 .lobby-left{
