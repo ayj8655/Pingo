@@ -1,7 +1,9 @@
 <template>
-  <div>
+<div class="score-board">
+  <div class="score-box">
       <h1>끝!</h1>
   </div>
+</div>
 </template>
 
 <script>

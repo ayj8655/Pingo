@@ -1,14 +1,12 @@
 <template>
   <div>
+    <div style="margin-top:2.2rem">
       <h2 id="timerBox">
-
       </h2>
       <div>
         <draw @draw-ended="playEnded"/>
       </div>
-      <!-- <div>
-        <chating/>
-      </div> -->
+    </div>
   </div>
 </template>
 

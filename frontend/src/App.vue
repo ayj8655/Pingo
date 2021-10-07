@@ -167,7 +167,7 @@ export default {
 
 @font-face {
   font-family: 'jalnan';
-  src: url('./fonts/Jalnan.ttf') format('truetype');
+  src: url('./assets/fonts/Jalnan.ttf') format('truetype');
 }
 
 * {

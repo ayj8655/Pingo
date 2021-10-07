@@ -9,7 +9,7 @@
           <button id="blue-button" @click="tutorial" v-if="!isTutorial">튜토리얼</button>
           <button id="blue-button" @click="tutorial" v-if="isTutorial">방목록으로</button>
         </section>
-        <div id="audio-box">
+        <div>
           <!-- <audio controls autoplay loop src="/victory.m4a" type="audio.m4a" style="width: 18rem">
             <source >
           </audio> -->

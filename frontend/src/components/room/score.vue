@@ -1,6 +1,11 @@
 <template>
-<h1>{{score}}</h1>
-<h1>AI는 당신의 그림을 "{{classes}}"(으)로 예측했습니다.</h1>
+<div class="score-board">
+  <div class="score-box">
+    <h1>{{score}}</h1>
+    <h1>AI는 당신의 그림을 "{{classes}}"(으)로 예측했습니다.</h1>
+  </div>
+</div>
+
 
 </template>
 
@@ -81,5 +86,18 @@ export default {
 </script>
 
 <style>
+.score-board{
+  height: 900px;
+  display: flex;
+  margin-top: auto;
+  margin-bottom: auto;
+  flex-direction: column;
+}
 
+.score-box{
+  margin-top: 15rem;
+  display: flex;
+  flex-direction: column;
+  color: ivory;
+}
 </style>

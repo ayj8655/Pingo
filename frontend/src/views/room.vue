@@ -2,12 +2,18 @@
   <div class="ai-back">
     <div class="top-box">
       <button id="yellow-button" @click="start" v-if="is_owner && !isStarted">start</button>
+
       <div class="link-box" v-if="!isStarted">
         <button id="small-yellow-button" v-if="!isInviting" @click="inviteButtonActivate">초대하기</button>
         <input  type="text" id="link" v-model="urlLink" v-if="isInviting">
         <button id="small-yellow-button" @click="inviteLink" v-if="isInviting">링크복사</button>
         <button id="small-yellow-button" @click="toLobby" >로비로</button>
-      </div>
+        <div id="room-audio">
+          <!-- 경로가 안잡혀서 여기로 둠 -->
+          <audio controls autoplay loop src="/Forest-Trekking.m4a" type="audio.m4a" style="width: 12rem !important; height: 2rem;">
+            <source >
+          </audio>
+        </div>
     </div>
     <div class="play-box">
       <div class="room-left">
@@ -15,7 +21,9 @@
         <div v-for="roomUser in roomUserList" :key='roomUser.user_id'>
           {{roomUser.user_name}}
         </div>
+
       </div>
+
       <div class="room-center" v-if="isStarted">
         <playRoom @to-room="toRoom" @leaveRoom="leaveRoom"/>
       </div>
@@ -23,6 +31,8 @@
       <div class="room-right">
         <p>채팅</p>
       </div>
+    </div>
+
     </div>
     <section >
       <Modal :isShow='isShow' @switchModal='switchModal'>
@@ -43,10 +53,12 @@
                 <input class="lock-input" type="text" v-model="invitedPassword">
                 <button id="blue-button" @click="inputPassword">비번입력</button>
               </div>
+
             </div>
 
           </template>
           <template v-slot:footer>
+
           </template>
       </Modal>
     </section>
@@ -429,19 +441,24 @@ export default {
 .play-box{
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 1300px;
-  height: 100%;
+  align-items: flex-start;
+  width: 1200px;
+  height: 800px;
   margin: auto;
+  flex-shrink: 2;
 }
 
 .room-left{
-height: 670px;
-width: 300px;
+display: flex;
+flex-direction: column;
+height: 500px;
+width: 200px;
 background-color: white;
-border-radius: 5px;
-margin: 3rem;
-margin-top: 0;
+border-radius: 10px;
+margin: 1rem;
+margin-top: 5rem;
+flex-shrink: 1;
+overflow: scroll;
 /* padding-top: 3rem; */
 
 }
@@ -450,16 +467,20 @@ margin-top: 0;
 height: 900px;
 flex-basis: 900px;
 width: 700px;
+margin: 0;
 }
 
 .room-right{
-height: 670px;
-width: 300px;
+display: flex;
+flex-direction: column;
+flex-shrink: 1;
+height: 500px;
+width: 400px;
 background-color: white;
-border-radius: 5px;
-margin: 3rem;
-margin-top: 0;
-
+border-radius: 10px;
+margin: 1rem;
+margin-top: 5em;
+overflow: scroll;
 }
 
 .word{
@@ -477,5 +498,12 @@ margin-top: 0;
 .word p {
   font-size: 1.4rem !important;
   margin: 0.6rem;
+}
+#room-audio{
+  display: flex;
+  align-items: center;
+  margin: auto;
+  margin: 10px;
+
 }
 </style>
