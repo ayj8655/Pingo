@@ -42,7 +42,7 @@
             <div v-if="!isLocked" class="lock-room-box">
               <div id="lock-room-box" >
                 <h1 style="font-size:3rem; color:#3883BC; " >Pingo!</h1>
-                <input class="lock-input" type="text" name="" id="" placeholder="ID" v-model="invitedUser">
+                <input class="lock-input" type="text" name="" id="" placeholder="ID" v-model="invitedUser" @keydown.enter="login" autofocus>
                 <button id="blue-button" @click="login">login</button>
               </div>
             </div>
@@ -50,7 +50,7 @@
             <div v-if="isLocked" class="lock-room-box">
               <div id="lock-room-box">
                 <img style="height:250px; width: 300px; margin-top:30px" src="/lock2.png" alt="lock">
-                <input class="lock-input" type="text" v-model="invitedPassword">
+                <input class="lock-input" type="password" v-model="invitedPassword" @keydown.enter="inputPassword" autofocus>
                 <button id="blue-button" @click="inputPassword">비번입력</button>
               </div>
 
@@ -166,6 +166,7 @@ export default {
       })
         .then((res) => {
           if (store.state.lobbySocket.readyState === 1) {
+            getRoomAndLobbyUsers()
             store.dispatch('lobbySend',
               {
                 space: 'lobby',

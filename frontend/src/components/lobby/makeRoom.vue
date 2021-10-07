@@ -8,7 +8,7 @@
         type="number"
         placeholder="0명"
         min="0"
-        max="100"
+        max="50"
         v-model="data.max_head_counts"
       />
 
@@ -52,6 +52,22 @@ export default {
       data.is_locked = !data.is_locked
     }
     const roomMaking = () => {
+      if (data.max_head_counts > 50) {
+        data.max_head_counts = 50
+      }
+
+      if (data.max_head_counts < 0) {
+        data.max_head_counts = 0
+      }
+
+      if (data.problems > 10) {
+        data.problems = 10
+      }
+
+      if (data.problems < 0) {
+        data.problems = 0
+      }
+
       axios({
         method: 'POST',
         url: domain + '/paint_game/make_room/',

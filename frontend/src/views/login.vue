@@ -2,7 +2,7 @@
   <div id='back'>
       <div class="login-box">
         <p>AI와 그림 퀴즈 맞춰요</p>
-        <input class="login-input" type="text" placeholder="Temporary Nickname" v-model="credentials.user_name" @keydown.enter="goToLobby">
+        <input class="login-input" type="text" placeholder="Temporary Nickname" v-model="credentials.user_name" @keydown.enter="goToLobby" autofocus>
         <br>
         <button id="blue-button" @click="goToLobby">Enter</button>
       </div>

@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { reactive, ref } from '@vue/reactivity'
+import { ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 export default {
   props: {
@@ -66,8 +66,9 @@ export default {
   setup () {
     const store = useStore()
     const message = ref('')
-    const username = localStorage.getItem('user_name')
+    let username = null
     const sendChatMessage = () => {
+      username = localStorage.getItem('user_name')
       if (message.value === '' || message.value === '\n') {
         message.value = ''
         return
@@ -91,7 +92,7 @@ export default {
       // }
 
       const mObj = {
-        user_name: username,
+        user_name: localStorage.getItem('user_name'),
         message: message.value,
         send_time: hour + ':' + min
       }
