@@ -1,5 +1,5 @@
 module.exports = {
-  lintOnSave: false
+  lintOnSave: false,
   // devServer: {
   //   // 프록시 설정
   //   proxy: {
@@ -17,4 +17,12 @@ module.exports = {
   //     }
   //   }
   // }
+  chainWebpack: config => {
+    config
+        .plugin('html')
+        .tap(args => {
+            args[0].title = "Pingo";
+            return args;
+        })
+}
 }
