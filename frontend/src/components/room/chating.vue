@@ -143,9 +143,9 @@ body {
   border-radius: 2px;
 }
 .chatbox {
-    width: 300px;
-    height: 670px;
-    max-height: 670px;
+    width: 400px;
+    height: 500px;
+    max-height: 500px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
