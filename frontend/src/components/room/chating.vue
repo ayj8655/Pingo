@@ -144,7 +144,7 @@ body {
 }
 .chatbox {
     width: 400px;
-    height: 500px;
+    height: 450px;
     max-height: 500px;
     display: flex;
     flex-direction: column;
