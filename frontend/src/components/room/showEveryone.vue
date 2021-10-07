@@ -111,7 +111,7 @@ ul{
 }
 
 .show-everyone{
-  height: 500px;
+  height: 450px;
   margin-top: 3rem;
   display: flex-start;
   flex-direction: column;
@@ -133,6 +133,7 @@ ul{
   flex-direction: column;
 }
 .an-item p {
+  font-size: 10px;
   margin: 3px;
 }
 </style>

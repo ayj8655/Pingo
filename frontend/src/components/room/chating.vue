@@ -45,8 +45,7 @@
     </section>
 
     <div class="chat-input">
-      <textarea v-model="message" autocomplete="on" @keydown.enter="sendChatMessage()" placeholder="Type a message" >
-      </textarea>
+      <textarea v-model="message" autocomplete="on" @keydown.enter="sendChatMessage()" placeholder="Type a message" style="resize:none;"></textarea>
       <button @click="sendChatMessage()">
                     <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="rgba(0,0,0,.38)" d="M17,12L12,17V14H8V10H12V7L17,12M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z" /></svg>
                 </button>
@@ -69,7 +68,10 @@ export default {
     const message = ref('')
     const username = localStorage.getItem('user_name')
     const sendChatMessage = () => {
-      scrollToBottom()
+      if (message.value === '' || message.value === '\n') {
+        message.value = ''
+        return
+      }
       const now0 = new Date()
       let hour = now0.getHours()
       let min = now0.getMinutes()
@@ -102,6 +104,7 @@ export default {
         }
       )
       message.value = ''
+      scrollToBottom()
     }
 
     const isMe = (val) => {
@@ -144,7 +147,7 @@ body {
 }
 .chatbox {
     width: 400px;
-    height: 500px;
+    height: 450px;
     max-height: 500px;
     display: flex;
     flex-direction: column;
@@ -236,7 +239,8 @@ body {
     display: inline-block;
     font-size: 11pt;
     line-height: 13pt;
-    color: rgba(255,255,255,.7);
+    /* color: rgba(255,255,255,.7); */
+    color: #ffffff;
     margin: 0 0 4px 0;
 }
 .msg:first-of-type {
@@ -246,12 +250,16 @@ body {
     color: rgba(0,0,0,.38);
     font-size: 8pt;
     margin-bottom: 10px;
+    /* color: #ffffff; */
+    color: rgba(255,255,255,.7);
 }
 .username {
     margin-right: 3px;
 }
 .posttime {
     margin-left: 3px;
+    /* color: #ffffff; */
+    color: rgba(255,255,255,.7);
 }
 .msg-self .msg-box {
     border-radius: 6px 0 0 6px;

@@ -219,7 +219,8 @@ export default {
 .lobby-left-box{
   display: flex;
   flex-direction: column;
-  min-height: 660px;
+  min-height: 100%;
+
 }
 
 
@@ -241,6 +242,8 @@ export default {
   margin: 10px;
   min-height: 200px;
   flex-shrink: 1;
+  height: 500px;
+  margin-bottom: 0;
 }
 
 .lobby-right{
