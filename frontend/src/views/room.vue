@@ -192,7 +192,6 @@ export default {
           roomSocket.value.close()
           localStorage.removeItem('room_id')
           if (is_owner.value) {
-            store.dispatch('setRoomOwner', { is_owner: false, name: '' })
             store.dispatch('lobbySend',
               {
                 space: 'lobby',
@@ -347,6 +346,7 @@ export default {
     onBeforeUnmount(() => {
       if (is_owner.value) {
         // 방장이 로비로 갈 경우 방폭
+        store.dispatch('setRoomOwner', { is_owner: false, name: '' })
         store.dispatch('roomSend',
           {
             space: 'room',
