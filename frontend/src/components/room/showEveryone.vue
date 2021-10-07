@@ -1,17 +1,17 @@
 <template>
 <div class="score-board">
-  <div >
-    <div class="show-image">
-      <h1 class="class-word" style="font-size:3rem;">모두의 그림</h1>
-    </div>
-    <div class="image-box">
-        <br>
-        <ul>
-          <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
-          <p>{{img.user.user_name}}</p>
-          <img  :src='domain + img.image' alt='???'>
+  <div class="show-image">
+    <h1 class="class-word" style="font-size:3rem;">모두의 그림</h1>
+  </div>
+  <div class="image-box">
+      <br>
+    <ul>
+      <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
+        <p>{{img.user.user_name}}</p>
+        <img  :src='domain + img.image' alt='???'>
       </li>
     </ul>
+  </div>
 </div>
 </template>
 
