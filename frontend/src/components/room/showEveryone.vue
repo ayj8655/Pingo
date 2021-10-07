@@ -118,6 +118,7 @@ ul{
   background-color: rgba(255, 255, 240, 0.534);
   color: #3883BC;
   font-size: 1.2rem;
+  overflow: scroll;
 }
 
 
