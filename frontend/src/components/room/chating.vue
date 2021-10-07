@@ -88,10 +88,8 @@ export default {
 
     const isMe = (val) => {
       if (username === val) {
-        console.log('me')
         return true
       } else {
-        console.log('notMe')
         return false
       }
     }
