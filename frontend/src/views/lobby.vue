@@ -47,7 +47,6 @@
               <makeRoom/>
             </div>
             <div v-if="password && isLocked">
-
               <lockRoom />
             </div>
           </template>
@@ -126,7 +125,6 @@ export default {
         url: domain + '/paint_game/room_info/' + room.room_id
       })
       .then((res) => {
-        console.log('move data',res.data)
         localStorage.setItem('is_locked', res.data.is_locked)
         localStorage.setItem('is_started', res.data.is_started)
         localStorage.setItem('max_head_counts', res.data.max_head_counts)
