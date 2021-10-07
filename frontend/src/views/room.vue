@@ -121,9 +121,6 @@ export default {
     }
 
     const toLobby = () => {
-      if (is_owner.value) {
-        store.dispatch('setRoomOwner', { is_owner: false, name: '' })
-      }
       router.push('/lobby')
     }
 
