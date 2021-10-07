@@ -88,7 +88,7 @@ export default {
     var max_head = 0
     var now_head = 0
     // const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
-    const urlLink = domain + '/room/' + localStorage.getItem('room_id')
+    const urlLink = 'http://j5b307.p.ssafy.io' + '/room/' + localStorage.getItem('room_id')
     const room_id = localStorage.getItem('room_id')
     let m = null
     let l = null
@@ -222,6 +222,7 @@ export default {
       const username = invitedUser._value
       // console.log('invitedUser', invitedUser)
       // console.log(username)
+
       if (username === '') {
         alert('아이디를 입력해주세요')
         return
@@ -325,7 +326,7 @@ export default {
       invited()
     })
 
-    onBeforeUnmount(() => {
+    (() => {
       if (is_owner.value) {
         // 방장이 로비로 갈 경우 방폭
         store.dispatch('roomSend',

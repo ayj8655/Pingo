@@ -165,6 +165,15 @@ export default {
   color: #3883BC;
 }
 
+@font-face {
+  font-family: 'jalnan';
+  src: url('./fonts/Jalnan.ttf') format('truetype');
+}
+
+* {
+    font-family: 'jalnan';
+  }
+
 /* Gradient in Hex */
 /* linear-gradient(to right, #3883BC 0%, 50%, #FFF9BA 100%); */
 
