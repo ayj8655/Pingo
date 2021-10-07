@@ -6,6 +6,7 @@
         <button id="small-yellow-button" v-if="!isInviting" @click="inviteButtonActivate">초대하기</button>
         <input  type="text" id="link" v-model="urlLink" v-if="isInviting">
         <button id="small-yellow-button" @click="inviteLink" v-if="isInviting">링크복사</button>
+        <button id="small-yellow-button" @click="toLobby" >로비로</button>
       </div>
     </div>
     <div class="play-box">
@@ -104,6 +105,10 @@ export default {
     }
     const inviteButtonActivate = () => {
       isInviting.value = !isInviting.value
+    }
+
+    const toLobby = () => {
+      router.push('/lobby')
     }
 
     const getRoomAndLobbyUsers = () => {
@@ -354,7 +359,8 @@ export default {
       leaveRoom,
       isInviting,
       inviteButtonActivate,
-      is_owner
+      is_owner,
+      toLobby
 
     }
   }
