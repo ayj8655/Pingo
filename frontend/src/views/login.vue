@@ -18,6 +18,7 @@ import { domain } from '@/domain.js'
 export default {
   name: 'login',
   setup () {
+    const reg = /^[0-9a-zA-zㄱ-ㅎㅏ-ㅣ가-힣]{3,8}$/
     const router = useRouter()
     const credentials = reactive({
       user_name: ''
@@ -29,6 +30,11 @@ export default {
         alert('아이디를 입력해주세요')
         return
       }
+      if (!reg.test(username)) {
+        alert('특수문자를 제외한 3~8자로 입력하세요')
+        return
+      }
+
       axios({
         method: 'POST',
         // url: 'http://J5B307.p.ssafy.io:8000/accounts/check_duplication/',

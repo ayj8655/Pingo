@@ -41,6 +41,8 @@ export default {
   setup (props, {emit}) {
     const canvas = ref()
     const router = useRouter()
+    const img = new Image()
+    img.src = 'https://w.namu.la/s/c9b951140de72f66425f2f5523cd2a4aa0a796a5c67e4c8363782e249d58f9d4fbbd977b1c6fd8d0fcecf5ee70a146619ee15c502a074c547f931384a97d69e545c812a594659981193b546f627eedae'
     const data = reactive({
       painting: false,
       erasing: false,
@@ -139,7 +141,8 @@ export default {
             // router.push('/playRoom/' + localStorage.getItem('room_id') + '/score')
             console.log('성공')
             // router.push('/play/score')
-            eraseAll()
+            // eraseAll()
+            data.ctx.drawImage(img, 0, 0, 400, 400)
             data.isPlaying = !data.isPlaying
           })
           .catch(err => {

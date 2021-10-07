@@ -276,7 +276,8 @@ def ayj(request):
     # score = tf.nn.softmax(predictions[0])
 
     # 내가 그린게 가장 높게 예측된 클래스
-    # class_name = class_names[np.argmax(predictions[0])]
+    max_class = class_names[np.argmax(predictions[0])]
+    max_score = np.max(predictions[0]) * 100
 
     idx = category_dict[category]-1
     # 해당 카테고리의 점수(예측률)
@@ -304,7 +305,7 @@ def ayj(request):
     os.makedirs(dir_path, exist_ok=True)
     numbers = len(os.listdir(dir_path))
     shutil.copy(test_path, dir_path+f"new_{category}_{numbers}.jpg")
-    return Response({"class_name": category, "score": score})
+    return Response({"class_name": category, "score": score, "max_class": max_class, "max_score": max_score})
 
 
 @swagger_auto_schema(

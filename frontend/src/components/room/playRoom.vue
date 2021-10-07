@@ -9,6 +9,7 @@
             <playReady @playready-ended="playReadyEnded"/>
           </div>
           <div v-else-if='playState === "play"'>
+            <!-- 그림그리는 곳 -->
             <play @play-ended="playEnded"/>
           </div>
           <div v-else-if='playState === "roundEnd"'>
@@ -36,8 +37,6 @@ import roundEnd from '@/components/room/roundEnd.vue'
 import showEveryone from '@/components/room/showEveryone.vue'
 import score from '@/components/room/score.vue'
 import gameRanking from '@/components/room/gameRanking.vue'
-import { domain } from '@/domain.js'
-import axios from 'axios'
 
 // Inside of vue router, you do not have a vue instance.
 // Therefore there is no way to access this.$store.state.
@@ -140,9 +139,8 @@ export default {
 <style>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s;
+  transition: opacity 0.35s;
 }
-
 
 .fade-enter-from,
 .fade-leave-to {
