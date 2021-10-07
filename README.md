@@ -1,25 +1,4 @@
-프론트엔드 → Vue, 포트 : 8080
-
-npm install
-npm run serve
-
-
-백엔드 → Django , 포트 : 8000
-
-pip install -r requirements.txt
-conda env create -f conda_requirements.txt
-
-python manage.py migrate
-python manage.py runserver
-
-DB → Mysql
-
-포트 : 3306
-
-
-스웨거 링크 : [http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
-
-포팅메뉴얼
+#포팅메뉴얼
 
 1. 프로젝트 소스코드 및 빌드파일 → 깃랩
 2. 발표자료 - PPT OR PDF 파일 → 에듀싸피>열린게시판>ucc경진대회 팀장대표 제출
@@ -61,15 +40,6 @@ DB → Mysql
             
 5. 프로젝트에서 사용하는 외부 서비스 정보 문서
     1. 무
-    
-6. 데이터베이스 덤프 파일 최신본
-    1. [https://velog.io/@finelinefe/TIP-MySQL-Workbench를-이용해-DB-Dump](https://velog.io/@finelinefe/TIP-MySQL-Workbench%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%B4-DB-Dump)
-        
-        [Dump20211007.sql](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/936f14b1-8e9c-4cfd-bab8-4c9e26249889/Dump20211007.sql)
-        
-        오후 4시 55분 기준 db
-        
-7. 시연 시나리오(스크립트 포함)
-    1. 시연 순서에 따른 site 화면별, 실행별(클릭 위치 등) 상세 설명
-    
-    [시연 시나리오.pptx](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ccb72615-995e-47e7-bf04-f7c1d0a81d44/시연_시나리오.pptx)
+
+6. 현재 AI 모델
+https://vagabond-loganberry-e23.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F6d0d1b70-988e-4bdb-a786-db7b6970419c%2Fpingo_256_500_0.981_0.099.png?table=block&id=57b81cff-9e26-46b4-8746-787ebf7def6e&spaceId=44063e9b-c12e-420e-b997-610d5caef9f8&width=2000&userId=&cache=v2
