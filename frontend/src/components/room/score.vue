@@ -1,73 +1,75 @@
 <template>
-<div class="score-board">
-  <div class="score-box">
-    <h3>Pingo가 보기에 {{classes}}로서</h3>
-    <h3>{{score2}}점 입니다</h3>
-    <div v-if="flag">
-      <h3>혹시 {{maxClass}}를 그린건가요?</h3>
-      <h3>{{maxClass}}에 대한 점수는 {{maxScore2}}입니다</h3>
+  <div class="score-board">
+    <div class="score-box">
+      <h3>Pingo가 보기에 {{ classes }}로서</h3>
+      <h3>{{ score2 }}점 입니다</h3>
+      <div v-if="flag">
+        <h3>혹시 {{ maxClass }}를 그린건가요?</h3>
+        <h3>{{ maxClass }}에 대한 점수는 {{ maxScore2 }}입니다</h3>
+      </div>
     </div>
   </div>
-</div>
-
 </template>
 
 <script>
-import { onMounted, ref } from '@vue/runtime-core'
-import axios from 'axios'
-import store from '@/store/index.js'
-import { domain } from '@/domain.js'
+import { onMounted, ref } from "@vue/runtime-core";
+import axios from "axios";
+import store from "@/store/index.js";
+import { domain } from "@/domain.js";
 
 export default {
-  name: 'score',
-  setup (prop, { emit }) {
-    const score = ref('채점 중')
-    const maxScore = ref('채점 중')
-    const classes = ref('?')
-    const maxClass = ref('?')
-    const score2 = ref('채점 중')
-    const maxScore2 = ref('채점 중')
-    const flag = ref(false)
+  name: "score",
+  setup(prop, { emit }) {
+    const score = ref("채점 중");
+    const maxScore = ref("채점 중");
+    const classes = ref("?");
+    const maxClass = ref("?");
+    const score2 = ref("채점 중");
+    const maxScore2 = ref("채점 중");
+    const flag = ref(false);
     onMounted(() => {
-      clearTimeout()
+      clearTimeout();
       // console.log('score mounted')
-      const roundCnt = store.state.roundCnt
-      const category = store.state.keywords[roundCnt]
+      const roundCnt = store.state.roundCnt;
+      const category = store.state.keywords[roundCnt];
 
       axios({
-        method: 'POST',
-        url: domain + '/paint_game/ayj/',
+        method: "POST",
+        url: domain + "/paint_game/ayj/",
         data: {
-          user_name: localStorage.getItem('user_name'),
-          room_id: localStorage.getItem('room_id'),
-          category: category
-        }
+          user_name: localStorage.getItem("user_name"),
+          room_id: localStorage.getItem("room_id"),
+          category: category,
+        },
       })
         .then((res) => {
           // console.log(res.data)
-          score.value = res.data.score
-          classes.value = res.data.class_name
-          maxScore.value = res.data.max_score
-          maxClass.value = res.data.max_class
-          if (res.data.max_score > res.data.score) {
-            flag.value = true
+          score.value = res.data.score;
+          classes.value = res.data.class_name;
+          maxScore.value = res.data.max_score;
+          maxClass.value = res.data.max_class;
+          if (res.data.class_name !== res.data.max_class) {
+            if (res.data.max_score > res.data.score) {
+              flag.value = true;
+            }
           }
-          score2.value = score.value.toFixed(3)
-          maxScore2.value = maxScore.value.toFixed(3)
+
+          score2.value = score.value.toFixed(3);
+          maxScore2.value = maxScore.value.toFixed(3);
         })
         .then(() => {
-          setTimeout(toNextLevel, 8000)
-        })
-    })
+          setTimeout(toNextLevel, 8000);
+        });
+    });
 
     const scoreEnded = () => {
-      emit('score-ended')
-    }
+      emit("score-ended");
+    };
 
     const toNextLevel = () => {
-      store.dispatch('increaseRoundcnt')
-      scoreEnded()
-    }
+      store.dispatch("increaseRoundcnt");
+      scoreEnded();
+    };
     return {
       onMounted,
       toNextLevel,
@@ -76,18 +78,18 @@ export default {
       flag,
       maxClass,
       score2,
-      maxScore2
-    }
+      maxScore2,
+    };
   },
 
-  unmounted () {
-    clearTimeout()
-  }
-}
+  unmounted() {
+    clearTimeout();
+  },
+};
 </script>
 
 <style>
-.score-board{
+.score-board {
   height: 600px;
   display: flex;
   margin-top: auto;
@@ -95,14 +97,14 @@ export default {
   flex-direction: column;
 }
 
-.score-box{
+.score-box {
   height: 450px;
   margin-top: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: rgba(255, 255, 240, 0.534);
-  color: #3883BC;
+  color: #3883bc;
   font-size: 1.2rem;
 }
 </style>
