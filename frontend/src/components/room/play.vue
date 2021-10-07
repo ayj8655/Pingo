@@ -1,31 +1,35 @@
 <template>
-  <div>
-    <div style="margin-top:2.2rem">
-      <h2 id="timerBox">
-      </h2>
-      <div>
-        <draw @draw-ended="playEnded"/>
-      </div>
+  <div style="margin-top:2.2rem">
+    <h2 id="timerBox"></h2>
+    <div>
+      <h3>{{keyword}}</h3>
+      <draw @draw-ended="playEnded"/>
     </div>
   </div>
 </template>
 
 <script>
 import draw from '@/components/room/draw.vue'
-import chating from '@/components/room/chating.vue'
 import { onMounted, onBeforeUnmount, ref } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 
 export default {
   name: 'play',
-  components: { draw, chating },
+  components: { draw },
   emits: 'playEnded',
 
-  setup (props, {emit}) {
-    onMounted(()=> {
+  setup (props, { emit }) {
+    const store = useStore()
+    var roundCnt = store.state.roundCnt
+    const keyword = store.state.keywords[roundCnt]
 
+    const playEnded = () => {
+      emit('playEnded')
+    }
+
+    onMounted(() => {
       const settime = ref(1590)
       const sec = ref(0)
-
       const timer = setInterval(function () {
         sec.value = parseInt(settime.value / 100)
 
@@ -35,22 +39,19 @@ export default {
           document.getElementById('timerBox').innerHTML = ''
           clearInterval(timer)
         }
-        }, 100)
-
-
+      }, 100)
     })
+
     onBeforeUnmount((timer) => {
       clearInterval(timer)
     })
-    const playEnded = () => {
-      emit('playEnded')
-    }
 
     return {
-      setTimeout,
-      playEnded
+      playEnded,
+      keyword
     }
-  } }
+  }
+}
 
 </script>
 

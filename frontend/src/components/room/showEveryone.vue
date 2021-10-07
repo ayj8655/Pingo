@@ -8,16 +8,10 @@
         <br>
         <ul>
           <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
-
-            <!-- <p>http://localhost:8000/{{img.image}}</p> -->
-              <p>{{key}}</p>
-              <img  :src='domain + img.image' alt='???'>
-              <!-- style="height: 125px; width:125px;" -->
-              <!-- <p>{{img.image}}</p> -->
-          </li>
-        </ul>
-    </div>
-  </div>
+          <p>{{img.user.user_name}}</p>
+          <img  :src='domain + img.image' alt='???'>
+      </li>
+    </ul>
 </div>
 </template>
 
@@ -26,7 +20,6 @@ import store from '@/store/index.js'
 import axios from 'axios'
 import { ref } from '@vue/reactivity'
 import { domain } from '@/domain.js'
-
 
 export default {
   name: 'showEveryone',
@@ -40,11 +33,7 @@ export default {
     axios.get(domain + '/paint_game/paints_of_round/' + this.room_id + '/' + category)
       .then((res) => {
         this.allImage = res.data
-          if(this.allImage.length > 6){
-            isSmall.value = !isSmall.value
-          }
-        console.log('이거확인', this.allImage)
-        // console.log('allimage', this.allImage)
+        // console.log('이거확인', this.allImage)
       })
       .then(() => {
         setTimeout(this.toNextLevel, 3000)
@@ -110,7 +99,6 @@ ul{
   width: 100px;
 
 }
-
 
 .image-box {
   overflow: scroll;

@@ -29,12 +29,15 @@ class MakeRoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = '__all__'
 
-
 class PaintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Paint
+        fields = '__all__'
+
+class PaintSerializer2(serializers.ModelSerializer):
     user = UserNameSerializer(read_only=True)
     class Meta:
         model = Paint
-        # fields = '__all__'
         fields = ('user', 'image')
         depth = 1
 
