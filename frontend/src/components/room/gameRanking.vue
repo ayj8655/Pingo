@@ -14,7 +14,7 @@
         </ul>
       </div> -->
       <div>
-          <button id="yellow-button" @click='playAgain'>초기화면으로</button>
+          <button id="yellow-button" @click='playAgain'>대기실로</button>
           <button id="blue-button" @click='toLobby'>로비로</button>
       </div>
       <div style="width:100% height:200px overflow:auto">

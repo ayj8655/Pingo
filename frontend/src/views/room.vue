@@ -19,7 +19,7 @@
       <div class="room-left">
         <p>회원</p>
         <div v-for="roomUser in roomUserList" :key='roomUser.user_id'>
-          {{roomUser.user_name}}
+          <div class="a-member" >{{roomUser.user_name}}</div>
         </div>
 
       </div>
@@ -476,7 +476,7 @@ flex-basis: 300px;
 background-color: white;
 border-radius: 10px;
 margin: 1rem;
-margin-top: 5em;
+margin-top: 7em;
 }
 
 .word{
@@ -501,5 +501,9 @@ margin-top: 5em;
   margin: auto;
   margin: 10px;
 
+}
+
+.a-member{
+  margin-top: 3px;
 }
 </style>
