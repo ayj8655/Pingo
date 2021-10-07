@@ -41,7 +41,7 @@ category_dict = {
     "strawberry": 9,
     "t-shirt": 10,
 }
-model2 = tf.keras.models.load_model("./models/pingo_256_500_0.981_0.099.h5")
+# model2 = tf.keras.models.load_model("./models/pingo_256_500_0.981_0.099.h5")
 ###### chat 테스트
 from django.shortcuts import render
 
@@ -91,21 +91,21 @@ def make_room(request):  # 만들어준 방의 정보 return
     serializer = MakeRoomSerializer(new_room)
     return Response(serializer.data)
 
+
 @swagger_auto_schema(
     method="delete",
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
-        properties={
-            "room_id": openapi.Schema(type=openapi.TYPE_INTEGER),
-        },
+        properties={"room_id": openapi.Schema(type=openapi.TYPE_INTEGER),},
     ),
 )
 @api_view(["DELETE"])
 def delete_room(request):
     # print("방 폭☆파")
-    room_id=request.data.get("room_id")
+    room_id = request.data.get("room_id")
     Room.objects.filter(room=room_id).delete()
-    return Response({'detail': '삭제 성공'})
+    return Response({"detail": "삭제 성공"})
+
 
 @api_view(["GET"])
 def room_list(request):  # 수정요망
@@ -114,10 +114,11 @@ def room_list(request):  # 수정요망
     serializer = RoomListSerializer(rooms, many=True)
     return Response(serializer.data)
 
+
 @api_view(["GET"])
 def room_info(request, room_id):
     # print("방 받아오기")
-    room = Room.objects.get(room_id = room_id)
+    room = Room.objects.get(room_id=room_id)
     serializer = RoomListSerializer(room)
     # print(serializer.data)
     return Response(serializer.data)
@@ -152,10 +153,11 @@ def enter_room(request):
 @api_view(["DELETE"])
 def leave_room(request):
     # print("방 퇴장")
-    user_id=request.data.get("user_id")
-    room_id=request.data.get("room_id")
+    user_id = request.data.get("user_id")
+    room_id = request.data.get("room_id")
     UserInRoom.objects.filter(room=room_id, user_id=user_id).delete()
-    return Response({'detail': '삭제 성공'})
+    return Response({"detail": "삭제 성공"})
+
 
 @api_view(["GET"])
 def room_member(request, room_id):
@@ -165,13 +167,15 @@ def room_member(request, room_id):
     # return Response(status=status.HTTP_200_OK)
     return Response(serializer.data)
 
+
 @api_view(["GET"])
 def room_headcount(request, room_id):
     # print("방 인원 출력")
     users_in_room = get_list_or_404(UserInRoom, room=room_id)
     headcount = len(users_in_room)
-    return Response({'headcount' : headcount})
-    
+    return Response({"headcount": headcount})
+
+
 @swagger_auto_schema(
     method="get",
     manual_parameters=[
@@ -243,7 +247,7 @@ def paints_of_round(request, room_id, category):
 @api_view(["POST"])
 def ayj(request):
     # model = tf.keras.models.load_model("./models/pingo_96_28.h5")
-    # model = tf.keras.models.load_model("./models/pingo_256_500_0.981_0.099.h5")
+    model2 = tf.keras.models.load_model("./models/pingo_256_500_0.981_0.099.h5")
     IMG_SIZE = (300, 300)
     class_names = [
         "banana",
@@ -279,7 +283,7 @@ def ayj(request):
     max_class = class_names[np.argmax(predictions[0])]
     max_score = np.max(predictions[0]) * 100
 
-    idx = category_dict[category]-1
+    idx = category_dict[category] - 1
     # 해당 카테고리의 점수(예측률)
     score = predictions[0][idx] * 100
     score = score.numpy()
@@ -304,8 +308,15 @@ def ayj(request):
         dir_path = f"./media/dataset/unsuccessful/{category}/"
     os.makedirs(dir_path, exist_ok=True)
     numbers = len(os.listdir(dir_path))
-    shutil.copy(test_path, dir_path+f"new_{category}_{numbers}.jpg")
-    return Response({"class_name": category, "score": score, "max_class": max_class, "max_score": max_score})
+    shutil.copy(test_path, dir_path + f"new_{category}_{numbers}.jpg")
+    return Response(
+        {
+            "class_name": category,
+            "score": score,
+            "max_class": max_class,
+            "max_score": max_score,
+        }
+    )
 
 
 @swagger_auto_schema(
@@ -323,7 +334,7 @@ def game_end(request):
     room_id = request.data.get("room_id")
     user_id = request.data.get("user_id")
     directory = f"./media/room_{room_id}"
-    try: 
+    try:
         # room_n 디렉토리 제거
         shutil.rmtree(directory)
     except OSError as e:
@@ -331,7 +342,7 @@ def game_end(request):
         # return Response({"detail": f"Error: {e.filename} - {e.strerror}."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     try:
-        scores = Score.objects.filter(room_id=room_id).order_by('-score')
+        scores = Score.objects.filter(room_id=room_id).order_by("-score")
         serializer = ScoreSerializer(scores, many=True)
         room = Room.objects.get(room_id=room_id)
         # room의 시작상태가 true면 false로 전환
@@ -345,12 +356,16 @@ def game_end(request):
         return Response(serializer.data)
 
     except Room.DoesNotExist as e:
-        return Response({"detail": "Room matching query does not exist"},  status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "Room matching query does not exist"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
 
 @swagger_auto_schema(method="get")
 @api_view(["GET"])
 def result_score(request, room_id):
     # 방번호를 받아서 유저들의 최종 스코어를 순서대로 나열
-    score = Score.objects.filter(room_id = room_id).order_by('-score')
+    score = Score.objects.filter(room_id=room_id).order_by("-score")
     serializer = ScoreSerializer(score, many=True)
     return Response(serializer.data)
