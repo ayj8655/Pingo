@@ -1,7 +1,7 @@
 <template>
 <div class="score-board">
   <div class="score-box">
-      <h1>끝!</h1>
+      <h1>분석중입니다</h1>
   </div>
 </div>
 </template>

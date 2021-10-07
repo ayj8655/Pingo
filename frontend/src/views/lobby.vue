@@ -9,10 +9,10 @@
           <button id="blue-button" @click="tutorial" v-if="!isTutorial">튜토리얼</button>
           <button id="blue-button" @click="tutorial" v-if="isTutorial">방목록으로</button>
         </section>
-        <div>
-          <!-- <audio controls autoplay loop src="/victory.m4a" type="audio.m4a" style="width: 18rem">
+        <div style="margin:5px">
+          <audio controls autoplay loop src="/victory.m4a" type="audio.m4a" style="width: 18rem; height: 2rem;">
             <source >
-          </audio> -->
+          </audio>
         </div>
         <section class="lobby-left">
           <div v-for="user in userList" :key="user.user_id">
@@ -217,14 +217,12 @@ export default {
 }
 
 .lobby-left-box{
-
   display: flex;
   flex-direction: column;
+  min-height: 660px;
 }
 
-#audio-box{
-  width: ;
-}
+
 
 .iframe-box {
   display: flex;
@@ -236,12 +234,13 @@ export default {
   overflow: scroll;
   background-color: white;
   max-width: 400px;
-  flex-basis: 400px;
+  flex-basis: 300px;
   flex: 1 1 100%;
   box-sizing: border-box;
   border-radius: 5px;
   margin: 10px;
-  min-height: 650px;
+  min-height: 200px;
+  flex-shrink: 1;
 }
 
 .lobby-right{
