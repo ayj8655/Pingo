@@ -15,7 +15,7 @@
 <script>
 import draw from '@/components/room/draw.vue'
 import chating from '@/components/room/chating.vue'
-import { onMounted, ref } from '@vue/runtime-core'
+import { onMounted, onBeforeUnmount, ref } from '@vue/runtime-core'
 
 export default {
   name: 'play',
@@ -34,13 +34,16 @@ export default {
         document.getElementById('timerBox').innerHTML = '남은시간: ' + sec.value + '초'
         settime.value -= 10
         if (settime.value <= 0) {
+          document.getElementById('timerBox').innerHTML = ''
           clearInterval(timer)
-          document.getElementById('timerBox').innerHTML = '' }
+        }
         }, 100)
 
-      
-    })
 
+    })
+    onBeforeUnmount((timer) => {
+      clearInterval(timer)
+    })
     const playEnded = () => {
       emit('playEnded')
     }

@@ -16,9 +16,9 @@
     <div class='controls'>
         <div class='controls__colors' id="jsColors">
             <div class="controls__color" @click="setColor(0)" style="background-color: black"></div>
-            <div class="controls__color" @click="setColor(1)" style="background-color: #ff9500"></div>
-            <div class="controls__color" @click="setColor(2)" style="background-color: #ffcc00"></div>
-            <div class="controls__color" @click="setColor(3)" style="background-color: #ff3b3c"></div>
+            <div class="controls__color" @click="setColor(1)" style="background-color: #ff3b3c"></div>
+            <div class="controls__color" @click="setColor(2)" style="background-color: #ff9500"></div>
+            <div class="controls__color" @click="setColor(3)" style="background-color: #ffcc00"></div>
             <div class="controls__color" @click="setColor(4)" style="background-color: #4cd963"></div>
             <div class="controls__color" @click="setColor(5)" style="background-color: #5ac8fa"></div>
             <div class="controls__color" @click="setColor(6)" style="background-color: #0579ff"></div>

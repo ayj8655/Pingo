@@ -6,6 +6,7 @@
         <button id="small-yellow-button" v-if="!isInviting" @click="inviteButtonActivate">초대하기</button>
         <input  type="text" id="link" v-model="urlLink" v-if="isInviting">
         <button id="small-yellow-button" @click="inviteLink" v-if="isInviting">링크복사</button>
+        <button id="small-yellow-button" @click="toLobby" >로비로</button>
       </div>
     </div>
     <div class="play-box">
@@ -88,7 +89,7 @@ export default {
     var max_head = 0
     var now_head = 0
     // const urlLink = 'http://localhost:8000/room/' + localStorage.getItem('room_id')
-    const urlLink = domain + '/room/' + localStorage.getItem('room_id')
+    const urlLink = 'http://j5b307.p.ssafy.io' + '/room/' + localStorage.getItem('room_id')
     const room_id = localStorage.getItem('room_id')
     let m = null
     let l = null
@@ -105,6 +106,13 @@ export default {
     }
     const inviteButtonActivate = () => {
       isInviting.value = !isInviting.value
+    }
+
+    const toLobby = () => {
+      if (is_owner.value) {
+        store.dispatch('setRoomOwner', { is_owner: false, name: '' })
+      }
+      router.push('/lobby')
     }
 
     const getRoomAndLobbyUsers = () => {
@@ -218,6 +226,7 @@ export default {
       const username = invitedUser._value
       // console.log('invitedUser', invitedUser)
       // console.log(username)
+
       if (username === '') {
         alert('아이디를 입력해주세요')
         return
@@ -359,21 +368,11 @@ export default {
       isInviting,
       inviteButtonActivate,
       is_owner,
-      messageObjs
+      messageObjs,
+      toLobby
 
     }
   }
-
-  // computed: {
-  //   change: function () {
-  //     return store.getters['getIsStarted']
-  //   }
-  // },
-  // watch: {
-  //   change (value) {
-  //     this.isStarted = value
-  //   }
-  // }
 }
 </script>
 
