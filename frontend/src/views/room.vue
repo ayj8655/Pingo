@@ -454,6 +454,7 @@ flex-shrink: 1;
 overflow: scroll;
 /* padding-top: 3rem; */
 min-height: 300px;
+max-height: 480px;
 }
 
 .room-center{
