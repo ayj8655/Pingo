@@ -8,7 +8,7 @@
       <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
 
         <!-- <p>http://localhost:8000/{{img.image}}</p> -->
-          <p>{{key}}</p>
+          <p>{{img.user.user_name}}</p>
           <img  :src='domain + img.image' alt='???'>
           <!-- style="height: 125px; width:125px;" -->
           <!-- <p>{{img.image}}</p> -->
@@ -22,7 +22,6 @@ import store from '@/store/index.js'
 import axios from 'axios'
 import { ref } from '@vue/reactivity'
 import { domain } from '@/domain.js'
-
 
 export default {
   name: 'showEveryone',
