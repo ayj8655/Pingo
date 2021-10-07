@@ -16,14 +16,14 @@
     <div class='controls'>
         <div class='controls__colors' id="jsColors">
             <div class="controls__color" @click="setColor(0)" style="background-color: black"></div>
-            <div class="controls__color" @click="setColor(1)" style="background-color: white"></div>
-            <div class="controls__color" @click="setColor(2)" style="background-color: #ff3b3c"></div>
-            <div class="controls__color" @click="setColor(3)" style="background-color: #ff9500"></div>
-            <div class="controls__color" @click="setColor(4)" style="background-color: #ffcc00"></div>
-            <div class="controls__color" @click="setColor(5)" style="background-color: #4cd963"></div>
-            <div class="controls__color" @click="setColor(6)" style="background-color: #5ac8fa"></div>
-            <div class="controls__color" @click="setColor(7)" style="background-color: #0579ff"></div>
-            <div class="controls__color" @click="setColor(8)" style="background-color: #5856d6"></div>
+            <div class="controls__color" @click="setColor(1)" style="background-color: #ff9500"></div>
+            <div class="controls__color" @click="setColor(2)" style="background-color: #ffcc00"></div>
+            <div class="controls__color" @click="setColor(3)" style="background-color: #ff3b3c"></div>
+            <div class="controls__color" @click="setColor(4)" style="background-color: #4cd963"></div>
+            <div class="controls__color" @click="setColor(5)" style="background-color: #5ac8fa"></div>
+            <div class="controls__color" @click="setColor(6)" style="background-color: #0579ff"></div>
+            <div class="controls__color" @click="setColor(7)" style="background-color: #5856d6"></div>
+            <div class="controls__color" @click="setColor(8)" style="background-color: white"></div>
         </div>
     </div>
 
@@ -47,14 +47,14 @@ export default {
       ctx: 0,
       colors: {
         0: 'black',
-        1: 'white',
-        2: '#ff3b3c',
-        3: '#ff9500',
-        4: '#ffcc00',
-        5: '#4cd963',
-        6: '#5ac8fa',
-        7: '#0579ff',
-        8: '#5856d6'
+        1: '#ff3b3c',
+        2: '#ff9500',
+        3: '#ffcc00',
+        4: '#4cd963',
+        5: '#5ac8fa',
+        6: '#0579ff',
+        7: '#5856d6',
+        8: 'white',
       },
       jsRange: 8.5,
       isPlaying: true
@@ -229,6 +229,7 @@ body {
 
 .controls {
     margin-top: flex;
+    display: flex;
 }
 
 .controls .controls__btns{
