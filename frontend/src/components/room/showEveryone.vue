@@ -8,8 +8,10 @@
         <br>
       <ul>
         <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
-          <p>{{img.user.user_name}}</p>
-          <img  :src='domain + img.image' alt='???'>
+          <div class="an-item">
+            <img  :src='domain + img.image' alt='???'>
+            <p>{{img.user.user_name}}</p>
+          </div>
         </li>
       </ul>
     </div>
@@ -51,12 +53,12 @@ export default {
 
   setup (props, { emit }) {
     const room_id = localStorage.getItem('room_id')
-    const allImage = ref([])
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    // require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    const allImage = ref([require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
+    require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png')])
+
     const isSmall = ref([true])
     const time_now = Date.now()
     const toNextLevel = () => {
@@ -128,5 +130,13 @@ ul{
   display: flex;
   flex-direction: column;
   color: ivory;
+}
+
+.an-item{
+  display: flex;
+  flex-direction: column;
+}
+.an-item p {
+  margin: 3px;
 }
 </style>
