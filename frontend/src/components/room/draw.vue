@@ -23,7 +23,7 @@
             <div class="controls__color" @click="setColor(5)" style="background-color: #5ac8fa"></div>
             <div class="controls__color" @click="setColor(6)" style="background-color: #0579ff"></div>
             <div class="controls__color" @click="setColor(7)" style="background-color: #5856d6"></div>
-            <div class="controls__color" @click="setColor(8)" style="background-color: white"></div>
+            <div class="controls__color" @click="setColor(8)" style="background-color: white">지우개</div>
         </div>
     </div>
 
@@ -219,8 +219,8 @@ body {
 }
 
 .canvas {
-    width: 600px;
-    height: 600px;
+    width: 500px;
+    height: 500px;
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0, 1px 3px rgba(0, 0, 0, 0.08);
@@ -228,12 +228,16 @@ body {
 }
 
 .controls {
-    margin-top: flex;
-    display: flex;
+  display: flex;
+  margin: auto;
+  margin-top: 2rem;
+  justify-content: center;
+
 }
 
 .controls .controls__btns{
-    margin-bottom: 30px;
+    margin-bottom: 10px;
+
 }
 
 .controls__btns button {
@@ -242,6 +246,7 @@ body {
     background-color: white;
     padding: 5px 0px;
     width: 80px;
+    height: 30px;
     text-align: center;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0,0,0,0.08);
@@ -250,6 +255,7 @@ body {
     text-transform: uppercase;
     font-weight: 800;
     font-size: 12px;
+    margin: 0.5rem;
 }
 .controls__btns button:active{
     transform: scale(0.98)
@@ -265,6 +271,11 @@ body {
     border-radius: 25px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    margin: 0.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
 }
 
 #timer-box{

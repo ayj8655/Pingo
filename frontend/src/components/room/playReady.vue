@@ -1,10 +1,11 @@
 <template>
     <!-- <slot name="playReady" :childData='childData' :close='close'> -->
-  <div>
-
-      <h1>Are you Ready?</h1>
-      <h3>라운드 {{this.roundCnt+1}}</h3>
-      <h3>{{keyword}}</h3>
+  <div class="score-board">
+    <div class="score-box">
+        <h1>Are you Ready?</h1>
+        <h3>{{this.roundCnt+1}} 라운드 </h3>
+        <h1 class="class-word">"{{keyword}}"</h1>
+    </div>
   </div>
     <!-- </slot> -->
 </template>
@@ -44,5 +45,8 @@ export default {
 </script>
 
 <style>
-
+.class-word{
+  font-size: 4rem;
+  color: rgb(240, 89, 89);
+}
 </style>

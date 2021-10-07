@@ -1,19 +1,23 @@
 <template>
-<div>
-  <h1>모두의 그림</h1>
-</div>
-<div class="image-box">
-    <br>
-    <ul>
-      <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
+<div class="score-board">
+  <div >
+    <div class="show-image">
+      <h1 class="class-word" style="font-size:3rem;">모두의 그림</h1>
+    </div>
+    <div class="image-box">
+        <br>
+        <ul>
+          <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
 
-        <!-- <p>http://localhost:8000/{{img.image}}</p> -->
-          <p>{{key}}</p>
-          <img  :src='domain + img.image' alt='???'>
-          <!-- style="height: 125px; width:125px;" -->
-          <!-- <p>{{img.image}}</p> -->
-      </li>
-    </ul>
+            <!-- <p>http://localhost:8000/{{img.image}}</p> -->
+              <p>{{key}}</p>
+              <img  :src='domain + img.image' alt='???'>
+              <!-- style="height: 125px; width:125px;" -->
+              <!-- <p>{{img.image}}</p> -->
+          </li>
+        </ul>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -116,5 +120,12 @@ ul{
   max-width: 800px;
   flex-shrink: 1;
   /* margin-top: 30px; */
+}
+
+.show-image{
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  color: ivory;
 }
 </style>

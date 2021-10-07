@@ -1,6 +1,8 @@
 <template>
-  <div class="show-box">
-
+  <div>
+      <audio controls autoplay loop src="/REPEATER.m4a" type="audio.m4a" style="width: 12rem !important; height: 2rem;">
+          <source >
+        </audio>
       <transition name='fade' mode='out-in'>
         <div v-if='playState === "playReady"'>
           <playReady @playready-ended="playReadyEnded"/>
@@ -32,26 +34,28 @@ import roundEnd from '@/components/room/roundEnd.vue'
 import showEveryone from '@/components/room/showEveryone.vue'
 import score from '@/components/room/score.vue'
 import gameRanking from '@/components/room/gameRanking.vue'
-// import { domain } from '@/domain.js'
-// import axios from 'axios'
+import { domain } from '@/domain.js'
+import axios from 'axios'
 
 // Inside of vue router, you do not have a vue instance.
 // Therefore there is no way to access this.$store.state.
 // In order to access your store you need to include vuex into the router.
 import store from '@/store/index.js'
-import { ref, computed } from 'vue'
+import { ref, isReactive, computed } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   components: { playReady, play, roundEnd, showEveryone, score, gameRanking },
 
   setup (props, { emit }) {
     const playState = ref('playReady')
     const is_owner = computed(() => store.state.roomOwner.is_owner)
-    // console.log(isReactive(playState.value))
+    console.log(isReactive(playState.value))
     // const keywords = ['banana', 'bulb', 'calculator', 'carrot', 'clock']
     // const rounds = keywords.length
+    const router = useRouter()
 
     const playReadyEnded = () => {
-      // console.log('playReadyEnded')
+      console.log('playReadyEnded')
       playState.value = 'play'
     }
 
@@ -68,8 +72,8 @@ export default {
     }
 
     const scoreEnded = () => {
-      // console.log('roundcnt', store.state.roundCnt)
-      // console.log('keyword length', store.state.keywords.length)
+      console.log('roundcnt', store.state.roundCnt)
+      console.log('keyword length', store.state.keywords.length)
       if (store.state.roundCnt >= store.state.keywords.length) {
         playState.value = 'gameRanking'
       } else {
@@ -78,7 +82,7 @@ export default {
     }
 
     const gameRankingEnded = (val) => {
-      // console.log(val.choice)
+      console.log(val.choice)
       store.dispatch('resetGame')
       if (val.choice === 'toLobby') {
         if (is_owner.value) {
@@ -109,7 +113,9 @@ export default {
       showEveryoneEnded,
       scoreEnded,
       gameRankingEnded,
-      playState
+      playState,
+      // roomOwner,
+      router
     }
   },
   // computed: {
@@ -135,13 +141,9 @@ export default {
   transition: opacity 0.5s;
 }
 
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-.show-box{
-  height: 900px;
-  width: 700px;
 }
 </style>
