@@ -20,10 +20,10 @@
       </div>
 
       <div class="room-right">
-        <p>채팅</p>
+        <chating :messageObjs="messageObjs"/>
       </div>
     </div>
-    <section >
+    <section>
       <Modal :isShow='isShow' @switchModal='switchModal'>
         <template v-slot:header>
           </template>
@@ -83,6 +83,7 @@ export default {
     const isInviting = ref(false)
     const invitedUser = ref('')
     const invitedPassword = ref('')
+    const messageObjs = ref([])
     const is_owner = computed(() => store.state.roomOwner.is_owner)
     var max_head = 0
     var now_head = 0
@@ -313,6 +314,9 @@ export default {
         }
       } else if (data.res === 'getRoomUsers') {
         roomUserList.value = data.value.map(e => e.user)
+      } else if (data.res === 'chat') {
+        console.log(data.value)
+        messageObjs.value.push(data.value)
       }
     }
 
@@ -354,7 +358,8 @@ export default {
       leaveRoom,
       isInviting,
       inviteButtonActivate,
-      is_owner
+      is_owner,
+      messageObjs
 
     }
   }
