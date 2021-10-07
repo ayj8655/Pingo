@@ -9,7 +9,7 @@
       <ul>
         <li class="list-item" v-for="(img, idx) in allImage" :key='time_now + idx'>
           <div class="an-item">
-            <img  :src='domain + img.image' alt='???'>
+            <img  :src='domain + img.image' alt='???' style="height:100px; width:100px;">
             <p>{{img.user.user_name}}</p>
           </div>
         </li>
@@ -53,11 +53,7 @@ export default {
 
   setup (props, { emit }) {
     const room_id = localStorage.getItem('room_id')
-    const allImage = ref([require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'),
-    require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png'), require('@/assets/logo.png')])
+    const allImage = ref([])
 
     const isSmall = ref([true])
     const time_now = Date.now()
