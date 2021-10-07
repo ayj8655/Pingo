@@ -20,8 +20,8 @@ def update():
     amount = 0
 
     for category in categories :
-        if os.path.isdir("/home/jenkins/workspace/test/backend/media/dataset/success/"+category) :
-            amount += len(os.listdir("/home/jenkins/workspace/test/backend//media/dataset/success/"+category))
+        if os.path.isdir("/home/new_jenkins/jenkins/workspace/k-test/backend/media/dataset/success/"+category) :
+            amount += len(os.listdir("/home/new_jenkins/jenkins/workspace/k-test/backend//media/dataset/success/"+category))
 
     if amount > 1000 :
         email = EmailMessage(
