@@ -35,7 +35,7 @@ category_dict = {
     "calculator": 3,
     "carrot": 4,
     "clock": 5,
-    "crecent": 6,
+    "crescent": 6,
     "diamond": 7,
     "icecream": 8,
     "strawberry": 9,
