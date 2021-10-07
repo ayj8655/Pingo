@@ -12,25 +12,26 @@
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { domain } from '@/domain.js'
+import { ref } from '@vue/reactivity'
 export default {
   setup () {
-    const password = ''
-    const room_id = localStorage.getItem('room_id')
+    const password = ref('')
+    const room_id = parseInt(localStorage.getItem('room_id'))
+    const user_id = parseInt(localStorage.getItem('user_id'))
     const router = useRouter()
     const enterRoom = () => {
-      axios({
-        method: 'POST',
-        // url: "http://localhost:8000/paint_game/enter_room/",
-        url: domain + '/paint_game/enter_room/',
-        data: {
-          user_id: localStorage.getItem('user_id'),
-          room_id: room_id,
-          room_password: password
-        }
+      console.log(typeof(user_id), user_id)
+      console.log(typeof(room_id), room_id)
+      console.log(typeof(password.value), password.value)
+      axios.post(domain + '/paint_game/enter_room/', {
+        user_id: user_id,
+        room_id: room_id,
+        room_password: password.value
       })
       .then((res) => {
         console.log(res)
-        router.push({ name: 'room', params: { room_id: room_id } })
+        // router.push({ name: 'room', params: { room_id: room_id } })
+        router.push({ name: 'room', params: { room_id: room_id, password: password.value } })
       })
       .catch((err) => {
         alert('비밀번호가 틀립니다')
