@@ -111,7 +111,7 @@ ul{
 }
 
 .show-everyone{
-  height: 500px;
+  height: 450px;
   margin-top: 3rem;
   display: flex-start;
   flex-direction: column;
