@@ -97,7 +97,7 @@ export default {
 }
 
 .score-box{
-  height: 500px;
+  height: 450px;
   margin-top: 3rem;
   display: flex;
   flex-direction: column;
