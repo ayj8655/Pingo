@@ -476,7 +476,6 @@ background-color: white;
 border-radius: 10px;
 margin: 1rem;
 margin-top: 5em;
-overflow: scroll;
 }
 
 .word{
