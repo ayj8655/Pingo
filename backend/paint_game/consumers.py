@@ -34,7 +34,7 @@ class Consumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print("[consumer-receive] text_data_json:", text_data_json, type(text_data_json), f'room: {self.room_name}')
+        # print("[consumer-receive] text_data_json:", text_data_json, type(text_data_json), f'room: {self.room_name}')
         space = text_data_json['space']
         req = text_data_json['req']
         payload = {'res': req}
@@ -47,11 +47,14 @@ class Consumer(AsyncWebsocketConsumer):
                 payload['value'] = value
 
         elif space == 'room':
-            if req == 'gameStart':
-                value = await database_sync_to_async(game_start)(self.room_name, text_data_json['parameter'])
+            if req == 'chat':
+                value = text_data_json['value']
                 payload['value'] = value
             elif req == 'getRoomUsers':
                 value = await database_sync_to_async(get_room_users)(self.room_name)
+                payload['value'] = value
+            elif req == 'gameStart':
+                value = await database_sync_to_async(game_start)(self.room_name, text_data_json['parameter'])
                 payload['value'] = value
             elif req == 'roomOwnerQuit':
                 await database_sync_to_async(remove_room)(self.room_name)
