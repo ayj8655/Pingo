@@ -30,7 +30,7 @@ export default {
         alert('아이디를 입력해주세요')
         return
       }
-      if (reg.test(username)) {
+      if (!reg.test(username)) {
         alert('특수문자를 제외한 3~8자로 입력하세요')
         return
       }
