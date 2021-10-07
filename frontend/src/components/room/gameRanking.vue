@@ -138,7 +138,5 @@ table {
   tbody tr:nth-child(2n+1) {
     background-color: #ffdd65;
   }
-  * {
-    font-family: 'Times New Roman', Times, serif;
-  }
+
 </style>
