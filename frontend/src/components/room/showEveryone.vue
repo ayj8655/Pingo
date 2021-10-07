@@ -1,6 +1,6 @@
 <template>
 <div class="score-board">
-  <div >
+  <div class="show-everyone">
     <div class="show-image">
       <h1 class="class-word" style="font-size:3rem;">모두의 그림</h1>
     </div>
@@ -122,8 +122,20 @@ ul{
   /* margin-top: 30px; */
 }
 
-.show-image{
+.show-everyone{
+  height: 500px;
   margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  background-color: rgba(255, 255, 240, 0.534);
+  color: #3883BC;
+  font-size: 1.2rem;
+}
+
+
+.show-image{
+
   display: flex;
   flex-direction: column;
   color: ivory;

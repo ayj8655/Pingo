@@ -1,28 +1,30 @@
 <template>
-  <div>
-      <audio controls autoplay loop src="/REPEATER.m4a" type="audio.m4a" style="width: 12rem !important; height: 2rem;">
-          <source >
-        </audio>
-      <transition name='fade' mode='out-in'>
-        <div v-if='playState === "playReady"'>
-          <playReady @playready-ended="playReadyEnded"/>
-        </div>
-        <div v-else-if='playState === "play"'>
-          <play @play-ended="playEnded"/>
-        </div>
-        <div v-else-if='playState === "roundEnd"'>
-          <roundEnd @roundend-ended="roundEndEnded"/>
-        </div>
-        <div v-else-if='playState === "showEveryone"'>
-          <showEveryone @showeveryone-ended="showEveryoneEnded"/>
-        </div>
-        <div v-else-if='playState === "score"'>
-          <score @score-ended="scoreEnded"/>
-        </div>
-        <div v-else-if='playState === "gameRanking"'>
-          <gameRanking @gameranking-ended="gameRankingEnded"/>
-        </div>
-      </transition>
+  <div >
+      <audio controls autoplay loop src="/REPEATER.m4a" type="audio.m4a" style="width: 18rem !important; height: 2rem; margin-top:1rem; margin-bottom:0.9rem;">
+        <source >
+      </audio>
+      <div class="play-room">
+        <transition name='fade' mode='out-in'>
+          <div v-if='playState === "playReady"'>
+            <playReady @playready-ended="playReadyEnded"/>
+          </div>
+          <div v-else-if='playState === "play"'>
+            <play @play-ended="playEnded"/>
+          </div>
+          <div v-else-if='playState === "roundEnd"'>
+            <roundEnd @roundend-ended="roundEndEnded"/>
+          </div>
+          <div v-else-if='playState === "showEveryone"'>
+            <showEveryone @showeveryone-ended="showEveryoneEnded"/>
+          </div>
+          <div v-else-if='playState === "score"'>
+            <score @score-ended="scoreEnded"/>
+          </div>
+          <div v-else-if='playState === "gameRanking"'>
+            <gameRanking @gameranking-ended="gameRankingEnded"/>
+          </div>
+        </transition>
+      </div>
 
   </div>
 </template>
@@ -145,5 +147,10 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.play-room {
+  /* background-color: #fff; */
+  height: 900px;
 }
 </style>

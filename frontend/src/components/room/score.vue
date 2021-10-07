@@ -2,7 +2,9 @@
 <div class="score-board">
   <div class="score-box">
     <h1>{{score}}</h1>
-    <h1>AI는 당신의 그림을 "{{classes}}"(으)로 예측했습니다.</h1>
+    <h1>AI는 당신의 그림을 </h1>
+    <h1>"{{classes}}"(으)로</h1>
+    <h1> 예측했습니다.</h1>
   </div>
 </div>
 
@@ -87,7 +89,7 @@ export default {
 
 <style>
 .score-board{
-  height: 900px;
+  height: 600px;
   display: flex;
   margin-top: auto;
   margin-bottom: auto;
@@ -95,9 +97,13 @@ export default {
 }
 
 .score-box{
-  margin-top: 15rem;
+  height: 500px;
+  margin-top: 3rem;
   display: flex;
   flex-direction: column;
-  color: ivory;
+  justify-content: center;
+  background-color: rgba(255, 255, 240, 0.534);
+  color: #3883BC;
+  font-size: 1.2rem;
 }
 </style>

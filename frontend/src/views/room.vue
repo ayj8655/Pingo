@@ -447,22 +447,22 @@ export default {
 .room-left{
 display: flex;
 flex-direction: column;
-height: 500px;
+height: 400px;
 width: 200px;
 background-color: white;
 border-radius: 10px;
 margin: 1rem;
-margin-top: 5rem;
+margin-top: 7rem;
 flex-shrink: 1;
 overflow: scroll;
 /* padding-top: 3rem; */
-
+min-height: 300px;
 }
 
 .room-center{
 height: 900px;
-flex-basis: 900px;
-width: 700px;
+flex-basis: 500px;
+width: 600px;
 margin: 0;
 }
 
@@ -470,13 +470,15 @@ margin: 0;
 display: flex;
 flex-direction: column;
 flex-shrink: 1;
-height: 500px;
+height: 400px;
 width: 400px;
+flex-basis: 300px;
 background-color: white;
 border-radius: 10px;
 margin: 1rem;
-margin-top: 5em;
+margin-top: 7em;
 overflow: scroll;
+min-height: 300px;
 }
 
 .word{

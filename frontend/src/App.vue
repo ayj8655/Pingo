@@ -100,7 +100,7 @@ export default {
   background: #3883BC;
   color: white;
   font-weight: bold;
-  margin: 10px;
+  margin: 5px;
   cursor: pointer;
 }
 
@@ -123,7 +123,7 @@ export default {
   background: #FFF9BA;
   color: #3883BC;
   font-weight: bold;
-  margin: 10px;
+  margin: 5px;
   cursor: pointer;
 }
 

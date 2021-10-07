@@ -3,7 +3,7 @@
 
     <div>
         <canvas id="jsCanvas" class="canvas" ref="canvas" @mousemove="onMouseMove" @mousedown="onMouseDown" @mouseup="onMouseUp" @mouseleave="stopPainting"
-        width="600" height="600"></canvas>
+        width="400" height="400"></canvas>
     </div>
     <!-- <div class="controls__range">
         <input type="range" id="jsRange" v-model="data.jsRange" min="0.1" max="5" step="0.1">
@@ -69,7 +69,7 @@ export default {
       data.ctx = canvas.value.getContext('2d')
       //   console.log(data.ctx)
       data.ctx.fillStyle = 'white'
-      data.ctx.fillRect(0, 0, 600, 600)
+      data.ctx.fillRect(0, 0, 400, 400)
       data.ctx.strokeStyle = '#2c2c2c'
       data.ctx.lineWidth = data.jsRange
 
@@ -150,9 +150,9 @@ export default {
 
     // 임시 방편인데 새로고침 말고 더 좋은 방법 없으려나...
     const eraseAll = () => {
-      data.ctx.clearRect(0, 0, 600, 600)
+      data.ctx.clearRect(0, 0, 400, 400)
       data.ctx.fillStyle = 'white'
-      data.ctx.fillRect(0, 0, 600, 600)
+      data.ctx.fillRect(0, 0, 400, 400)
     }
 
     const toNextLevel = () => {
@@ -189,7 +189,7 @@ export default {
   mounted () {
     clearTimeout()
     console.log('play mounted')
-    setTimeout(this.toNextLevel, 16000)
+    setTimeout(this.toNextLevel, 15100)
   },
   unmounted () {
     clearTimeout()
@@ -219,8 +219,8 @@ body {
 }
 
 .canvas {
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 400px;
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0, 1px 3px rgba(0, 0, 0, 0.08);
@@ -230,7 +230,7 @@ body {
 .controls {
   display: flex;
   margin: auto;
-  margin-top: 2rem;
+  margin-top: 1rem;
   justify-content: center;
 
 }
@@ -266,9 +266,9 @@ body {
 }
 
 .controls__colors .controls__color{
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
     margin: 0.2rem;
