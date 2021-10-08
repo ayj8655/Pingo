@@ -24,7 +24,7 @@ export default {
   props: {
     isShow: {
       type: Boolean,
-      required: true,
+      required: true
     },
     popupId: {
       default: () => `popup-${_.uniqueId()}`,
@@ -42,7 +42,7 @@ export default {
       default: () => "50%",
     },
   },
-  setup(props) {
+  setup (props) {
     // 모달 사이즈 지정
     onMounted(() => {
       ModalApi.setModalSize(
