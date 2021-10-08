@@ -7,8 +7,8 @@
         <input type="range" id="jsRange" v-model="data.jsRange" min="0.1" max="5" step="0.1">
     </div>
     <div class='controls__btns'>
-        <button id='jsMode'>Fill</button>
-        <button id='jsSave'>Save</button>
+        <button id='jsMode' @click="eraseAll">Erase All</button>
+        <button id='jsSave' @click="sendImage">Save</button>
     </div>
     <div class='controls'>
         <div class='controls__colors' id="jsColors">
@@ -29,13 +29,16 @@
 
 <script>
 import { ref, reactive, onMounted } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 export default {
   setup () {
     const canvas = ref()
-
+    const router = useRouter()
     const data = reactive({
       painting: false,
+      erasing: false,
       ctx: 0,
       colors: {
         0: 'black',
@@ -53,12 +56,15 @@ export default {
 
     onMounted(() => {
       prepare()
+      console.log('prepare')
     })
 
     const prepare = () => {
       console.log(canvas.value)
       data.ctx = canvas.value.getContext('2d')
       //   console.log(data.ctx)
+      canvas.value.fillStyle = 'white'
+      // canvas.value.fillRect(0, 0, 700, 700)
       data.ctx.strokeStyle = '#2c2c2c'
       data.ctx.lineWidth = data.jsRange
 
@@ -78,7 +84,7 @@ export default {
     //   prepare()
       const x = event.offsetX
       const y = event.offsetY
-      console.log(x, y)
+      // console.log(x, y)
 
       if (!data.painting) {
         data.ctx.beginPath()
@@ -105,6 +111,46 @@ export default {
     const handleRangeChange = (event) => {
       console.log(event)
     }
+
+
+
+    const sendImage = () => {
+      canvas.value.toBlob(function (blob) {
+        const formData = new FormData()
+        // 이부분에 접속한 유저, 들어온 방, 정해진 category 를 지정해줘야 함
+        const userId = localStorage.getItem('user_id')
+        const roomId = localStorage.getItem('room_id')
+        console.log(userId, roomId)
+        formData.append('user', userId)
+        formData.append('room', roomId)
+        formData.append('category', 'banana')
+        formData.append('image', blob, 'filename.png')
+        axios.post(
+          'http://127.0.0.1:8000/paint_game/saving/',
+          formData,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        )
+          .then(res => {
+            console.log(res)
+            router.push('/play/score')
+            console.log('성공')
+            router.push('/play/score')
+
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      })
+    }
+
+    // 임시 방편인데 새로고침 말고 더 좋은 방법 없으려나...
+    const eraseAll = () => {
+      data.ctx.clearRect(0, 0, 700, 700)
+    }
+
+    const erase = () => {
+
+    }
     // 붓 사이즈 조절하는거 아직 못함
     return {
       startPainting,
@@ -115,8 +161,12 @@ export default {
       prepare,
       setColor,
       handleRangeChange,
+      sendImage,
+      eraseAll,
+      erase,
       data,
-      canvas
+      canvas,
+      router
     }
   }
 }

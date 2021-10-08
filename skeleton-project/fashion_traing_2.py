@@ -7,19 +7,33 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
+from tensorflow.python.client import device_lib
+
+print(device_lib.list_local_devices())
+
+
 # gpu 오류로 인해서 설정
-os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 print(tf.__version__)
 
 
 fashion_mnist = tf.keras.datasets.fashion_mnist
 
-(train_images, train_labels), (test_images,
-                               test_labels) = fashion_mnist.load_data()
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
-class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
-               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+class_names = [
+    "T-shirt/top",
+    "Trouser",
+    "Pullover",
+    "Dress",
+    "Coat",
+    "Sandal",
+    "Shirt",
+    "Sneaker",
+    "Bag",
+    "Ankle boot",
+]
 
 
 print(train_images.shape)
@@ -41,7 +55,7 @@ test_images = test_images / 255.0
 
 plt.figure(figsize=(10, 10))
 for i in range(25):
-    plt.subplot(5, 5, i+1)
+    plt.subplot(5, 5, i + 1)
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
@@ -59,32 +73,36 @@ plt.show()
 # ])
 
 
-model = tf.keras.Sequential([  # 정확도 : 92.8퍼
-    tf.keras.layers.Conv2D(filters=32, kernel_size=(3, 3), activation='relu',
-                           input_shape=(28, 28, 1)),
-    # tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu'),
-    # tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Dropout(0.25),
+model = tf.keras.Sequential(
+    [  # 정확도 : 92.8퍼
+        tf.keras.layers.Conv2D(
+            filters=32, kernel_size=(3, 3), activation="relu", input_shape=(28, 28, 1)
+        ),
+        tf.keras.layers.Conv2D(filters=64, kernel_size=(3, 3), activation="relu"),
+        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Dropout(0.25),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(128, activation="relu"),
+        tf.keras.layers.Dropout(0.5),
+        tf.keras.layers.Dense(10, activation="softmax"),
+    ]
+)
 
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.Dense(10, activation='softmax')
-])
 
-
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
+model.compile(
+    optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
+)
 
 model.summary()
 
-hist = model.fit(train_images, train_labels, epochs=1, validation_data=(test_images,test_labels))
-#model.fit(train_images, train_labels, epochs=10)
+hist = model.fit(
+    train_images, train_labels, epochs=10, validation_data=(test_images, test_labels)
+)
+# model.fit(train_images, train_labels, epochs=10)
 
-test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
 
-print('\n테스트 정확도:', test_acc)
+print("\n테스트 정확도:", test_acc)
 
 predictions = model.predict(test_images)
 predictions[0]
@@ -100,13 +118,18 @@ def plot_image(i, predictions_array, true_label, img):
 
     predicted_label = np.argmax(predictions_array)
     if predicted_label == true_label:
-        color = 'blue'
+        color = "blue"
     else:
-        color = 'red'
+        color = "red"
 
-    plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
-                                         100*np.max(predictions_array),
-                                         class_names[true_label]), color=color)
+    plt.xlabel(
+        "{} {:2.0f}% ({})".format(
+            class_names[predicted_label],
+            100 * np.max(predictions_array),
+            class_names[true_label],
+        ),
+        color=color,
+    )
 
 
 def plot_value_array(i, predictions_array, true_label):
@@ -118,8 +141,8 @@ def plot_value_array(i, predictions_array, true_label):
     plt.ylim([0, 1])
     predicted_label = np.argmax(predictions_array)
 
-    thisplot[predicted_label].set_color('red')
-    thisplot[true_label].set_color('blue')
+    thisplot[predicted_label].set_color("red")
+    thisplot[true_label].set_color("blue")
 
 
 # i = 0
@@ -143,32 +166,32 @@ def plot_value_array(i, predictions_array, true_label):
 # 올바른 예측은 파랑색으로 잘못된 예측은 빨강색으로 나타냅니다
 num_rows = 5
 num_cols = 3
-num_images = num_rows*num_cols
-plt.figure(figsize=(2*2*num_cols, 2*num_rows))
+num_images = num_rows * num_cols
+plt.figure(figsize=(2 * 2 * num_cols, 2 * num_rows))
 for i in range(num_images):
-    plt.subplot(num_rows, 2*num_cols, 2*i+1)
+    plt.subplot(num_rows, 2 * num_cols, 2 * i + 1)
     plot_image(i, predictions, test_labels, test_images)
-    plt.subplot(num_rows, 2*num_cols, 2*i+2)
+    plt.subplot(num_rows, 2 * num_cols, 2 * i + 2)
     plot_value_array(i, predictions, test_labels)
 plt.show()
 
-print(hist.history.keys())  
+print(hist.history.keys())
 
-plt.plot(hist.history['accuracy'])
-plt.plot(hist.history['val_accuracy'])
-plt.title('Accuracy Trend')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'validation'], loc='best')
+plt.plot(hist.history["accuracy"])
+plt.plot(hist.history["val_accuracy"])
+plt.title("Accuracy Trend")
+plt.ylabel("accuracy")
+plt.xlabel("epoch")
+plt.legend(["train", "validation"], loc="best")
 plt.grid()
 plt.show()
 
 
-plt.plot(hist.history['loss'])
-plt.plot(hist.history['val_loss'])
-plt.title('Loss Trend')
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(['train', 'validation'], loc='best')
+plt.plot(hist.history["loss"])
+plt.plot(hist.history["val_loss"])
+plt.title("Loss Trend")
+plt.ylabel("loss")
+plt.xlabel("epoch")
+plt.legend(["train", "validation"], loc="best")
 plt.grid()
 plt.show()

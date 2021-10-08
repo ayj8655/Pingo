@@ -1,5 +1,7 @@
+from django.db.models import fields
+from accounts import models
 from rest_framework import serializers
-from .models import Room,Ranking,UserInRoom,Words
+from .models import Room,Ranking,UserInRoom,Words, Paint
 
 class RoomMemberSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,3 +19,7 @@ class MakeRoomSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PaintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Paint
+        fields = '__all__'

@@ -19,8 +19,8 @@ from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
-# from django.conf.urls.static import static
-# from django.conf import settings
+from django.conf.urls.static import static
+from django.conf import settings
 
 # swagger(drf-yasg) 세팅
 schema_view = get_schema_view(
@@ -43,4 +43,4 @@ urlpatterns = [
     path('paint_game/', include('paint_game.urls')),
     path('swagger/', schema_view.with_ui('swagger')),
 ]
-# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
