@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+# import logging
+# logging.disable(logging.CRITICAL)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,13 +26,14 @@ SECRET_KEY = "django-insecure-i5l&2lxs-l&gp(m2sj4-ywu@py(i8wq%2jx@@xx17nykgq=opq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "j5b307.p.ssafy.io", "127.0.0.1"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
     "channels",
+    'django_crontab',
     "accounts",
     "paint_game",
     "rest_framework",
@@ -82,13 +84,13 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', #1
-        'NAME': 'ssafy_painting_game', #2
-        'USER': 'root', #3                      
-        'PASSWORD': 'ssafy',  #4              
-        'HOST': 'localhost',   #5                
-        'PORT': '3306', #6
+    "default": {
+        "ENGINE": "django.db.backends.mysql",  # 1
+        "NAME": "ssafy_painting_game",  # 2
+        "USER": "root",  # 3
+        "PASSWORD": "ssafy",  # 4
+        "HOST": "j5b307.p.ssafy.io",  # 5
+        "PORT": "3306",  # 6
     }
 }
 
@@ -138,10 +140,24 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_CREDENTIALS = True
 
-ASGI_APPLICATION = "backend.asgi.application"
+ASGI_APPLICATION = "backend.routing.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {"hosts": [("127.0.0.1", 6379)],},
     },
 }
+
+#Crontab
+CRONJOBS = [
+    ('00 12 * * *', 'paint_game.cron.update')
+]
+
+#Email setting
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = 'beenprojectauth@gmail.com'
+EMAIL_HOST_PASSWORD = 'pingossafy5!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
