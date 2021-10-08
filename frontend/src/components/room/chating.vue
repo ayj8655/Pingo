@@ -57,13 +57,14 @@
 <script>
 import { ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import { watch } from '@vue/runtime-core'
 export default {
   props: {
     messageObjs: {
       type: Array
     }
   },
-  setup () {
+  setup (props) {
     const store = useStore()
     const message = ref('')
     let username = null
@@ -85,12 +86,6 @@ export default {
         min = '0' + min
       }
 
-      // const mObj = {
-      //   user_name: username,
-      //   message: message.value,
-      //   send_time: now0.getHours() + ':' + now0.getMinutes()
-      // }
-
       const mObj = {
         user_name: localStorage.getItem('user_name'),
         message: message.value,
@@ -105,7 +100,6 @@ export default {
         }
       )
       message.value = ''
-      scrollToBottom()
     }
 
     const isMe = (val) => {
@@ -120,6 +114,13 @@ export default {
       var chatHistory = document.querySelector('.chat-window')
       chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight
     }
+
+    watch(props.messageObjs, () => {
+      // setTimeout으로 dom이 변할 시간을 기다린다
+      setTimeout(() => {
+        scrollToBottom()
+      }, 1)
+    })
 
     return {
       sendChatMessage,
