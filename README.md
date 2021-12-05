@@ -1,64 +1,92 @@
+# **Pingo**
 
-# 프론트엔드
-npm install
+</br>
 
-npm run serve
-
----
-
-# 백엔드
-pip install -r requirements.txt
-
-conda env create -f conda_requirements.txt
-
-python manage.py migrate
-
-python manage.py runserver
-
+아이스 브레이킹을 위한 AI 그림 퀴즈 웹 게임 - Pingo
 
 
 ---
+## **목차**
+
+- 팀원소개
+- 프로젝트 설명
+- 기술스택
+- License
+
+</br>
+
+---
+
+## **팀원소개**
+
+|  | 안영진 | 김선우 | 최인태 | 고석환 | 천수승 |
+| --- | --- | --- | --- | --- | --- | 
+| 역할 | 팀장, CNN 모델 개발 | 백엔드 | 백엔드 & 프론트엔드| 프론트엔드 | 프론트엔드 |
+
+</br>
+
+---
+## **프로젝트 설명**
+
+UCC : [https://youtu.be/s4rHtoiR8kE](https://youtu.be/s4rHtoiR8kE)
 
 
-#포팅메뉴얼
+## 기획 배경
 
-    
-1. 포팅 매뉴얼
-    1. **gitlab 소스 클론 이후 빌드 및 배포할 수 있는 작업 문서**
-        1. 사용한 JVM,웹서버,WAS 제품 등의 종류와 설정값, 버전(ide버전 포함) 기재
-            1. 프론트엔드 : Vue(3.0), IDE → VSCode
-            2. 백엔드 : Django (3.2.7), IDE → VSCode,PyCharm
-            3. AI : Tensorflow 2.4.1
-            4. Mysql : 5.7
-            5. Redis : 5
-            6. Python 3.7.0
-            
-        2. 빌드 시 사용되는 환경 변수 등의 주요 내용 상세 기재
-            1. 프론트엔드 : npm install
-            2. 백엔드 : pip install -r requirements.txt
-            3. AI : conda install git matplotlib scikit-learn tqdm scipy numpy=1.19 tensorflow-gpu==2.4.1
-            
-        3. 배포 시 특이사항 기재
-            1. 백엔드는 직접 실행해야한다.(자동 배포시 websocket 사용 불가) 
-            
-            백엔드 서버 종료 : sudo killall daphne
-            
-            백엔드 서버 기동 : sudo nohup daphne -b 0.0.0.0 -p 8000 backend.asgi:application &
-            
-            백엔드 서버 프로세스 확인 : ps -ef | grep daphne 
-            
-            여기서 sudo nohup daphne -b 0.0.0.0 -p 8000 backend.asgi:application & 있는지 확인
-            
-        4. 데이터베이스 접속 정보 등 프로젝트에 활용되는 주요 계정 및 프로퍼티가 정의된 파일 목록
-            1. Mysql ID : root, PW : ssafy
-            2. 젠킨스 ID : admin, PW : ssafy
-            
-2. 프로젝트에서 사용하는 외부 서비스 정보 문서
-    1. 무
+비대면으로 인해 친구들, 팀원들과의 교류가 어렵고 이로인한 어색함은 앞으로도 지속될 것이다. 이를 해결하는데는 아이스 브레이킹이 효과적이다.
 
-3. 현재 AI 모델
-   
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6d0d1b70-988e-4bdb-a786-db7b6970419c/pingo_256_500_0.981_0.099.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20211008%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211008T005105Z&X-Amz-Expires=86400&X-Amz-Signature=b03be3c256b9de1e3af273b5a37f0b3d8de07290bf37f28a3a6276f464508c69&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22pingo_256_500_0.981_0.099.png%22" width="500" height="500">
 
-- accuracy = 0.981
-- loss = 0.099
+문제점
+- 온라인으로 인한 어색함
+- 친구들과 친해지는데 어려움
+- 어색한 분위기를 풀기 쉽지않음
+
+
+</br>
+
+주요기능
+
+- 실시간 AI 그림 퀴즈
+- 방과 게임중 채팅 기능
+- 매 라운드 마다 점수 비교
+- 10개의 클래스 기반의 AI 채점
+- 간단한 게임 플레이 (회원가입 없이 닉네임만으로)
+- 게임 플레이를 통해 쌓이는 데이터셋 기반 학습 알림
+
+</br>
+
+프로젝트 구조
+
+![프로젝트구조](https://github.com/ayj8655/Readme_Images/blob/main/pingo/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%EA%B5%AC%EC%A1%B0.png?raw=true)
+
+<br>
+
+ERD
+
+![ERD](https://github.com/ayj8655/Readme_Images/blob/main/pingo/%ED%95%91%EA%B3%A0_ERD.PNG?raw=true)
+<br>
+
+---
+## **기술 스택**
+
+```
+FE : Vue.js
+BE : Django, mysql, redis
+INFRA : Nginx, Jenkins, Docker, amazon EC2, amazon S3
+AI : Tensorflow, Keras
+
+```
+
+</br>
+
+---
+
+
+Note: The `license` badge image link at the top of this file should be updated with the correct `:user` and `:repo`.
+
+</br>
+
+
+## **License**
+
+[MIT © Richard McRichface.](https://www.notion.so/LICENSE)
